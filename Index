@@ -1,1 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Projet ISN - Index</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="BlocNiveau">
+      <p>Ici ce sera le niveau</p>
+    </div>
+    <div class="BlocBoutons">
+      <p>Ici ce sera les boutons Play et Reset</p>
+    </div>
 
+    <div class="BlocPlayground">
+      <p>Ici ce sera la zone de jeu</p>
+    </div>
+
+    <div class="BlocBanque">
+      <p>Ici ce sera la banque de commandes</p>
+    </div>
+  </body>
+</html>
