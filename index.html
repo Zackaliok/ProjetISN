@@ -8,19 +8,25 @@
         <!-- Ajout viewport -> meileur comportement des paramètres width, ect -->
     </head>
     <body>
-        <div class="BlocNiveau">
+        <div id="BlocNiveau">
           <p>Ici ce sera le niveau</p>
         </div>
-        <div class="BlocBoutons">
+        <div id="BlocBoutons">
           <p>Ici ce sera les boutons Play et Reset</p>
         </div>
 
-        <div class="BlocPlayground">
-          <p>Ici ce sera la zone de jeu</p>
+        <div id="BlocPlayground">
+
         </div>
 
-        <div class="BlocBanque">
-          <p>Ici ce sera la banque de commandes</p>
+        <div id="BlocBanque">
+          <input type="button" name="Commande1" value="Avancer" onclick="Avancer()">
+          <br>
+          <input type="button" name="Commande2" value="Sauter" onclick="Sauter()">
+          <br>
+          <input type="button" name="Commande3" value="Tourner à gauche" onclick="TournerAGauche()">
+          <br>
+          <input type="button" name="Commande3bis" value="Tourner à droite" onclick="TournerADroite()"> 
         </div>
 
         <script type="text/javascript" src="src/lib/script.js"></script>

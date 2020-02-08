@@ -7,3 +7,7 @@ div {
   padding: 10px; margin: 5px;
   border: 2px solid black;
 } /* -> Temporaire ! */
+
+.blocCommande {
+  border: 2px solid red;
+}
