@@ -1,0 +1,13 @@
+html, body {
+  padding: 0; margin: 0; height: 100vh;
+  -webkit-font-smoothing: antialiased;
+} /* -> Ces paramètres servent à l'érgonomie de la page  */
+
+div {
+  padding: 10px; margin: 5px;
+  border: 2px solid black;
+} /* -> Temporaire ! */
+
+.blocCommande {
+  border: 2px solid red;
+}
