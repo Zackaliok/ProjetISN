@@ -1,13 +1,38 @@
-html, body {
-  padding: 0; margin: 0; height: 100vh;
-  -webkit-font-smoothing: antialiased;
-} /* -> Ces paramètres servent à l'érgonomie de la page  */
+body {
+    padding: 0; margin: 0;
+    height: 100vh; width: 100vw;
+    -webkit-font-smoothing: antialiased;
+    background: linear-gradient(90deg, #2a4d69 0%, rgba(255,255,255,1) 100%);
+}
 
-div {
-  padding: 10px; margin: 5px;
-  border: 2px solid black;
-} /* -> Temporaire ! */
+.wrapper {
+    display: flex; 
+    align-content: center; 
+    align-items: center;
+    height: 100vh; width: 100vw;
+}
+
+.zone {
+    padding: 10px;
+    border: 2px solid black;
+    margin-left: 4%;
+}
+
+#zoneDuNiveau {
+    width: 40%; height: 600px;
+}
+
+#zoneDuCode, #zoneDesBlocs {
+    width: 20%; height: 600px;
+}
+
 
 .blocCommande {
   border: 2px solid red;
+}
+
+input[type=button] {
+    margin: 5px;
+    border: 2px solid black;
+    background-color: transparent;
 }
