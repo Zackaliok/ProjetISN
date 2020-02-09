@@ -10,4 +10,3 @@ function ajouterBloc(nom){
     AlgorithmeJoueur += "<p class='blocCommande'>"+nom+"</p>";
     zoneDuCode.innerHTML = AlgorithmeJoueur;
 }
-
