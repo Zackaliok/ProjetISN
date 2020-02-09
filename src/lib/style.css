@@ -3,6 +3,7 @@ body {
     height: 100vh; width: 100vw;
     -webkit-font-smoothing: antialiased;
     background: linear-gradient(90deg, #2a4d69 0%, rgba(255,255,255,1) 100%);
+    font-family: 'Source Sans Pro', sans-serif;
 }
 
 .wrapper {
@@ -15,24 +16,31 @@ body {
 .zone {
     padding: 10px;
     border: 2px solid black;
-    margin-left: 4%;
+    margin-left: 50px;
 }
 
 #zoneDuNiveau {
-    width: 40%; height: 600px;
+    width: 600px; height: 600px; padding: 0;
 }
 
 #zoneDuCode, #zoneDesBlocs {
-    width: 20%; height: 600px;
+    width: 400px; height: 600px;
 }
 
 
 .blocCommande {
-  border: 2px solid red;
+    border: 2px solid red; 
+    padding: 5px; text-align: center; 
 }
 
 input[type=button] {
-    margin: 5px;
-    border: 2px solid black;
+    margin: 5px; border: 2px solid black;
     background-color: transparent;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
+}
+
+canvas {
+    background-color: white;
+    /* couleur test */
 }
