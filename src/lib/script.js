@@ -3,7 +3,10 @@
 var CodeAlgorithmeJoueur = new Array();
 var playerImg;
 
-const zoneDuCode = document.getElementById("zoneDuCode"); //Objet représentant l'element "zoneDuCode"
+const zoneDuCode = document.getElementById("zoneDuCode");
+const Poubelle = document.getElementById("Poubelle");
+
+var blocEnMouvement;
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
@@ -31,7 +34,6 @@ function ajouterBloc(nom){
 
 
 //------------------------------ Charger une image et l'afficher sur le canvas ------------------------------
-// La documentation arrive !
 
 function loadImg(url){
     return new Promise(resolve => {
@@ -57,14 +59,62 @@ function sleep(ms) {
 }
 
 async function executerCode(){
-    for(var i=0;i<CodeAlgorithmeJoueur.length;i++){
-        switch(CodeAlgorithmeJoueur[i]){
-            case "Avancer":
-                ctx.clearRect(player.x,player.y,64,64);
-                player.y -= 64;
-                ctx.drawImage(playerImg,400,player.y);
-                break;
-        }
-        await sleep(1000);
-    }
 }
+
+
+// ---------- Evenements de début et de fin de drag ----------
+
+document.ondragstart = function(e){
+    blocEnMouvement = e.target.cloneNode(true);
+    blocEnMouvement.style.opacity = .2;
+    e.dataTransfer.setData("text/html", this.innerHTML);
+};
+
+document.ondragend = function(e){
+    blocEnMouvement.style.opacity = 1;
+//    blocEnMouvement = null; //Pour l'instant inutile
+};
+
+
+// ---------- Evenements lorsqu'on entre, survole, et quitte la zone de 'drop' ----------
+
+zoneDuCode.ondragenter = function(e){
+    e.preventDefault();
+    //zoneDuCode.classList.add("survol");
+};
+
+zoneDuCode.ondragover = function(e){
+    e.preventDefault();
+};
+
+zoneDuCode.ondragleave = function(e){
+    //zoneDuCode.classList.remove("survol");
+    //zoneDuCode.idList.add("survol");
+}
+
+
+// ---------- Evenements lorsqu'on 'drop' une div ----------
+
+zoneDuCode.ondrop = function(e){
+    zoneDuCode.append(blocEnMouvement);
+    //alert(Avancer);
+    //zoneDuCode.classList.remove("survol"); //On restaure l'interface 
+};
+
+
+// ---------- Evenements lorsqu'on entre, survole, et quitte la zone de la poubelle ----------
+
+Poubelle.ondragenter = function(e){
+    e.preventDefault();
+    //Je vais essayer de faire un changement de source de l'image
+};
+
+Poubelle.ondragover = function(e){
+    e.preventDefault();
+};
+
+Poubelle.ondrop = function(e){
+    var el = document.getElementById(e.dataTransfer.getData('Text'));
+    el.parentNode.removeChild(el);
+    //BON NSM J'Y ARRIVE PAS CA MME SOULE
+};
