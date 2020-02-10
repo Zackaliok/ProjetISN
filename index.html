@@ -9,23 +9,20 @@
     </head>
     <body>
         <div class="wrapper">
-            <div class="zone" id="zoneDuNiveau">
+            <div class="zone" id="zoneDuNiveau" draggable="false">
                 <canvas id="canvas" height="600" width="600"></canvas>
             </div>
 
-            <div class="zone" id="zoneDuCode">
-            </div>
+            <div class="zone" id="zoneDuCode" draggable="false"></div>
 
-            <div class="zone" id="zoneDesBlocs">
-                <input type="button" name="Commande1" value="Avancer" onclick="ajouterBloc('Avancer')">
-                <br>
-                <input type="button" name="Commande2" value="Sauter" onclick="ajouterBloc('Sauter')">
-                <br>
-                <input type="button" name="Commande3" value="Tourner à gauche" onclick="ajouterBloc('Tourner à gauche')">
-                <br>
-                <input type="button" name="Commande3bis" value="Tourner à droite" onclick="ajouterBloc('Tourner à droite')"> 
+            <div class="zone" id="zoneDesBlocs" draggable="false">
+                <div id="Avancer" draggable="true" data-info="Commande pour Avancer">Avancer</div>
+                <div id="Sauter" draggable="true" data-info="Commande pour Sauter">Sauter</div>
             </div>
             
+            <div class="zone" id="Poubelle" draggable="false">
+                <img src="src/media/delete.png" alt="Poubelle" id="ImgPoubelle" draggable="false">
+            </div>
 <!--
             <div class="zone" id="BlocBoutons">
                 <p>Ici ce sera les boutons Play et Reset</p>
