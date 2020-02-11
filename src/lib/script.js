@@ -2,12 +2,14 @@
 
 var CodeAlgorithmeJoueur = new Array();
 var playerImg;
+let blocEnMouvement;
 
+//Zones :
 const zoneDuCode = document.getElementById("zoneDuCode");
-const Poubelle = document.getElementById("Poubelle");
+const zoneDesBlocs = document.getElementById("zoneDesBlocs");
+const zonePoubelle = document.getElementById("zonePoubelle");
 
-var blocEnMouvement;
-
+//Canvas :
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 canvas.height = 600; canvas.width = 600;
@@ -55,28 +57,28 @@ loadImg("src/media/player.png").then(img => {
 
 
 function sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function executerCode(){
 }
 
 
-// ---------- Evenements de début et de fin de drag ----------
+//------------------------------ Evenements de début et de fin de drag dans la zone des blocs ------------------------------
 
-document.ondragstart = function(e){
-	blocEnMouvement = e.target.cloneNode(true);
-	blocEnMouvement.style.opacity = .2;
-	e.dataTransfer.setData("text/html", this.innerHTML);
+zoneDesBlocs.ondragstart = function(e){
+    blocEnMouvement = e.target.cloneNode(true);
+    blocEnMouvement.style.opacity = .2;
+    e.dataTransfer.setData("text/html", this.innerHTML);
 };
 
-document.ondragend = function(e){
+zoneDesBlocs.ondragend = function(e){
     blocEnMouvement.style.opacity = 1;
-//    blocEnMouvement = null; //Pour l'instant inutile
+    //blocEnMouvement = null; //Pour l'instant inutile
 };
 
 
-// ---------- Evenements lorsqu'on entre, survole, et quitte la zone de 'drop' ----------
+//------------------------------ Evenements lorsqu'on entre, survole, quitte, et drop dans la zone de code ------------------------------
 
 zoneDuCode.ondragenter = function(e){
     e.preventDefault();
@@ -90,10 +92,7 @@ zoneDuCode.ondragover = function(e){
 zoneDuCode.ondragleave = function(e){
     //zoneDuCode.classList.remove("survol");
     //zoneDuCode.idList.add("survol");
-}
-
-
-// ---------- Evenements lorsqu'on 'drop' une div dans la zoneDuCode ----------
+};
 
 zoneDuCode.ondrop = function(e){
 	zoneDuCode.append(blocEnMouvement);
@@ -103,11 +102,11 @@ zoneDuCode.ondrop = function(e){
 };
 
 
-// ---------- Evenements lorsqu'on entre, survole, et quitte la zone de la poubelle ----------
+// ---------- Evenements lorsqu'on entre, survole, quitte, et drop dans la zone de la poubelle ----------
 
 let blocASupprimer;
 
-Poubelle.ondragenter = function(e){
+zonePoubelle.ondragenter = function(e){
     e.preventDefault();
     //Je vais essayer de faire un changement de source de l'image
 };
@@ -117,10 +116,10 @@ zoneDuCode.ondragstart = function(e){
 };
 
 
-Poubelle.ondragover = function(e){
+zonePoubelle.ondragover = function(e){
     e.preventDefault();
 };
 
-Poubelle.ondrop = function(){
+zonePoubelle.ondrop = function(){
 	document.getElementById(blocEnMouvement.id).parentNode.removeChild(blocASupprimer);
 };
