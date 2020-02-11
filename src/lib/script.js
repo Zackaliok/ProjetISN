@@ -65,9 +65,9 @@ async function executerCode(){
 // ---------- Evenements de début et de fin de drag ----------
 
 document.ondragstart = function(e){
-    blocEnMouvement = e.target.cloneNode(true);
-    blocEnMouvement.style.opacity = .2;
-    e.dataTransfer.setData("text/html", this.innerHTML);
+	blocEnMouvement = e.target.cloneNode(true);
+	blocEnMouvement.style.opacity = .2;
+	e.dataTransfer.setData("text/html", this.innerHTML);
 };
 
 document.ondragend = function(e){
@@ -93,10 +93,11 @@ zoneDuCode.ondragleave = function(e){
 }
 
 
-// ---------- Evenements lorsqu'on 'drop' une div ----------
+// ---------- Evenements lorsqu'on 'drop' une div dans la zoneDuCode ----------
 
 zoneDuCode.ondrop = function(e){
-    zoneDuCode.append(blocEnMouvement);
+	zoneDuCode.append(blocEnMouvement);
+
     //alert(Avancer);
     //zoneDuCode.classList.remove("survol"); //On restaure l'interface 
 };
@@ -104,17 +105,22 @@ zoneDuCode.ondrop = function(e){
 
 // ---------- Evenements lorsqu'on entre, survole, et quitte la zone de la poubelle ----------
 
+let blocASupprimer;
+
 Poubelle.ondragenter = function(e){
     e.preventDefault();
     //Je vais essayer de faire un changement de source de l'image
 };
 
+zoneDuCode.ondragstart = function(e){
+	blocASupprimer = e.target;
+};
+
+
 Poubelle.ondragover = function(e){
     e.preventDefault();
 };
 
-Poubelle.ondrop = function(e){
-    var el = document.getElementById(e.dataTransfer.getData('Text'));
-    el.parentNode.removeChild(el);
-    //BON NSM J'Y ARRIVE PAS CA MME SOULE
+Poubelle.ondrop = function(){
+	document.getElementById(blocEnMouvement.id).parentNode.removeChild(blocASupprimer);
 };
