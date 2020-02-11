@@ -14,6 +14,9 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 canvas.height = 600; canvas.width = 600;
 
+//Empêcher la selection :
+document.onselectstart = (e) => {e.preventDefault();};
+
 
 //------------------------------ Classe du joueur + déclaration ------------------------------
 
@@ -25,14 +28,6 @@ class Player {
 }
 
 var player = new Player(400,400);
-
-
-//------------------------------ Ajoute un bloc dans l'esapce de codage ------------------------------
-
-function ajouterBloc(nom){
-    zoneDuCode.innerHTML += "<p class='blocCommande'>"+nom+"</p>";
-    CodeAlgorithmeJoueur.push(nom);
-}
 
 
 //------------------------------ Charger une image et l'afficher sur le canvas ------------------------------
@@ -96,7 +91,6 @@ zoneDuCode.ondragleave = function(e){
 
 zoneDuCode.ondrop = function(e){
 	zoneDuCode.append(blocEnMouvement);
-
     //alert(Avancer);
     //zoneDuCode.classList.remove("survol"); //On restaure l'interface 
 };
@@ -106,20 +100,19 @@ zoneDuCode.ondrop = function(e){
 
 let blocASupprimer;
 
-zonePoubelle.ondragenter = function(e){
-    e.preventDefault();
-    //Je vais essayer de faire un changement de source de l'image
-};
-
 zoneDuCode.ondragstart = function(e){
 	blocASupprimer = e.target;
 };
 
+zonePoubelle.ondragenter = function(e){
+    e.preventDefault();
+    //Je vais essayer de faire un changement de source de l'image
+};
 
 zonePoubelle.ondragover = function(e){
     e.preventDefault();
 };
 
 zonePoubelle.ondrop = function(){
-	document.getElementById(blocEnMouvement.id).parentNode.removeChild(blocASupprimer);
+    blocASupprimer.parentNode.removeChild(blocASupprimer);
 };
