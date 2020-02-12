@@ -8,9 +8,10 @@ body {
 
 .wrapper {
     display: flex; 
-    align-content: center; 
+    justify-content: center;
     align-items: center;
     height: 100vh; width: 100vw;
+    flex-direction: column;
 }
 
 canvas {
@@ -26,6 +27,18 @@ canvas {
     margin-left: 50px;
 }
 
+.partieZone {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    margin-bottom: 40px; 
+}
+
+.partieBoutons {
+    display: flex;
+    align-items: center;
+}
+
 #zoneDuNiveau {
     width: 600px; height: 600px; padding: 0;
 }
@@ -35,15 +48,33 @@ canvas {
 }
 
 #zonePoubelle {
-    width: 55px; height: 55px;
+    width: 50px; height: 50px;
 }
+
+#zonePoubelle img {
+    display: block; margin: 0 auto;
+}
+
 
 /*-------------------- Blocs : --------------------*/
 
 #Avancer, #Sauter {
-    margin: 10px; padding: 10px;
+    margin-bottom: 10px; 
+    padding: 10px;
     cursor: pointer;
     background: white;
     border: 2px solid gray;
     border-radius: 5px;
+}
+
+
+/*-------------------- Boutons : --------------------*/
+
+#btnDepart {
+    height: 74px; width: 74px;
+    padding: 2px;
+    background: transparent;
+    border: 2px solid red;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 20px;
 }
