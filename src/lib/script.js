@@ -56,6 +56,23 @@ function sleep(ms) {
 }
 
 async function executerCode(){
+    if(zoneDuCode.hasChildNodes()){
+        var commandeTableau = new Array();
+        for(var i=0;i<zoneDuCode.childNodes.length;i++){
+            commandeTableau.push(zoneDuCode.childNodes[i].id);
+        }
+        /////////
+        for(var i=0;i<commandeTableau.length;i++){
+            switch(commandeTableau[i]){
+                case "Avancer":
+                    ctx.clearRect(player.x,player.y,64,64);
+                    player.y -= 64;
+                    ctx.drawImage(playerImg,player.x,player.y);
+                    break;
+            }
+            await sleep(1000);
+        }
+    }
 }
 
 
@@ -75,6 +92,10 @@ zoneDesBlocs.ondragend = function(e){
 
 //------------------------------ Evenements lorsqu'on entre, survole, quitte, et drop dans la zone de code ------------------------------
 
+zoneDuCode.ondragstart = function(e){
+	blocEnMouvement = e.target;
+};
+
 zoneDuCode.ondragenter = function(e){
     e.preventDefault();
     //zoneDuCode.classList.add("survol");
@@ -91,28 +112,33 @@ zoneDuCode.ondragleave = function(e){
 
 zoneDuCode.ondrop = function(e){
 	zoneDuCode.append(blocEnMouvement);
-    //alert(Avancer);
+    blocEnMouvement.dataset.parent = "zoneDuCode";
     //zoneDuCode.classList.remove("survol"); //On restaure l'interface 
 };
 
 
-// ---------- Evenements lorsqu'on entre, survole, quitte, et drop dans la zone de la poubelle ----------
-
-let blocASupprimer;
-
-zoneDuCode.ondragstart = function(e){
-	blocASupprimer = e.target;
-};
+//------------------------------ Evenements lorsqu'on entre, survole, quitte, et drop dans la zone de la poubelle ------------------------------
 
 zonePoubelle.ondragenter = function(e){
     e.preventDefault();
-    //Je vais essayer de faire un changement de source de l'image
+    if(e.target.id=="imgPoubelle"){
+        e.target.src = "src/media/trash_open.png";
+    }
 };
 
 zonePoubelle.ondragover = function(e){
     e.preventDefault();
 };
 
-zonePoubelle.ondrop = function(){
-    blocASupprimer.parentNode.removeChild(blocASupprimer);
+zonePoubelle.ondragleave = function(e){
+    if(e.target.id=="imgPoubelle"){
+        e.target.src = "src/media/trash_close.png";
+    }
+};
+
+zonePoubelle.ondrop = function(e){
+    if(blocEnMouvement.dataset.parent!=="zoneDesBlocs"){
+        blocEnMouvement.parentNode.removeChild(blocEnMouvement);
+        e.target.src = "src/media/trash_close.png";
+    }
 };

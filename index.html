@@ -9,25 +9,25 @@
     </head>
     <body>
         <div class="wrapper">
-            <div class="zone" id="zoneDuNiveau">
-                <canvas id="canvas" height="600" width="600"></canvas>
+            <div class="partieZone">
+                <div class="zone" id="zoneDuNiveau">
+                    <canvas id="canvas" height="600" width="600"></canvas>
+                </div>
+
+                <div class="zone" id="zoneDuCode"></div>
+
+                <div class="zone" id="zoneDesBlocs">
+                    <div id="Avancer" draggable="true" data-parent="zoneDesBlocs">Avancer</div>
+                    <div id="Sauter" draggable="true" data-parent="zoneDesBlocs">Sauter</div>
+                </div>
             </div>
 
-            <div class="zone" id="zoneDuCode"></div>
-
-            <div class="zone" id="zoneDesBlocs">
-                <div id="Avancer" draggable="true" data-avancer="Commande pour Avancer">Avancer</div>
-                <div id="Sauter" draggable="true" data-sauter="Commande pour Sauter">Sauter</div>
+            <div class="partieBoutons">
+                <button id="btnDepart" onclick="executerCode()">Départ</button>
+                <div class="zone" id="zonePoubelle">
+                    <img src="src/media/trash_close.png" alt="Poubelle" id="imgPoubelle" draggable="false" height="50px">
+                </div>
             </div>
-            
-            <div class="zone" id="zonePoubelle">
-                <img src="src/media/delete.png" alt="Poubelle" id="ImgPoubelle" draggable="false">
-            </div>
-<!--
-            <div class="zone" id="BlocBoutons">
-                <p>Ici ce sera les boutons Play et Reset</p>
-            </div>
--->
         </div>
 
         <script type="text/javascript" src="src/lib/script.js"></script>
