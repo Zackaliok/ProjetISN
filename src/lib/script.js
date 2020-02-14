@@ -1,7 +1,6 @@
 //------------------------------ Initialisation ------------------------------
 
-var CodeAlgorithmeJoueur = new Array();
-var playerImg;
+let playerImg;
 let blocEnMouvement;
 
 //Zones :
@@ -12,13 +11,12 @@ const zonePoubelle = document.getElementById("zonePoubelle");
 //Canvas :
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-canvas.height = 600; canvas.width = 600;
 
 //Empêcher la selection :
 document.onselectstart = (e) => {e.preventDefault();};
 
 
-//------------------------------ Classe du joueur + déclaration ------------------------------
+//------------------------------ Classe du joueur + déclaration player ------------------------------
 
 class Player {
     constructor(x,y){
@@ -57,13 +55,10 @@ function sleep(ms) {
 
 async function executerCode(){
     if(zoneDuCode.hasChildNodes()){
-        var commandeTableau = new Array();
+        remiseAZero();
+        await sleep(300);
         for(var i=0;i<zoneDuCode.childNodes.length;i++){
-            commandeTableau.push(zoneDuCode.childNodes[i].id);
-        }
-        /////////
-        for(var i=0;i<commandeTableau.length;i++){
-            switch(commandeTableau[i]){
+            switch(zoneDuCode.childNodes[i].id){
                 case "Avancer":
                     ctx.clearRect(player.x,player.y,64,64);
                     player.y -= 64;
@@ -72,7 +67,18 @@ async function executerCode(){
             }
             await sleep(1000);
         }
+    }else{
+        alert("Il n'y a pas de bloc dans la zone !"); //Optionnel
     }
+}
+
+
+//------------------------------ Remet à zéro le canvas, etc ------------------------------
+
+function remiseAZero(){
+    ctx.clearRect(player.x,player.y,64,64);
+    player.x = 400; player.y = 400;
+    ctx.drawImage(playerImg,player.x,player.y);
 }
 
 
