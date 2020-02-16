@@ -56,7 +56,7 @@ function sleep(ms) {
 async function executerCode(){
     if(zoneDuCode.hasChildNodes()){
         remiseAZero();
-        await sleep(300);
+        await sleep(500);
         for(var i=0;i<zoneDuCode.childNodes.length;i++){
             switch(zoneDuCode.childNodes[i].id){
                 case "Avancer":
@@ -91,13 +91,27 @@ zoneDesBlocs.ondragstart = function(e){
 };
 
 zoneDesBlocs.ondragend = function(e){
-    blocEnMouvement.style.opacity = 1;
+    blocEnMouvement.style.opacity = "";
     //blocEnMouvement = null; //Pour l'instant inutile
 };
 
 
+//------------------------------ TEST ------------------------------
+
+zoneDuCode.onmousedown = function(e){
+    if(e.target.tagName=="DIV"){
+        blocEnMouvement = e.target;
+        e.preventDefault();
+    }
+    console.log(blocEnMouvement);
+//    blocEnMouvement.style.left = e.clientX-rect.left;
+//    blocEnMouvement.style.top = e.clientY-rect.top;
+}
+
+
 //------------------------------ Evenements lorsqu'on entre, survole, quitte, et drop dans la zone de code ------------------------------
 
+var rect = zoneDuCode.getBoundingClientRect();
 zoneDuCode.ondragstart = function(e){
 	blocEnMouvement = e.target;
 };
@@ -117,8 +131,11 @@ zoneDuCode.ondragleave = function(e){
 };
 
 zoneDuCode.ondrop = function(e){
-	zoneDuCode.append(blocEnMouvement);
-    blocEnMouvement.dataset.parent = "zoneDuCode";
+    if(blocEnMouvement.dataset.parent=="zoneDesBlocs"){
+        zoneDuCode.append(blocEnMouvement);
+        blocEnMouvement.dataset.parent = "zoneDuCode";
+        blocEnMouvement.style.position="relative";
+    }
     //zoneDuCode.classList.remove("survol"); //On restaure l'interface 
 };
 
@@ -127,7 +144,7 @@ zoneDuCode.ondrop = function(e){
 
 zonePoubelle.ondragenter = function(e){
     e.preventDefault();
-    if(e.target.id=="imgPoubelle"){
+    if(e.target.id=="imgPoubelle" && blocEnMouvement.dataset.parent=="zoneDuCode"){
         e.target.src = "src/media/trash_open.png";
     }
 };
