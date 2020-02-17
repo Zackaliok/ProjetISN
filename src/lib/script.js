@@ -82,6 +82,33 @@ function remiseAZero(){
 }
 
 
+//------------------------------ Déplacer les blocs à l'intérieur de la zone de code ------------------------------
+
+var infoBlocEnMvm = document.querySelector(".bloc").getBoundingClientRect();
+
+zoneDuCode.onmousedown = function(e){
+    if(e.target.dataset.parent=="zoneDuCode" && e.which !== 3){
+        blocEnMouvement = e.target;
+        window.addEventListener('mousemove', deplacerBloc, true);
+    }
+};
+
+window.onmouseup = function(){
+    window.removeEventListener('mousemove', deplacerBloc, true);
+};
+
+function deplacerBloc(e){
+    var posSourisX = e.clientX-infoBlocEnMvm.width/2;
+    var posSourisY = e.clientY-infoBlocEnMvm.height/2;
+    var infoZone = zoneDuCode.getBoundingClientRect();
+    
+    if((posSourisX > infoZone.left) && (posSourisX+infoBlocEnMvm.width < infoZone.right) && (posSourisY > infoZone.top) && (posSourisY < infoZone.bottom-infoBlocEnMvm.height)){
+        blocEnMouvement.style.top = posSourisY + 'px';
+        blocEnMouvement.style.left = posSourisX + 'px';
+    }
+}
+
+
 //------------------------------ Evenements de début et de fin de drag dans la zone des blocs ------------------------------
 
 zoneDesBlocs.ondragstart = function(e){
@@ -96,25 +123,7 @@ zoneDesBlocs.ondragend = function(e){
 };
 
 
-//------------------------------ TEST ------------------------------
-
-zoneDuCode.onmousedown = function(e){
-    if(e.target.tagName=="DIV"){
-        blocEnMouvement = e.target;
-        e.preventDefault();
-    }
-    console.log(blocEnMouvement);
-//    blocEnMouvement.style.left = e.clientX-rect.left;
-//    blocEnMouvement.style.top = e.clientY-rect.top;
-}
-
-
-//------------------------------ Evenements lorsqu'on entre, survole, quitte, et drop dans la zone de code ------------------------------
-
-var rect = zoneDuCode.getBoundingClientRect();
-zoneDuCode.ondragstart = function(e){
-	blocEnMouvement = e.target;
-};
+//------------------------------ Evenements lorsqu'on entre, survole et drop dans la zone de code ------------------------------
 
 zoneDuCode.ondragenter = function(e){
     e.preventDefault();
@@ -125,16 +134,19 @@ zoneDuCode.ondragover = function(e){
     e.preventDefault();
 };
 
-zoneDuCode.ondragleave = function(e){
-    //zoneDuCode.classList.remove("survol");
-    //zoneDuCode.idList.add("survol");
-};
+//zoneDuCode.ondragleave = function(e){
+//    //zoneDuCode.classList.remove("survol");
+//    //zoneDuCode.idList.add("survol");
+//};
 
 zoneDuCode.ondrop = function(e){
     if(blocEnMouvement.dataset.parent=="zoneDesBlocs"){
         zoneDuCode.append(blocEnMouvement);
         blocEnMouvement.dataset.parent = "zoneDuCode";
-        blocEnMouvement.style.position="relative";
+        blocEnMouvement.style.position = "absolute";
+        blocEnMouvement.style.top = (e.clientY-infoBlocEnMvm.height/2) + 'px';
+        blocEnMouvement.style.left = (e.clientX-infoBlocEnMvm.width/2) + 'px';
+        blocEnMouvement.setAttribute("draggable",false);
     }
     //zoneDuCode.classList.remove("survol"); //On restaure l'interface 
 };
