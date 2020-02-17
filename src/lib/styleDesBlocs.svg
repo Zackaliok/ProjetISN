@@ -1,0 +1,4 @@
+<svg width="150" height="40" viewBox="0 0 150 40" xmlns="http://www.w3.org/2000/svg">
+    <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="white" stroke="black" stroke-width="2"/>
+    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="14">Avancer</text>
+</svg>
