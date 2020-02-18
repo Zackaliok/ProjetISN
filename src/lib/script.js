@@ -85,6 +85,7 @@ function remiseAZero(){
 //------------------------------ Déplacer les blocs à l'intérieur de la zone de code ------------------------------
 
 var infoBlocEnMvm = document.querySelector(".bloc").getBoundingClientRect();
+var infoZone = zoneDuCode.getBoundingClientRect();
 
 zoneDuCode.onmousedown = function(e){
     if(e.target.dataset.parent=="zoneDuCode" && e.which !== 3){
@@ -100,7 +101,6 @@ window.onmouseup = function(){
 function deplacerBloc(e){
     var posSourisX = e.clientX-infoBlocEnMvm.width/2;
     var posSourisY = e.clientY-infoBlocEnMvm.height/2;
-    var infoZone = zoneDuCode.getBoundingClientRect();
     
     if((posSourisX > infoZone.left) && (posSourisX+infoBlocEnMvm.width < infoZone.right) && (posSourisY > infoZone.top) && (posSourisY < infoZone.bottom-infoBlocEnMvm.height)){
         blocEnMouvement.style.top = posSourisY + 'px';
@@ -142,11 +142,17 @@ zoneDuCode.ondragover = function(e){
 zoneDuCode.ondrop = function(e){
     if(blocEnMouvement.dataset.parent=="zoneDesBlocs"){
         zoneDuCode.append(blocEnMouvement);
-        blocEnMouvement.dataset.parent = "zoneDuCode";
-        blocEnMouvement.style.position = "absolute";
         blocEnMouvement.style.top = (e.clientY-infoBlocEnMvm.height/2) + 'px';
         blocEnMouvement.style.left = (e.clientX-infoBlocEnMvm.width/2) + 'px';
+        
+        if(blocEnMouvement.style.left < infoZone.left+'px' || blocEnMouvement.style.top < infoZone.top+'px'){
+            blocEnMouvement.style.left = "";
+            blocEnMouvement.style.top = "";
+        }
+        
         blocEnMouvement.setAttribute("draggable",false);
+        blocEnMouvement.dataset.parent = "zoneDuCode";
+        blocEnMouvement.style.position = "absolute";
     }
     //zoneDuCode.classList.remove("survol"); //On restaure l'interface 
 };
