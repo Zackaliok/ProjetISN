@@ -7,6 +7,7 @@ var blocArray = new Array();
 //Zones :
 const zoneDuCode = document.getElementById("zoneDuCode");
 const zoneDesBlocs = document.getElementById("zoneDesBlocs");
+var infoZone = zoneDuCode.getBoundingClientRect();
 
 //Canvas :
 const canvas = document.getElementById('canvas');
@@ -75,16 +76,7 @@ async function executerCode(){
     if(zoneDuCode.hasChildNodes()){
         remiseAZero();
         await sleep(500);
-        for(var i=0;i<zoneDuCode.childNodes.length;i++){
-            switch(zoneDuCode.childNodes[i].id){
-                case "Avancer":
-                    ctx.clearRect(joueur.x,joueur.y,64,64);
-                    joueur.y -= 64;
-                    afficherJoueur(joueur.x,joueur.y,"HAUT");
-                    break;
-            }
-            await sleep(1000);
-        }
+        //Code à faire !!!
     }else{
         alert("Il n'y a pas de bloc dans la zone !"); //Optionnel
     }
@@ -102,12 +94,16 @@ function remiseAZero(){
 
 //------------------------------ Déplacer les blocs à l'intérieur de la zone de code ------------------------------
 
-var infoZone = zoneDuCode.getBoundingClientRect();
+var blocId;
+var arr;
 
 zoneDuCode.onmousedown = function(e){
     if(e.target.dataset.parent=="zoneDuCode" && e.which !== 3){
-        blocEnMouvement = e.target;
         window.addEventListener('mousemove', deplacerBloc, true);
+        blocEnMouvement = e.target;
+        blocId = blocArray.indexOf(blocEnMouvement);
+        arr = blocArray.slice();
+        arr.splice(blocId,1);
     }
 };
 
@@ -123,15 +119,24 @@ function deplacerBloc(e){
     if(posSourisX > infoZone.left && posSourisX+infoBloc.width < infoZone.right && posSourisY > infoZone.top && posSourisY < infoZone.bottom-infoBloc.height){
         blocEnMouvement.style.top = posSourisY + 'px';
         blocEnMouvement.style.left = posSourisX + 'px';
-    }
-    
-    if(blocArray.length > 1){
-        var id = blocArray.indexOf(blocEnMouvement);
-        if(id>=1 && blocArray[id].getBoundingClientRect().top < blocArray[id-1].getBoundingClientRect().top){
-            var temp = blocArray[id-1];
-            blocArray[id-1] = blocEnMouvement;
-            blocArray[id] = temp;
+        
+        for(var i=0;i<blocArray.length;i++){
+            if(blocArray[blocId].getBoundingClientRect().top < blocArray[i].getBoundingClientRect().top){
+                console.log('ya')
+//                [blocArray[blocId], blocArray[i]] = [blocArray[i], blocArray[blocId]];
+                blocArray[i] = blocArray.splice(blocId, 1, blocArray[i])[0];
+                console.log(blocArray)
+            }
         }
+        
+        
+        
+        
+//        for(var i=0;i<blocArray.length;i++){
+//            if(blocArray[blocId].getBoundingClientRect().top < blocArray[i].getBoundingClientRect().top){
+//                [blocArray[blocId], blocArray[i]] = [blocArray[i], blocArray[blocId]];
+//            }
+//        }
     }
 }
 
@@ -168,7 +173,7 @@ zoneDuCode.ondragover = function(e){
 zoneDuCode.ondrop = function(e){
     if(blocEnMouvement.dataset.parent=="zoneDesBlocs"){
         zoneDuCode.append(blocEnMouvement);
-        blocArray.push(blocEnMouvement); console.log(blocArray);
+        blocArray.push(blocEnMouvement);
         var infoBloc = blocEnMouvement.getBoundingClientRect();
         
         blocEnMouvement.style.top = (e.clientY-infoBloc.height/2) + 'px';
