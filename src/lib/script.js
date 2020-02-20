@@ -1,12 +1,14 @@
 //------------------------------ Initialisation ------------------------------
 
-let playerImg;
-let blocEnMouvement;
+//Bloc et joueur :
+var imgJoueur;
+var blocEnMouvement;
+var blocArray = new Array();
 
 //Zones :
 const zoneDuCode = document.getElementById("zoneDuCode");
 const zoneDesBlocs = document.getElementById("zoneDesBlocs");
-const zonePoubelle = document.getElementById("zonePoubelle");
+var infoZone = zoneDuCode.getBoundingClientRect();
 
 //Canvas :
 const canvas = document.getElementById('canvas');
@@ -16,19 +18,38 @@ const ctx = canvas.getContext('2d');
 document.onselectstart = (e) => {e.preventDefault();};
 
 
-//------------------------------ Classe du joueur + déclaration player ------------------------------
+//------------------------------ Classe du joueur + déclaration ------------------------------
 
-class Player {
-    constructor(x,y){
+class Joueur {
+    constructor(x,y,dir){
         this.x=x;
         this.y=y;
+        this.dir=dir;
+    }
+    
+    afficher(x,y,dir){
+        this.dir = dir;
+        switch(dir){
+            case "HAUT":
+                ctx.drawImage(imgJoueur,64,64,64,64,x,y,64,64);
+                break;
+            case "BAS":
+                ctx.drawImage(imgJoueur,0,64,64,64,x,y,64,64);
+                break;
+            case "GAUCHE":
+                ctx.drawImage(imgJoueur,0,0,64,64,x,y,64,64);
+                break;
+            case "DROITE":
+                ctx.drawImage(imgJoueur,64,0,64,64,x,y,64,64);
+                break;
+        }
     }
 }
 
-var player = new Player(400,400);
+var joueur = new Joueur(400,400,"HAUT");
 
 
-//------------------------------ Charger une image et l'afficher sur le canvas ------------------------------
+//------------------------------ Charger le "tileset" et l'afficher sur le canvas ------------------------------
 
 function loadImg(url){
     return new Promise(resolve => {
@@ -37,16 +58,16 @@ function loadImg(url){
             resolve(img);
         });
         img.src = url;
-        playerImg = img;
+        imgJoueur = img;
     });
 }
 
-loadImg("src/media/player.png").then(img => {
-    ctx.drawImage(img,player.x,player.y);
+loadImg("src/media/joueurSet.png").then(img => {
+    joueur.afficher(joueur.x,joueur.y,joueur.dir);
 });
 
 
-//------------------------------ Executer le code mis en place dans la zone de codage ------------------------------
+//------------------------------ Executer le code mis en place dans la zone de code ------------------------------
 
 
 function sleep(ms) {
@@ -57,39 +78,28 @@ async function executerCode(){
     if(zoneDuCode.hasChildNodes()){
         remiseAZero();
         await sleep(500);
-        for(var i=0;i<zoneDuCode.childNodes.length;i++){
-            switch(zoneDuCode.childNodes[i].id){
-                case "Avancer":
-                    ctx.clearRect(player.x,player.y,64,64);
-                    player.y -= 64;
-                    ctx.drawImage(playerImg,player.x,player.y);
-                    break;
-            }
-            await sleep(1000);
-        }
+        //Code à faire !!!
     }else{
         alert("Il n'y a pas de bloc dans la zone !"); //Optionnel
     }
 }
 
 
-//------------------------------ Remet à zéro le canvas, etc ------------------------------
+//------------------------------ Remettre à zéro le canvas, etc ------------------------------
 
 function remiseAZero(){
-    ctx.clearRect(player.x,player.y,64,64);
-    player.x = 400; player.y = 400;
-    ctx.drawImage(playerImg,player.x,player.y);
+    ctx.clearRect(joueur.x,joueur.y,64,64);
+    joueur.x = 400; joueur.y = 400;
+    joueur.afficher(joueur.x,joueur.y,"HAUT");
 }
 
 
-//------------------------------ Déplacer les blocs à l'intérieur de la zone de code ------------------------------
-
-var infoBlocEnMvm = document.querySelector(".bloc").getBoundingClientRect();
+//------------------------------ Déplacement des blocs à l'intérieur de la zone de code ------------------------------
 
 zoneDuCode.onmousedown = function(e){
     if(e.target.dataset.parent=="zoneDuCode" && e.which !== 3){
-        blocEnMouvement = e.target;
         window.addEventListener('mousemove', deplacerBloc, true);
+        blocEnMouvement = e.target;
     }
 };
 
@@ -98,11 +108,21 @@ window.onmouseup = function(){
 };
 
 function deplacerBloc(e){
-    var posSourisX = e.clientX-infoBlocEnMvm.width/2;
-    var posSourisY = e.clientY-infoBlocEnMvm.height/2;
-    var infoZone = zoneDuCode.getBoundingClientRect();
+    var infoBloc = blocEnMouvement.getBoundingClientRect();
+    var blocId = blocArray.indexOf(blocEnMouvement);
+    var posSourisX = e.clientX-infoBloc.width/2;
+    var posSourisY = e.clientY-infoBloc.height/2;
     
-    if((posSourisX > infoZone.left) && (posSourisX+infoBlocEnMvm.width < infoZone.right) && (posSourisY > infoZone.top) && (posSourisY < infoZone.bottom-infoBlocEnMvm.height)){
+    if(posSourisX > infoZone.left && posSourisX+infoBloc.width < infoZone.right && posSourisY > infoZone.top && posSourisY < infoZone.bottom-infoBloc.height){
+        for(var i=0;i<blocArray.length;i++){
+            var bloc1Top = blocArray[blocId].getBoundingClientRect().top;
+            var bloc2Top = blocArray[i].getBoundingClientRect().top;
+            if((bloc1Top < bloc2Top && blocId > i) || (bloc1Top > bloc2Top && blocId < i)){
+                blocArray[i] = blocArray.splice(blocId, 1, blocArray[i])[0];
+            }
+            
+        }
+        
         blocEnMouvement.style.top = posSourisY + 'px';
         blocEnMouvement.style.left = posSourisX + 'px';
     }
@@ -119,7 +139,6 @@ zoneDesBlocs.ondragstart = function(e){
 
 zoneDesBlocs.ondragend = function(e){
     blocEnMouvement.style.opacity = "";
-    //blocEnMouvement = null; //Pour l'instant inutile
 };
 
 
@@ -142,38 +161,20 @@ zoneDuCode.ondragover = function(e){
 zoneDuCode.ondrop = function(e){
     if(blocEnMouvement.dataset.parent=="zoneDesBlocs"){
         zoneDuCode.append(blocEnMouvement);
+        blocArray.push(blocEnMouvement);
+        var infoBloc = blocEnMouvement.getBoundingClientRect();
+        
+        blocEnMouvement.style.top = (e.clientY-infoBloc.height/2) + 'px';
+        blocEnMouvement.style.left = (e.clientX-infoBloc.width/2) + 'px';
+        
+//        if(blocEnMouvement.style.left < infoZone.left+'px' || blocEnMouvement.style.top < infoZone.top+'px'){
+//            blocEnMouvement.style.left = e.clientX+ 'px';
+//            blocEnMouvement.style.top = e.clientY + 'px';
+//        }
+        
+        blocEnMouvement.setAttribute("draggable",false);
         blocEnMouvement.dataset.parent = "zoneDuCode";
         blocEnMouvement.style.position = "absolute";
-        blocEnMouvement.style.top = (e.clientY-infoBlocEnMvm.height/2) + 'px';
-        blocEnMouvement.style.left = (e.clientX-infoBlocEnMvm.width/2) + 'px';
-        blocEnMouvement.setAttribute("draggable",false);
     }
     //zoneDuCode.classList.remove("survol"); //On restaure l'interface 
-};
-
-
-//------------------------------ Evenements lorsqu'on entre, survole, quitte, et drop dans la zone de la poubelle ------------------------------
-
-zonePoubelle.ondragenter = function(e){
-    e.preventDefault();
-    if(e.target.id=="imgPoubelle" && blocEnMouvement.dataset.parent=="zoneDuCode"){
-        e.target.src = "src/media/trash_open.png";
-    }
-};
-
-zonePoubelle.ondragover = function(e){
-    e.preventDefault();
-};
-
-zonePoubelle.ondragleave = function(e){
-    if(e.target.id=="imgPoubelle"){
-        e.target.src = "src/media/trash_close.png";
-    }
-};
-
-zonePoubelle.ondrop = function(e){
-    if(blocEnMouvement.dataset.parent!=="zoneDesBlocs"){
-        blocEnMouvement.parentNode.removeChild(blocEnMouvement);
-        e.target.src = "src/media/trash_close.png";
-    }
 };
