@@ -119,6 +119,7 @@ function deplacerBloc(e){
             var bloc2Top = blocArray[i].getBoundingClientRect().top;
             if((bloc1Top < bloc2Top && blocId > i) || (bloc1Top > bloc2Top && blocId < i)){
                 blocArray[i] = blocArray.splice(blocId, 1, blocArray[i])[0];
+                console.log(blocArray);
             }
             
         }
@@ -163,18 +164,29 @@ zoneDuCode.ondrop = function(e){
         zoneDuCode.append(blocEnMouvement);
         blocArray.push(blocEnMouvement);
         var infoBloc = blocEnMouvement.getBoundingClientRect();
+        var blocId = blocArray.indexOf(blocEnMouvement);
         
         blocEnMouvement.style.top = (e.clientY-infoBloc.height/2) + 'px';
         blocEnMouvement.style.left = (e.clientX-infoBloc.width/2) + 'px';
+        
+        for(var i=0;i<blocArray.length;i++){
+            var bloc1Top = blocArray[blocId].getBoundingClientRect().top;
+            var bloc2Top = blocArray[i].getBoundingClientRect().top;
+
+            if(bloc1Top < bloc2Top && blocId > i){
+                blocArray[i] = blocArray.splice(blocId, 1, blocArray[i])[0];
+                console.log(blocArray);
+            }
+        }
+        
+        blocEnMouvement.setAttribute("draggable",false);
+        blocEnMouvement.dataset.parent = "zoneDuCode";
+        blocEnMouvement.style.position = "absolute";
         
 //        if(blocEnMouvement.style.left < infoZone.left+'px' || blocEnMouvement.style.top < infoZone.top+'px'){
 //            blocEnMouvement.style.left = e.clientX+ 'px';
 //            blocEnMouvement.style.top = e.clientY + 'px';
 //        }
-        
-        blocEnMouvement.setAttribute("draggable",false);
-        blocEnMouvement.dataset.parent = "zoneDuCode";
-        blocEnMouvement.style.position = "absolute";
     }
     //zoneDuCode.classList.remove("survol"); //On restaure l'interface 
 };
