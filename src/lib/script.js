@@ -1,8 +1,7 @@
 //------------------------------ Initialisation ------------------------------
 
 //Bloc et joueur :
-var imgJoueur;
-var blocEnMouvement;
+var imgJoueur, blocEnMouvement, sourisX, sourisY, idBloc;
 var blocArray = new Array();
 
 //Zones :
@@ -100,6 +99,7 @@ zoneDuCode.onmousedown = function(e){
     if(e.target.dataset.parent=="zoneDuCode" && e.which !== 3){
         window.addEventListener('mousemove', deplacerBloc, true);
         blocEnMouvement = e.target;
+        idBloc = blocArray.indexOf(blocEnMouvement);
     }
 };
 
@@ -108,24 +108,19 @@ window.onmouseup = function(){
 };
 
 function deplacerBloc(e){
-    var infoBloc = blocEnMouvement.getBoundingClientRect();
-    var blocId = blocArray.indexOf(blocEnMouvement);
-    var posSourisX = e.clientX-infoBloc.width/2;
-    var posSourisY = e.clientY-infoBloc.height/2;
-    
-    if(posSourisX > infoZone.left && posSourisX+infoBloc.width < infoZone.right && posSourisY > infoZone.top && posSourisY < infoZone.bottom-infoBloc.height){
-        for(var i=0;i<blocArray.length;i++){
-            var bloc1Top = blocArray[blocId].getBoundingClientRect().top;
-            var bloc2Top = blocArray[i].getBoundingClientRect().top;
-            if((bloc1Top < bloc2Top && blocId > i) || (bloc1Top > bloc2Top && blocId < i)){
-                blocArray[i] = blocArray.splice(blocId, 1, blocArray[i])[0];
-                console.log(blocArray);
-            }
-            
-        }
+    if(e.clientX-75 > infoZone.left && e.clientX+85 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+30 < infoZone.bottom){
+        blocEnMouvement.style.transform = "translate("+sourisX+"px, "+sourisY+"px)";
+        sourisX = e.clientX - infoZone.left - 75;
+        sourisY = e.clientY - infoZone.top - 20;
         
-        blocEnMouvement.style.top = posSourisY + 'px';
-        blocEnMouvement.style.left = posSourisX + 'px';
+        for(var i=0;i<blocArray.length;i++){
+            var bloc1Top = blocArray[idBloc].getBoundingClientRect().top;
+            var bloc2Top = blocArray[i].getBoundingClientRect().top;
+            
+            if((bloc1Top < bloc2Top && idBloc > i) || (bloc1Top > bloc2Top && idBloc < i)){
+                blocArray[i] = blocArray.splice(idBloc, 1, blocArray[i])[0];
+            }
+        }
     }
 }
 
@@ -147,46 +142,31 @@ zoneDesBlocs.ondragend = function(e){
 
 zoneDuCode.ondragenter = function(e){
     e.preventDefault();
-    //zoneDuCode.classList.add("survol");
 };
 
 zoneDuCode.ondragover = function(e){
     e.preventDefault();
 };
 
-//zoneDuCode.ondragleave = function(e){
-//    //zoneDuCode.classList.remove("survol");
-//    //zoneDuCode.idList.add("survol");
-//};
-
 zoneDuCode.ondrop = function(e){
     if(blocEnMouvement.dataset.parent=="zoneDesBlocs"){
-        zoneDuCode.append(blocEnMouvement);
+        zoneDuCode.appendChild(blocEnMouvement);
         blocArray.push(blocEnMouvement);
-        var infoBloc = blocEnMouvement.getBoundingClientRect();
-        var blocId = blocArray.indexOf(blocEnMouvement);
         
-        blocEnMouvement.style.top = (e.clientY-infoBloc.height/2) + 'px';
-        blocEnMouvement.style.left = (e.clientX-infoBloc.width/2) + 'px';
+        sourisX = e.clientX - infoZone.left - 75;
+        sourisY = e.clientY - infoZone.top - 20;
+        blocEnMouvement.style.transform = "translate("+sourisX+"px, "+sourisY+"px)";
         
-        for(var i=0;i<blocArray.length;i++){
-            var bloc1Top = blocArray[blocId].getBoundingClientRect().top;
-            var bloc2Top = blocArray[i].getBoundingClientRect().top;
-
-            if(bloc1Top < bloc2Top && blocId > i){
-                blocArray[i] = blocArray.splice(blocId, 1, blocArray[i])[0];
-                console.log(blocArray);
-            }
-        }
-        
+        idBloc = blocArray.indexOf(blocEnMouvement);
+//        for(var i=0;i<blocArray.length;i++){
+//            var blocHaut = blocArray[i].getBoundingClientRect().top;
+//
+//            if(blocArray[idBloc].getBoundingClientRect().top < blocHaut && idBloc > i){
+//                blocArray[i] = blocArray.splice(idBloc, 1, blocArray[i])[0];
+//            }
+//        }
+                
         blocEnMouvement.setAttribute("draggable",false);
         blocEnMouvement.dataset.parent = "zoneDuCode";
-        blocEnMouvement.style.position = "absolute";
-        
-//        if(blocEnMouvement.style.left < infoZone.left+'px' || blocEnMouvement.style.top < infoZone.top+'px'){
-//            blocEnMouvement.style.left = e.clientX+ 'px';
-//            blocEnMouvement.style.top = e.clientY + 'px';
-//        }
     }
-    //zoneDuCode.classList.remove("survol"); //On restaure l'interface 
 };
