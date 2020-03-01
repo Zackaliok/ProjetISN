@@ -1,24 +1,32 @@
 //------------------------------ Initialisation ------------------------------
 
 //Bloc et joueur :
-var imgJoueur;
-var blocEnMouvement;
-var blocArray = new Array();
+var imgJoueur, blocEnMouvement, sourisX, sourisY, idBloc; //Variables globales
+var blocArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
 
 //Zones :
-const zoneDuCode = document.getElementById("zoneDuCode");
-const zoneDesBlocs = document.getElementById("zoneDesBlocs");
-var infoZone = zoneDuCode.getBoundingClientRect();
+const zoneDuCode = document.getElementById("zoneDuCode"); //Variable représentant la zone du code
+const zoneDesBlocs = document.getElementById("zoneDesBlocs"); //Variable représentant la zone des blocs
+var infoZone = zoneDuCode.getBoundingClientRect(); //Variable représentant les caractèristiques (position, hauteur, etc) de la zone du code
 
 //Canvas :
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById('canvas'); //Variables représentant le canvas
+const ctx = canvas.getContext('2d'); //Variables "représentant le context" (La où on dessine)
 
 //Empêcher la selection :
-document.onselectstart = (e) => {e.preventDefault();};
+document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction (texte, images) sur la page
 
 
 //------------------------------ Classe du joueur + déclaration ------------------------------
+/*
+    Les classe représentent des objets ayant des caractéristiques.
+    Le "contructor" est l'élément obligatoire d'une classe, il permet d'enregistrer les différents paramètres.
+    Par exemple, ici l'objet 'Joueur' a 3 paramètres, les positions x et y ainsi que la direction (dir).
+    Par abus de langage on peut dire que le "constructor" agit comme une fonction au sein de la classe.
+    Ainsi, "afficher" peut-être considérer (et remplacer) comme une fonction, elle sera appeler de cette manière :
+    'joueur.afficher(x,y,dir)'.
+*/
+
 
 class Joueur {
     constructor(x,y,dir){
@@ -46,10 +54,17 @@ class Joueur {
     }
 }
 
-var joueur = new Joueur(400,400,"HAUT");
+var joueur = new Joueur(400,400,"HAUT"); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
 
 
 //------------------------------ Charger le "tileset" et l'afficher sur le canvas ------------------------------
+/*
+    Pour faire court, lorque l'on créer un objet 'Image()' et qu'on souhaite lui attribuer une source, le navigateur doit 
+    d'abords charger l'image, sauf que le reste du code est exécuté en même temps et l'image n'a pas fini de charger avant
+    qu'on lui attribue la source (qui ducoup n'existe pas). Pour palier à ce problème, on utilise la méthode asynchrone "Promise"
+    qui représente littéralement une promesse. Cette promesse peut-être résolue dans le temps et bloque l'éxécution du code.
+    Ainsi, lorque la promesse est résolue (ici le chargement de l'image) la méthode renvoie le résultat et permet l'exécution du code.
+*/
 
 function loadImg(url){
     return new Promise(resolve => {
@@ -69,9 +84,8 @@ loadImg("src/media/joueurSet.png").then(img => {
 
 //------------------------------ Executer le code mis en place dans la zone de code ------------------------------
 
-
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms)); //Méthode asynchrone permettant de créer un 'temps d'arret' (par exemple sleep(1000) arretera le code pendant 1sec)
 }
 
 async function executerCode(){
@@ -80,7 +94,7 @@ async function executerCode(){
         await sleep(500);
         //Code à faire !!!
     }else{
-        alert("Il n'y a pas de bloc dans la zone !"); //Optionnel
+        alert("Il n'y a pas de bloc dans la zone !");
     }
 }
 
@@ -100,6 +114,7 @@ zoneDuCode.onmousedown = function(e){
     if(e.target.dataset.parent=="zoneDuCode" && e.which !== 3){
         window.addEventListener('mousemove', deplacerBloc, true);
         blocEnMouvement = e.target;
+        idBloc = blocArray.indexOf(blocEnMouvement);
     }
 };
 
@@ -108,23 +123,18 @@ window.onmouseup = function(){
 };
 
 function deplacerBloc(e){
-    var infoBloc = blocEnMouvement.getBoundingClientRect();
-    var blocId = blocArray.indexOf(blocEnMouvement);
-    var posSourisX = e.clientX-infoBloc.width/2;
-    var posSourisY = e.clientY-infoBloc.height/2;
-    
-    if(posSourisX > infoZone.left && posSourisX+infoBloc.width < infoZone.right && posSourisY > infoZone.top && posSourisY < infoZone.bottom-infoBloc.height){
-        for(var i=0;i<blocArray.length;i++){
-            var bloc1Top = blocArray[blocId].getBoundingClientRect().top;
-            var bloc2Top = blocArray[i].getBoundingClientRect().top;
-            if((bloc1Top < bloc2Top && blocId > i) || (bloc1Top > bloc2Top && blocId < i)){
-                blocArray[i] = blocArray.splice(blocId, 1, blocArray[i])[0];
-            }
-            
-        }
+    if(e.clientX-75 > infoZone.left && e.clientX+85 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+30 < infoZone.bottom){
+        blocEnMouvement.style.left = sourisX + 'px';
+        blocEnMouvement.style.top = sourisY + 'px';
+        sourisX = e.clientX - 75; sourisY = e.clientY - 20;
         
-        blocEnMouvement.style.top = posSourisY + 'px';
-        blocEnMouvement.style.left = posSourisX + 'px';
+        for(var i=0;i<blocArray.length;i++){
+            var bloc1Haut = blocArray[idBloc].getBoundingClientRect().top;
+            var bloc2Haut = blocArray[i].getBoundingClientRect().top;
+            if((bloc1Haut < bloc2Haut && idBloc > i) || (bloc1Haut > bloc2Haut && idBloc < i)){
+                blocArray[i] = blocArray.splice(idBloc, 1, blocArray[i])[0];
+            }
+        }
     }
 }
 
@@ -146,35 +156,31 @@ zoneDesBlocs.ondragend = function(e){
 
 zoneDuCode.ondragenter = function(e){
     e.preventDefault();
-    //zoneDuCode.classList.add("survol");
 };
 
 zoneDuCode.ondragover = function(e){
     e.preventDefault();
 };
 
-//zoneDuCode.ondragleave = function(e){
-//    //zoneDuCode.classList.remove("survol");
-//    //zoneDuCode.idList.add("survol");
-//};
-
 zoneDuCode.ondrop = function(e){
     if(blocEnMouvement.dataset.parent=="zoneDesBlocs"){
-        zoneDuCode.append(blocEnMouvement);
+        zoneDuCode.appendChild(blocEnMouvement);
         blocArray.push(blocEnMouvement);
-        var infoBloc = blocEnMouvement.getBoundingClientRect();
         
-        blocEnMouvement.style.top = (e.clientY-infoBloc.height/2) + 'px';
-        blocEnMouvement.style.left = (e.clientX-infoBloc.width/2) + 'px';
+        sourisX = e.clientX - 75; sourisY = e.clientY - 20;
+        blocEnMouvement.style.left = sourisX + 'px';
+        blocEnMouvement.style.top = sourisY + 'px';
         
-//        if(blocEnMouvement.style.left < infoZone.left+'px' || blocEnMouvement.style.top < infoZone.top+'px'){
-//            blocEnMouvement.style.left = e.clientX+ 'px';
-//            blocEnMouvement.style.top = e.clientY + 'px';
-//        }
-        
+        idBloc = blocArray.indexOf(blocEnMouvement);
+        for(var i=0;i<blocArray.length;i++){
+            var blocHaut = blocArray[i].getBoundingClientRect().top;
+            if(blocArray[idBloc].getBoundingClientRect().top < blocHaut && idBloc > i){
+                blocArray[i] = blocArray.splice(idBloc, 1, blocArray[i])[0];
+            }
+        }
+                
         blocEnMouvement.setAttribute("draggable",false);
         blocEnMouvement.dataset.parent = "zoneDuCode";
         blocEnMouvement.style.position = "absolute";
     }
-    //zoneDuCode.classList.remove("survol"); //On restaure l'interface 
 };
