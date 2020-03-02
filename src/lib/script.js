@@ -1,7 +1,7 @@
 //------------------------------ Initialisation ------------------------------
 
 //Bloc et joueur :
-var imgJoueur, blocEnMouvement, sourisX, sourisY, idBloc; //Variables globales
+var imgJoueur, blocEnMouvement, sourisX, sourisY; //Variables globales
 var blocArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
 
 //Zones :
@@ -10,8 +10,8 @@ const zoneDesBlocs = document.getElementById("zoneDesBlocs"); //Variable représ
 var infoZone = zoneDuCode.getBoundingClientRect(); //Variable représentant les caractèristiques (position, hauteur, etc) de la zone du code
 
 //Canvas :
-const canvas = document.getElementById('canvas'); //Variables représentant le canvas
-const ctx = canvas.getContext('2d'); //Variables "représentant le context" (La où on dessine)
+const canvas = document.getElementById('canvas'); //Variable représentant le canvas
+const ctx = canvas.getContext('2d'); //Variable représentant le "context" (la où on dessine)
 
 //Empêcher la selection :
 document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction (texte, images) sur la page
@@ -26,7 +26,6 @@ document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction 
     Ainsi, "afficher" peut-être considérer (et remplacer) comme une fonction, elle sera appeler de cette manière :
     'joueur.afficher(x,y,dir)'.
 */
-
 
 class Joueur {
     constructor(x,y,dir){
@@ -66,7 +65,7 @@ var joueur = new Joueur(400,400,"HAUT"); //Déclaration de l'objet Joueur avec 3
     Ainsi, lorque la promesse est résolue (ici le chargement de l'image) la méthode renvoie le résultat et permet l'exécution du code.
 */
 
-function loadImg(url){
+function chargerImg(url){
     return new Promise(resolve => {
         const img = new Image();
         img.addEventListener("load", () => {
@@ -77,7 +76,7 @@ function loadImg(url){
     });
 }
 
-loadImg("src/media/joueurSet.png").then(img => {
+chargerImg("src/media/joueurSet.png").then(img => {
     joueur.afficher(joueur.x,joueur.y,joueur.dir);
 });
 
@@ -85,7 +84,7 @@ loadImg("src/media/joueurSet.png").then(img => {
 //------------------------------ Executer le code mis en place dans la zone de code ------------------------------
 
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms)); //Méthode asynchrone permettant de créer un 'temps d'arret' (par exemple sleep(1000) arretera le code pendant 1sec)
+    return new Promise(resolve => setTimeout(resolve, ms)); //Méthode asynchrone permettant de créer un 'temps d'arret' (ex : sleep(1000) arretera le code pendant 1sec)
 }
 
 async function executerCode(){
@@ -108,13 +107,27 @@ function remiseAZero(){
 }
 
 
+//------------------------------ Trier les blocs dans le tableau selon leur position en X ------------------------------
+
+function trierBloc(){
+    var idBloc = blocArray.indexOf(blocEnMouvement);
+    for(var i=0;i<blocArray.length;i++){
+        var bloc1Haut = blocArray[idBloc].getBoundingClientRect().top;
+        var bloc2Haut = blocArray[i].getBoundingClientRect().top;
+        if((bloc1Haut < bloc2Haut && idBloc > i) || (bloc1Haut > bloc2Haut && idBloc < i)){
+            blocArray[i] = blocArray.splice(idBloc, 1, blocArray[i])[0];
+        }
+    }
+    console.log(blocArray);
+}
+
+
 //------------------------------ Déplacement des blocs à l'intérieur de la zone de code ------------------------------
 
 zoneDuCode.onmousedown = function(e){
     if(e.target.dataset.parent=="zoneDuCode" && e.which !== 3){
         window.addEventListener('mousemove', deplacerBloc, true);
         blocEnMouvement = e.target;
-        idBloc = blocArray.indexOf(blocEnMouvement);
     }
 };
 
@@ -123,18 +136,11 @@ window.onmouseup = function(){
 };
 
 function deplacerBloc(e){
-    if(e.clientX-75 > infoZone.left && e.clientX+85 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+30 < infoZone.bottom){
+    if(e.clientX-75 > infoZone.left && e.clientX+75 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+20 < infoZone.bottom){
         blocEnMouvement.style.left = sourisX + 'px';
         blocEnMouvement.style.top = sourisY + 'px';
         sourisX = e.clientX - 75; sourisY = e.clientY - 20;
-        
-        for(var i=0;i<blocArray.length;i++){
-            var bloc1Haut = blocArray[idBloc].getBoundingClientRect().top;
-            var bloc2Haut = blocArray[i].getBoundingClientRect().top;
-            if((bloc1Haut < bloc2Haut && idBloc > i) || (bloc1Haut > bloc2Haut && idBloc < i)){
-                blocArray[i] = blocArray.splice(idBloc, 1, blocArray[i])[0];
-            }
-        }
+        trierBloc();
     }
 }
 
@@ -170,17 +176,25 @@ zoneDuCode.ondrop = function(e){
         sourisX = e.clientX - 75; sourisY = e.clientY - 20;
         blocEnMouvement.style.left = sourisX + 'px';
         blocEnMouvement.style.top = sourisY + 'px';
+        trierBloc();
         
-        idBloc = blocArray.indexOf(blocEnMouvement);
-        for(var i=0;i<blocArray.length;i++){
-            var blocHaut = blocArray[i].getBoundingClientRect().top;
-            if(blocArray[idBloc].getBoundingClientRect().top < blocHaut && idBloc > i){
-                blocArray[i] = blocArray.splice(idBloc, 1, blocArray[i])[0];
-            }
-        }
-                
         blocEnMouvement.setAttribute("draggable",false);
         blocEnMouvement.dataset.parent = "zoneDuCode";
         blocEnMouvement.style.position = "absolute";
     }
 };
+
+
+
+//------------------------------ TEST ------------------------------
+
+window.addEventListener('keydown',function(e){
+    switch(e.keyCode){
+        case 96:
+            console.log(blocArray);
+            break;
+    }
+});
+
+
+
