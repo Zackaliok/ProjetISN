@@ -1,0 +1,71 @@
+body {
+    padding: 0; margin: 0;
+    height: 100vh; width: 100vw;
+    -webkit-font-smoothing: antialiased;
+    background: linear-gradient(90deg, #2a4d69 0%, rgba(255,255,255,1) 100%);
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.wrapper {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    height: 100vh; width: 100vw;
+    flex-direction: column;
+}
+
+canvas {
+    background-color: white; /* couleur test */
+}
+
+
+/*-------------------- Zones : --------------------*/
+
+.zone {
+    border: 2px solid black;
+}
+
+.partieZone {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    margin-bottom: 2%;
+}
+
+.partieBoutons {
+    display: flex;
+    align-items: center;
+}
+
+#zoneDuNiveau {
+    width: 640px; height: 640px; padding: 0;
+}
+
+#zoneDuCode, #zoneDesBlocs {
+    width: 400px; height: 640px;
+    margin-left: 2%;
+}
+
+
+/*-------------------- Blocs : --------------------*/
+
+.bloc {
+    width: 150px;
+    height: 40px;
+    margin: 5px;
+}
+
+svg, path, text {
+    pointer-events: none;
+}
+
+/*-------------------- Boutons : --------------------*/
+
+.btn {
+    height: 74px; width: 74px;
+    padding: 2px; margin-left: 50px;
+    background: transparent;
+    border: 2px solid red;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 20px; cursor: pointer;
+}
