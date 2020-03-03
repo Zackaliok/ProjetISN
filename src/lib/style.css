@@ -38,11 +38,11 @@ canvas {
 }
 
 #zoneDuNiveau {
-    width: 600px; height: 600px; padding: 0;
+    width: 640px; height: 640px; padding: 0;
 }
 
 #zoneDuCode, #zoneDesBlocs {
-    width: 400px; height: 600px;
+    width: 400px; height: 640px;
     margin-left: 2%;
 }
 
