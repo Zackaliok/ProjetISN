@@ -1,7 +1,7 @@
 //------------------------------ Initialisation ------------------------------
 
 //Bloc et joueur :
-var imgJoueur, blocEnMouvement, sourisX, sourisY; //Variables globales
+var imgJoueur, blocEnMouvement, sourisX, sourisY, indexBloc; //Variables globales
 var blocArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
 
 //Zones :
@@ -83,6 +83,8 @@ chargerImg("src/media/joueurSet.png").then(img => {
 
 //------------------------------ Executer le code mis en place dans la zone de code ------------------------------
 
+var audio = new Audio();
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms)); //Méthode asynchrone permettant de créer un 'temps d'arret' (ex : sleep(1000) arretera le code pendant 1sec)
 }
@@ -91,7 +93,20 @@ async function executerCode(){
     if(zoneDuCode.hasChildNodes()){
         remiseAZero();
         await sleep(500);
-        //Code à faire !!!
+        for (var i = 0; i < blocArray.length; i++){
+			if(blocArray[i].dataset.type=="musique"){
+				var idBloc = blocArray[i].id;
+				audio.src="src/media/noteMusique/piano/"+idBloc+".mp3";
+				audio.play();
+				await sleep(800);
+			}
+			else if(blocArray[i].dataset.type=="deplacement"){
+				alert("Deplacement du joueur");
+			}
+			else{
+				alert("erreur");
+			}
+		}
     }else{
         alert("Il n'y a pas de bloc dans la zone !");
     }
@@ -110,15 +125,13 @@ function remiseAZero(){
 //------------------------------ Trier les blocs dans le tableau selon leur position en X ------------------------------
 
 function trierBloc(){
-    var idBloc = blocArray.indexOf(blocEnMouvement);
     for(var i=0;i<blocArray.length;i++){
-        var bloc1Haut = blocArray[idBloc].getBoundingClientRect().top;
+        var bloc1Haut = blocArray[indexBloc].getBoundingClientRect().top;
         var bloc2Haut = blocArray[i].getBoundingClientRect().top;
-        if((bloc1Haut < bloc2Haut && idBloc > i) || (bloc1Haut > bloc2Haut && idBloc < i)){
-            blocArray[i] = blocArray.splice(idBloc, 1, blocArray[i])[0];
+        if((bloc1Haut < bloc2Haut && indexBloc > i) || (bloc1Haut > bloc2Haut && indexBloc < i)){
+            blocArray[i] = blocArray.splice(indexBloc, 1, blocArray[i])[0];
         }
     }
-    console.log(blocArray);
 }
 
 
@@ -136,6 +149,7 @@ window.onmouseup = function(){
 };
 
 function deplacerBloc(e){
+	indexBloc = blocArray.indexOf(blocEnMouvement);
     if(e.clientX-75 > infoZone.left && e.clientX+75 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+20 < infoZone.bottom){
         blocEnMouvement.style.left = sourisX + 'px';
         blocEnMouvement.style.top = sourisY + 'px';
@@ -172,29 +186,29 @@ zoneDuCode.ondrop = function(e){
     if(blocEnMouvement.dataset.parent=="zoneDesBlocs"){
         zoneDuCode.appendChild(blocEnMouvement);
         blocArray.push(blocEnMouvement);
+		indexBloc = blocArray.indexOf(blocEnMouvement);
         
         sourisX = e.clientX - 75; sourisY = e.clientY - 20;
         blocEnMouvement.style.left = sourisX + 'px';
         blocEnMouvement.style.top = sourisY + 'px';
-        trierBloc();
         
         blocEnMouvement.setAttribute("draggable",false);
         blocEnMouvement.dataset.parent = "zoneDuCode";
         blocEnMouvement.style.position = "absolute";
+		
+		trierBloc();
     }
 };
 
 
 
-//------------------------------ TEST ------------------------------
 
-window.addEventListener('keydown',function(e){
-    switch(e.keyCode){
-        case 96:
-            console.log(blocArray);
-            break;
-    }
+window.addEventListener("keydown",function(e){
+	switch(e.keyCode){
+		case 96:
+			var wrapper = document.querySelector(".wrapper");
+			console.log(window.getComputedStyle(wrapper,"display"));
+			break;
+	}
 });
-
-
 
