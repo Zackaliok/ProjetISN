@@ -1,71 +1,79 @@
 body {
-    padding: 0; margin: 0;
     height: 100vh; width: 100vw;
+    margin: 0; padding: 0;
+    background: #bbcdf0; color: white;
     -webkit-font-smoothing: antialiased;
-    background: linear-gradient(90deg, #2a4d69 0%, rgba(255,255,255,1) 100%);
     font-family: 'Source Sans Pro', sans-serif;
+    box-sizing: border-box;
 }
 
 .wrapper {
-    display: flex; 
-    justify-content: center;
-    align-items: center;
-    height: 100vh; width: 100vw;
-    flex-direction: column;
+    display: flex; flex-direction: row;
+    width: 100vw; height: calc(100vh - 67px);
 }
 
 canvas {
-    background-color: white; /* couleur test */
+    border: 1px solid black;
+    background: white;
+    border-radius: 5px;
+    margin-left: 5px;
+}
+
+/*-------------------- En-tête : --------------------*/
+
+#en-tete {
+    display: flex; width: 100vw; height: 50px;
+    border-bottom: 1px solid black; margin-bottom: 15px;
+    background: #6699ff; justify-content: center;
+    align-items: center; font-weight: bold; font-size: 24px;
 }
 
 
 /*-------------------- Zones : --------------------*/
 
-.zone {
-    border: 2px solid black;
+#partieDroite {
+    width: -webkit-fill-available; 
+    margin: 0 5px 5px 15px; 
+    border: 1px solid black;
+    border-radius: 5px;
+    background: white;
+    z-index: 0;
 }
 
-.partieZone {
+#partieBanque {
     display: flex;
-    align-content: center;
-    align-items: center;
-    margin-bottom: 2%;
+    flex-flow: column;
+    align-items: flex-end;
+    float: right;
+    width: 20vw; height: 100%;
+    border-left: 1px solid black;
 }
 
-.partieBoutons {
-    display: flex;
-    align-items: center;
+#partieCode {
+    height: -webkit-fill-available;
+    width: calc(100% - 20vw);
+    z-index: 10;
 }
-
-#zoneDuNiveau {
-    width: 640px; height: 640px; padding: 0;
-}
-
-#zoneDuCode, #zoneDesBlocs {
-    width: 400px; height: 640px;
-    margin-left: 2%;
-}
-
 
 /*-------------------- Blocs : --------------------*/
 
 .bloc {
-    width: 150px;
-    height: 40px;
-    margin: 5px;
+    width: 150px; height: 40px; 
+    margin: 5px; float: right;
+}
+
+.bloc:hover {
+    cursor: grab;
 }
 
 svg, path, text {
     pointer-events: none;
 }
 
-/*-------------------- Boutons : --------------------*/
 
-.btn {
-    height: 74px; width: 74px;
-    padding: 2px; margin-left: 50px;
-    background: transparent;
-    border: 2px solid red;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size: 20px; cursor: pointer;
+.shadow {
+    display: none;
+    transform: translate(0px, -4px);
+    filter: blur(2px);
+    opacity: 0.7;
 }

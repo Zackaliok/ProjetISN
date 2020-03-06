@@ -1,91 +1,44 @@
 <!DOCTYPE html>
-<html lang="fr" dir="ltr">
+<html lang="fr">
     <head>
-        <title>Projet ISN - Index</title>
+        <title>Projet ISN v2</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="src/lib/style.css">
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
     </head>
     <body>
+        <header id="en-tete">
+            Scratchly : Décrouvez l'algorithmie ! <!-- A remplacer avec le vrai nom -->
+         </header>
+       
         <div class="wrapper">
-            <div class="partieZone">
-                <div class="zone" id="zoneDuNiveau">
-                    <canvas id="canvas" height="640" width="640"></canvas>
-                </div>
-
-                <div class="zone" id="zoneDuCode"></div>
-
-                <div class="zone" id="zoneDesBlocs">
-                    <div class="bloc" id="Avancer" draggable="true" data-parent="zoneDesBlocs" data-type="deplacement">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="white" stroke="black" stroke-width="2"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="14">Avancer</text>
-                        </svg>
-                    </div>
-                    <div class="bloc" id="Sauter" draggable="true" data-parent="zoneDesBlocs" data-type="deplacement">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="white" stroke="black" stroke-width="2"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="14">Sauter</text>
-                        </svg>
-                    </div>
-					<div class="bloc" id="Piano24" draggable="true" data-parent="zoneDesBlocs" data-type="musique">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="white" stroke="black" stroke-width="2"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="14">Piano (24)</text>
-                        </svg>
-                    </div>
-                    <div class="bloc" id="Piano36" draggable="true" data-parent="zoneDesBlocs" data-type="musique">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="white" stroke="black" stroke-width="2"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="14">Piano (36)</text>
-                        </svg>
-                    </div>
-                    <div class="bloc" id="Piano48" draggable="true" data-parent="zoneDesBlocs" data-type="musique">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="white" stroke="black" stroke-width="2"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="14">Piano (48)</text>
-                        </svg>
-                    </div>
-                    <div class="bloc" id="Piano60" draggable="true" data-parent="zoneDesBlocs" data-type="musique">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="white" stroke="black" stroke-width="2"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="14">Piano (60)</text>
-                        </svg>
-                    </div>
-                    <div class="bloc" id="Piano72" draggable="true" data-parent="zoneDesBlocs" data-type="musique">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="white" stroke="black" stroke-width="2"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="14">Piano (72)</text>
-                        </svg>
-                    </div>
-                    <div class="bloc" id="Piano84" draggable="true" data-parent="zoneDesBlocs" data-type="musique">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="white" stroke="black" stroke-width="2"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="14">Piano (84)</text>
-                        </svg>
-                    </div>
-                    <div class="bloc" id="Piano96" draggable="true" data-parent="zoneDesBlocs" data-type="musique">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="white" stroke="black" stroke-width="2"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="14">Piano (96)</text>
-                        </svg>
-                    </div>
-                    <div class="bloc" id="Piano108" draggable="true" data-parent="zoneDesBlocs" data-type="musique">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="white" stroke="black" stroke-width="2"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="14">Piano (108)</text>
-                        </svg>
-                    </div>
-                </div>
+            <div id="partieCanvas">
+                <canvas id="canvas" height="512" width="512"></canvas>
             </div>
-
-            <div class="partieBoutons">
-                <button class="btn" onclick="executerCode()">Play</button>
-                <button class="btn" onclick="remiseAZero()">Reset</button>
+            
+            <div id="partieDroite">
+                <div id="partieBanque">
+                    <div class="bloc" id="Avancer" draggable="true" data-parent="partieBanque" data-type="deplacement" data-stacked="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
+                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
+                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Avancer d'une case</text>
+                        </svg>
+                        <img class="shadow" src="src/media/svg.png"/>
+                    </div>
+                    <div class="bloc" id="Sauter" draggable="true" data-parent="partieBanque" data-type="deplacement" data-stacked="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
+                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
+                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Sauter d'une case</text>
+                        </svg>
+                        <img class="shadow" src="src/media/svg.png"/>
+                    </div>
+                </div>
+                
+                <div id="partieCode"></div>
             </div>
         </div>
-
+        
         <script type="text/javascript" src="src/lib/script.js"></script>
     </body>
 </html>
