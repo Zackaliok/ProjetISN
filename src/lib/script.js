@@ -1,8 +1,9 @@
 //------------------------------ Initialisation ------------------------------
 
 //Bloc et joueur :
-var blocEnMouvement, sourisX, sourisY, indexBloc, blocParent; //Variables globales
+var blocEnMouvement, blocParent, sourisX, sourisY, indexBloc; //Variables globales
 var blocArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
+var stackArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
 
 //Zones :
 const partieCode = document.getElementById("partieCode"); //Variable représentant la zone de code
@@ -33,11 +34,10 @@ function collageBloc(){
     for(var i=0;i<blocArray.length;i++){
         var rect1 = blocArray[indexBloc].getBoundingClientRect();
         var rect2 = blocArray[i].getBoundingClientRect();
-        if(rect1.top-10 <= rect2.bottom && indexBloc > i){
-            if(rect1.left >= rect2.left-20 && rect1.right <= rect2.right+20){
-                blocArray[i].childNodes[3].style.display = "block";
-                blocParent = blocArray[i];
-            }
+        
+        if(rect1.top-10 <= rect2.bottom && rect1.left >= rect2.left-20 && rect1.right <= rect2.right+20 && blocArray[i].dataset.stackedbot=="false" && indexBloc > i){
+            blocArray[i].childNodes[3].style.display = "block";
+            blocParent = blocArray[i];
         }else{
             blocArray[i].childNodes[3].style.display = "none";
         }
@@ -63,10 +63,12 @@ document.onmouseup = function(e){
         if(blocParent!== undefined && blocParent.childNodes[3].style.display == "block"){
             blocEnMouvement.style.left = getComputedStyle(blocParent).left;
             blocEnMouvement.style.top = (parseInt(getComputedStyle(blocParent).top)+33).toString()+"px";
-            blocEnMouvement.dataset.stacked = "true";
-            blocParent.dataset.stacked = "true";
+            blocEnMouvement.dataset.stackedtop = "true";
+            blocParent.dataset.stackedbot = "true";
             blocParent.childNodes[3].style.display = "none";
+            stackArray.push(blocEnMouvement);
         }
+        
         blocEnMouvement = undefined;
     }
 };
@@ -77,14 +79,25 @@ function deplacerBloc(e){
         sourisX = e.clientX - 75; sourisY = e.clientY - 20;
         blocEnMouvement.style.left = sourisX+"px";
         blocEnMouvement.style.top = sourisY+"px";
-        trierBloc();
         
-        if(blocEnMouvement.dataset.stacked == "true"){
-            blocArray[indexBloc+1].style.left = sourisX+"px";
-            blocArray[indexBloc+1].style.top = sourisY+33+"px";
+        if(blocEnMouvement.dataset.stackedbot == "true"){
+            for(var i=0;i<stackArray.length;i++){
+                stackArray[i].style.left = sourisX+"px";
+                stackArray[i].style.top = sourisY+(33*(i+1))+"px";
+            }
         }
         
+        if(blocEnMouvement.dataset.stackedtop == "true"){
+            var indexBloc2 = stackArray.indexOf(blocEnMouvement);
+            blocEnMouvement.dataset.stackedtop = "false"
+            blocParent.dataset.stackedbot = "false"
+            stackArray.splice(indexBloc2,1);
+        }
+        
+        trierBloc();
         collageBloc();
+        
+        console.log(stackArray)
     }
 }
 
@@ -110,9 +123,11 @@ partieCode.ondrop = function(e){
     
     if(e.clientX-75 > infoZone.left && e.clientX+75 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+20 < infoZone.bottom){
         sourisX = e.clientX - 75; sourisY = e.clientY - 20;
-        blocEnMouvement.style.left = sourisX+"px"; blocEnMouvement.style.top = sourisY+"px";
+        blocEnMouvement.style.left = sourisX+"px";
+        blocEnMouvement.style.top = sourisY+"px";
     }else{
-        blocEnMouvement.style.left = "50%"; blocEnMouvement.style.top = "50%";
+        blocEnMouvement.style.left = "50%"; 
+        blocEnMouvement.style.top = "50%";
     }
     trierBloc();
     blocEnMouvement = undefined;

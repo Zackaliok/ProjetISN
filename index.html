@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
     <head>
-        <title>Projet ISN v2</title>
+        <title>Scratchly : Décrouvez l'algorithmie </title> <!-- A remplacer avec le vrai nom -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="src/lib/style.css">
@@ -19,19 +19,19 @@
             
             <div id="partieDroite">
                 <div id="partieBanque">
-                    <div class="bloc" id="Avancer" draggable="true" data-parent="partieBanque" data-type="deplacement" data-stacked="false">
+                    <div class="bloc" id="Avancer" draggable="true" data-parent="partieBanque" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
                             <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
                             <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Avancer d'une case</text>
                         </svg>
-                        <img class="shadow" src="src/media/svg.png"/>
+                        <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                     </div>
-                    <div class="bloc" id="Sauter" draggable="true" data-parent="partieBanque" data-type="deplacement" data-stacked="false">
+                    <div class="bloc" id="Sauter" draggable="true" data-parent="partieBanque" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
                             <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
                             <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Sauter d'une case</text>
                         </svg>
-                        <img class="shadow" src="src/media/svg.png"/>
+                        <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                     </div>
                 </div>
                 

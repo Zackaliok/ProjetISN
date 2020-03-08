@@ -70,8 +70,7 @@ svg, path, text {
     pointer-events: none;
 }
 
-
-.shadow {
+.bloc-shadow {
     display: none;
     transform: translate(0px, -4px);
     filter: blur(2px);
