@@ -2,7 +2,6 @@ body {
     height: 100vh; width: 100vw;
     margin: 0; padding: 0;
     background: #bbcdf0; color: white;
-    -webkit-font-smoothing: antialiased;
     font-family: 'Source Sans Pro', sans-serif;
     box-sizing: border-box;
 }
@@ -32,7 +31,9 @@ canvas {
 /*-------------------- Zones : --------------------*/
 
 #partieDroite {
-    width: -webkit-fill-available; 
+    width: -moz-available;
+    width: -webkit-fill-available;
+	height: (100% - 20px);
     margin: 0 5px 5px 15px; 
     border: 1px solid black;
     border-radius: 5px;
@@ -50,7 +51,7 @@ canvas {
 }
 
 #partieCode {
-    height: -webkit-fill-available;
+	height: 100%;
     width: calc(100% - 20vw);
     z-index: 10;
 }
