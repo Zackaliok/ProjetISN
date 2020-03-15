@@ -18,6 +18,7 @@ canvas {
     margin-left: 5px;
 }
 
+
 /*-------------------- En-tête : --------------------*/
 
 #en-tete {
@@ -25,6 +26,23 @@ canvas {
     border-bottom: 1px solid black; margin-bottom: 15px;
     background: #6699ff; justify-content: center;
     align-items: center; font-weight: bold; font-size: 24px;
+}
+
+
+/*--------------------- Menu : ----------------------*/
+
+#menu {
+    display: inline-block;
+    margin-left: 40%;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+.boutonNiveau{
+    display: justify;
+    margin-left: 22.5%;
 }
 
 
@@ -55,6 +73,7 @@ canvas {
     width: calc(100% - 20vw);
     z-index: 10;
 }
+
 
 /*-------------------- Blocs : --------------------*/
 

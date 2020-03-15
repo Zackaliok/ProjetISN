@@ -17,6 +17,44 @@ const ctx = canvas.getContext('2d'); //Variable représentant le "context" (la o
 document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction (texte, images) sur la page
 
 
+//---------------------------Switch Menu vers les niveaux et Initialisation de ceux-ci-----------------------
+
+var chapitre=0;
+var niveau=0;
+var leMenuEstAffiché=true;
+var unNiveauEstAffiché=false;
+
+function affichageDuNiveauSouhaité(z,n){
+    chapitre=z;
+    niveau=n;
+    alert("Vous êtes dans la zone " + chapitre + " au niveau " + niveau + ".");
+
+    leMenuEstAffiché=false;
+    document.getElementById('menu').style.display="none";
+    unNiveauEstAffiché=true;
+    document.getElementById('wrapper').style.display="flex";
+
+
+    //Code que je vais compléter... (Tristan)
+    switch (z){
+      case 1:
+        //document.getElementById('Avancer').style.display="flex";
+        //document.getElementById('Sauter').style.display="flex";
+        break;
+      case 2:
+
+        break;
+      case 3:
+
+        break;
+      case 4:
+
+        break;
+    }
+
+}
+
+
 //------------------------------ Trier les blocs & les coller ------------------------------
 
 function trierBloc(){
