@@ -1,9 +1,8 @@
 //------------------------------ Initialisation ------------------------------
 
 //Bloc et joueur :
-var blocEnMouvement, blocParent, sourisX, sourisY, indexBloc; //Variables globales
+var blocEnMouvement, indexBloc, sourisX, sourisY; //Variables globales
 var blocArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
-var stackArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
 
 //Zones :
 const partieCode = document.getElementById("partieCode"); //Variable représentant la zone de code
@@ -30,16 +29,28 @@ function trierBloc(){
     }
 }
 
-function collageBloc(){
+function detectionCollage(){
     for(var i=0;i<blocArray.length;i++){
         var rect1 = blocArray[indexBloc].getBoundingClientRect();
         var rect2 = blocArray[i].getBoundingClientRect();
         
         if(rect1.top-10 <= rect2.bottom && rect1.left >= rect2.left-20 && rect1.right <= rect2.right+20 && blocArray[i].dataset.stackedbot=="false" && indexBloc > i){
-            blocArray[i].childNodes[3].style.display = "block";
-            blocParent = blocArray[i];
+            blocArray[i].children[1].style.display = "block";
         }else{
-            blocArray[i].childNodes[3].style.display = "none";
+            blocArray[i].children[1].style.display = "none";
+        }
+    }
+}
+
+function collageBloc(){
+    for(var i=0;i<blocArray.length;i++){
+        if(blocArray[i].children[1].style.display == "block"){
+            blocEnMouvement.style.left = getComputedStyle(blocArray[i]).left;
+            blocEnMouvement.style.top = (parseInt(getComputedStyle(blocArray[i]).top)+33).toString()+"px";
+            
+            blocEnMouvement.dataset.stackedtop = "true";
+            blocArray[i].dataset.stackedbot = "true";
+            blocArray[i].children[1].style.display = "none";
         }
     }
 }
@@ -48,7 +59,7 @@ function collageBloc(){
 //------------------------------ Déplacement des blocs à l'intérieur de la zone de code ------------------------------
 
 partieCode.onmousedown = function(e){
-    if(e.target.dataset.parent=="partieBanque" && e.which !== 3){
+    if(e.target.className=="bloc" && e.which !== 3){
         window.addEventListener('mousemove', deplacerBloc, true);
         blocEnMouvement = e.target;
         blocEnMouvement.style.cursor = "grabbing";
@@ -56,20 +67,10 @@ partieCode.onmousedown = function(e){
 };
 
 document.onmouseup = function(e){
-    if(blocEnMouvement!==undefined){
+    if(e.target.className=="bloc"){
         window.removeEventListener('mousemove', deplacerBloc, true);
         blocEnMouvement.style.cursor = "grab";
-        
-        if(blocParent!== undefined && blocParent.childNodes[3].style.display == "block"){
-            blocEnMouvement.style.left = getComputedStyle(blocParent).left;
-            blocEnMouvement.style.top = (parseInt(getComputedStyle(blocParent).top)+33).toString()+"px";
-            blocEnMouvement.dataset.stackedtop = "true";
-            blocParent.dataset.stackedbot = "true";
-            blocParent.childNodes[3].style.display = "none";
-            stackArray.push(blocEnMouvement);
-        }
-        
-        blocEnMouvement = undefined;
+        collageBloc();
     }
 };
 
@@ -81,23 +82,21 @@ function deplacerBloc(e){
         blocEnMouvement.style.top = sourisY+"px";
         
         if(blocEnMouvement.dataset.stackedbot == "true"){
-            for(var i=0;i<stackArray.length;i++){
-                stackArray[i].style.left = sourisX+"px";
-                stackArray[i].style.top = sourisY+(33*(i+1))+"px";
+            for(var i=0;i<blocArray.length;i++){
+                if(blocArray[i].dataset.stackedtop == "true"){
+                    blocArray[i].style.left = sourisX+"px";
+                    blocArray[i].style.top = sourisY+(33*(i))+"px";
+                }
             }
         }
         
         if(blocEnMouvement.dataset.stackedtop == "true"){
-            var indexBloc2 = stackArray.indexOf(blocEnMouvement);
-            blocEnMouvement.dataset.stackedtop = "false"
-            blocParent.dataset.stackedbot = "false"
-            stackArray.splice(indexBloc2,1);
+            blocEnMouvement.dataset.stackedtop = "false";
+            blocParent.dataset.stackedbot = "false";
         }
         
         trierBloc();
-        collageBloc();
-        
-        console.log(stackArray)
+        detectionCollage();
     }
 }
 
@@ -109,7 +108,6 @@ partieBanque.ondragstart = function(e){
     e.dataTransfer.setData("text/html", this.innerHTML);
 };
 
-partieBanque.ondrop = function(e){blocEnMouvement = undefined;};
 partieBanque.ondragover = function(e){e.preventDefault();};
 partieCode.ondragenter = function(e){e.preventDefault();};
 partieCode.ondragover = function(e){e.preventDefault();};
@@ -129,6 +127,15 @@ partieCode.ondrop = function(e){
         blocEnMouvement.style.left = "50%"; 
         blocEnMouvement.style.top = "50%";
     }
+    
     trierBloc();
-    blocEnMouvement = undefined;
 };
+
+
+//------------------------------ Debugage et tests ------------------------------
+
+window.addEventListener("keydown", function(e){
+    if(e.keyCode == 96){
+        console.log(blocArray)
+    }
+});
