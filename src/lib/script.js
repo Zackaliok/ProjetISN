@@ -19,39 +19,53 @@ document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction 
 
 //---------------------------Switch Menu vers les niveaux et Initialisation de ceux-ci-----------------------
 
-var chapitre=0;
-var niveau=0;
-var leMenuEstAffiché=true;
-var unNiveauEstAffiché=false;
+var chapitre=0, niveau=0;
 
 function affichageDuNiveauSouhaité(z,n){
-    chapitre=z;
-    niveau=n;
+    chapitre = z; 
+    niveau = n;
+    
     alert("Vous êtes dans la zone " + chapitre + " au niveau " + niveau + ".");
 
-    leMenuEstAffiché=false;
-    document.getElementById('menu').style.display="none";
-    unNiveauEstAffiché=true;
-    document.getElementById('wrapper').style.display="flex";
+    document.querySelector(".menu").style.display="none";
+    document.querySelector(".wrapper").style.display="flex";
+    document.querySelector(".en-tete").style.display="flex";
 
-
-    //Code que je vais compléter... (Tristan)
-    switch (z){
-      case 1:
-        //document.getElementById('Avancer').style.display="flex";
-        //document.getElementById('Sauter').style.display="flex";
+    switch(z){
+        case 1: //Affichage des blocs disponibles dans la zone 1:
+            document.getElementById('Avancer').style.display="block";
+            document.getElementById('Sauter').style.display="block";
+            document.getElementById('TournerAGauche').style.display="block";
+            document.getElementById('TournerADroite').style.display="block";
+            document.getElementById('Attaquer').style.display="block";
+            document.getElementById('TirerAlArc').style.display="block";
         break;
-      case 2:
-
+            
+        case 2: //Affichage des blocs disponibles dans la zone 2:
+            document.getElementById('Avancer').style.display="block";
+            document.getElementById('Sauter').style.display="block";
+            document.getElementById('TournerAGauche').style.display="block";
+            document.getElementById('TournerADroite').style.display="block";
+            document.getElementById('Attaquer').style.display="block";
+            document.getElementById('TirerAlArc').style.display="block";
+            document.getElementById('Répéter').style.display="block";
         break;
-      case 3:
-
+            
+        case 3: //Affichage des blocs disponibles dans la zone 3:
+            document.getElementById('Avancer').style.display="block";
+            document.getElementById('Sauter').style.display="block";
+            document.getElementById('TournerAGauche').style.display="block";
+            document.getElementById('TournerADroite').style.display="block";
+            document.getElementById('Attaquer').style.display="block";
+            document.getElementById('TirerAlArc').style.display="block";
+            document.getElementById('Répéter').style.display="block";
+            document.getElementById('If').style.display="block";
         break;
-      case 4:
-
+            
+        case 4: //Affichage des blocs disponibles dans la zone 4:
+            //A continuer...
         break;
     }
-
 }
 
 

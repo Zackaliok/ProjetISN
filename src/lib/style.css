@@ -7,7 +7,7 @@ body {
 }
 
 .wrapper {
-    display: flex; flex-direction: row;
+    display: none; flex-direction: row;
     width: 100vw; height: calc(100vh - 67px);
 }
 
@@ -21,8 +21,8 @@ canvas {
 
 /*-------------------- En-tête : --------------------*/
 
-#en-tete {
-    display: flex; width: 100vw; height: 50px;
+.en-tete {
+    display: none; width: 100vw; height: 50px;
     border-bottom: 1px solid black; margin-bottom: 15px;
     background: #6699ff; justify-content: center;
     align-items: center; font-weight: bold; font-size: 24px;
@@ -31,27 +31,30 @@ canvas {
 
 /*--------------------- Menu : ----------------------*/
 
-#menu {
-    display: inline-block;
-    margin-left: 40%;
+.menu {
+    display: flex; 
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    flex-direction: column;
 }
 
-h1, h2 {
-    text-align: center;
+.menu input {
+    background: transparent;
+    border: 1px solid black;
+    border-radius: 10px;
+    height: 50px; width: 50px;
+    margin: 0 5px 0 5px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 20px;
 }
-
-.boutonNiveau{
-    display: justify;
-    margin-left: 22.5%;
-}
-
 
 /*-------------------- Zones : --------------------*/
 
 #partieDroite {
     width: -moz-available;
     width: -webkit-fill-available;
-	height: (100% - 20px);
+	height: (100% - 66px);
     margin: 0 5px 5px 15px; 
     border: 1px solid black;
     border-radius: 5px;
