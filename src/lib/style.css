@@ -37,6 +37,8 @@ canvas {
     height: 100vh;
     align-items: center;
     flex-direction: column;
+    background: url(../media/fondMenu.png);
+/*    Fond a changer si cela ne convient pas (ce qui est fort probable)*/
 }
 
 .menu input {
@@ -54,7 +56,7 @@ canvas {
 #partieDroite {
     width: -moz-available;
     width: -webkit-fill-available;
-	height: (100% - 66px);
+	height: calc(100% - 66px);
     margin: 0 5px 5px 15px; 
     border: 1px solid black;
     border-radius: 5px;

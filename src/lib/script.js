@@ -1,13 +1,13 @@
 //------------------------------ Initialisation ------------------------------
 
 //Bloc et joueur :
-var blocEnMouvement, indexBloc, sourisX, sourisY; //Variables globales
+var blocEnMouvement, indexBloc, sourisX, sourisY, chapitre=0, niveau=0; //Variables globales
 var blocArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
 
 //Zones :
-const partieCode = document.getElementById("partieCode"); //Variable représentant la zone de code
+const partieCode = document.getElementById("partieCode"); //Variable représentant la zone du code
 const partieBanque = document.getElementById("partieBanque"); //Variable représentant la zone de la banque de bloc
-var infoZone = partieCode.getBoundingClientRect(); //Variable représentant les caractèristiques (position, hauteur, etc) de la zone du code
+var infoZone; //Variable représentant les caractèristiques (position, hauteur, etc) de la zone du code
 
 //Canvas :
 const canvas = document.getElementById('canvas'); //Variable représentant le canvas
@@ -19,8 +19,6 @@ document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction 
 
 //---------------------------Switch Menu vers les niveaux et Initialisation de ceux-ci-----------------------
 
-var chapitre=0, niveau=0;
-
 function affichageDuNiveauSouhaité(z,n){
     chapitre = z; 
     niveau = n;
@@ -30,42 +28,43 @@ function affichageDuNiveauSouhaité(z,n){
     document.querySelector(".menu").style.display="none";
     document.querySelector(".wrapper").style.display="flex";
     document.querySelector(".en-tete").style.display="flex";
+    infoZone = partieCode.getBoundingClientRect(); 
 
-    switch(z){
-        case 1: //Affichage des blocs disponibles dans la zone 1:
-            document.getElementById('Avancer').style.display="block";
-            document.getElementById('Sauter').style.display="block";
-            document.getElementById('TournerAGauche').style.display="block";
-            document.getElementById('TournerADroite').style.display="block";
-            document.getElementById('Attaquer').style.display="block";
-            document.getElementById('TirerAlArc').style.display="block";
-        break;
-            
-        case 2: //Affichage des blocs disponibles dans la zone 2:
-            document.getElementById('Avancer').style.display="block";
-            document.getElementById('Sauter').style.display="block";
-            document.getElementById('TournerAGauche').style.display="block";
-            document.getElementById('TournerADroite').style.display="block";
-            document.getElementById('Attaquer').style.display="block";
-            document.getElementById('TirerAlArc').style.display="block";
-            document.getElementById('Répéter').style.display="block";
-        break;
-            
-        case 3: //Affichage des blocs disponibles dans la zone 3:
-            document.getElementById('Avancer').style.display="block";
-            document.getElementById('Sauter').style.display="block";
-            document.getElementById('TournerAGauche').style.display="block";
-            document.getElementById('TournerADroite').style.display="block";
-            document.getElementById('Attaquer').style.display="block";
-            document.getElementById('TirerAlArc').style.display="block";
-            document.getElementById('Répéter').style.display="block";
-            document.getElementById('If').style.display="block";
-        break;
-            
-        case 4: //Affichage des blocs disponibles dans la zone 4:
-            //A continuer...
-        break;
-    }
+//    switch(z){
+//        case 1: //Affichage des blocs disponibles dans la zone 1:
+//            document.getElementById('Avancer').style.display="block";
+//            document.getElementById('Sauter').style.display="block";
+//            document.getElementById('TournerAGauche').style.display="block";
+//            document.getElementById('TournerADroite').style.display="block";
+//            document.getElementById('Attaquer').style.display="block";
+//            document.getElementById('TirerAlArc').style.display="block";
+//        break;
+//            
+//        case 2: //Affichage des blocs disponibles dans la zone 2:
+//            document.getElementById('Avancer').style.display="block";
+//            document.getElementById('Sauter').style.display="block";
+//            document.getElementById('TournerAGauche').style.display="block";
+//            document.getElementById('TournerADroite').style.display="block";
+//            document.getElementById('Attaquer').style.display="block";
+//            document.getElementById('TirerAlArc').style.display="block";
+//            document.getElementById('Répéter').style.display="block";
+//        break;
+//            
+//        case 3: //Affichage des blocs disponibles dans la zone 3:
+//            document.getElementById('Avancer').style.display="block";
+//            document.getElementById('Sauter').style.display="block";
+//            document.getElementById('TournerAGauche').style.display="block";
+//            document.getElementById('TournerADroite').style.display="block";
+//            document.getElementById('Attaquer').style.display="block";
+//            document.getElementById('TirerAlArc').style.display="block";
+//            document.getElementById('Répéter').style.display="block";
+//            document.getElementById('If').style.display="block";
+//        break;
+//            
+//        case 4: //Affichage des blocs disponibles dans la zone 4:
+//            //A continuer...
+//        break;
+//    }
 }
 
 
@@ -128,6 +127,7 @@ document.onmouseup = function(e){
 
 function deplacerBloc(e){
 	indexBloc = blocArray.indexOf(blocEnMouvement);
+    
     if(e.clientX-75 > infoZone.left && e.clientX+75 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+20 < infoZone.bottom){
         sourisX = e.clientX - 75; sourisY = e.clientY - 20;
         blocEnMouvement.style.left = sourisX+"px";
@@ -144,7 +144,7 @@ function deplacerBloc(e){
         
         if(blocEnMouvement.dataset.stackedtop == "true"){
             blocEnMouvement.dataset.stackedtop = "false";
-            blocParent.dataset.stackedbot = "false";
+//            blocParent.dataset.stackedbot = "false";
         }
         
         trierBloc();
@@ -160,7 +160,7 @@ partieBanque.ondragstart = function(e){
     e.dataTransfer.setData("text/html", this.innerHTML);
 };
 
-partieBanque.ondragover = function(e){e.preventDefault();};
+//partieBanque.ondragover = function(e){e.preventDefault();};
 partieCode.ondragenter = function(e){e.preventDefault();};
 partieCode.ondragover = function(e){e.preventDefault();};
 
@@ -188,6 +188,6 @@ partieCode.ondrop = function(e){
 
 window.addEventListener("keydown", function(e){
     if(e.keyCode == 96){
-        console.log(blocArray)
+        console.log(partieCode.getBoundingClientRect().left)
     }
 });
