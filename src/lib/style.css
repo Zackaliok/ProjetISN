@@ -32,7 +32,7 @@ canvas {
 /*--------------------- Menu : ----------------------*/
 
 .menu {
-    display: flex; 
+    display: flex;
     width: 100vw;
     height: 100vh;
     align-items: center;
@@ -51,13 +51,24 @@ canvas {
     font-size: 20px;
 }
 
+.BouttonsDeZone {
+  background-color: rgba(255, 0, 0, 0);
+  border-color: rgba(255, 0, 0, 0);      /*Définition de l'opactité et de l'index Z pour les mettre devant l'image*/
+  z-index: 10;
+}
+
+#BouttonZone1{position: absolute;left: 40%;top: 45%;}
+#BouttonZone2{position: absolute;left: 52.5%;top: 50%;}
+#BouttonZone3{position: absolute;left: 45%;top: 75%;}         /*Positionnement de tout les boutons pour les placer sur les îles*/
+#BouttonZone4{position: absolute;left: 62.5%;top: 75%;}       /*Il faut aussi augmenter la taille de ceux-ci quand la vraie Map sera mise*/
+
 /*-------------------- Zones : --------------------*/
 
 #partieDroite {
     width: -moz-available;
     width: -webkit-fill-available;
 	height: calc(100% - 66px);
-    margin: 0 5px 5px 15px; 
+    margin: 0 5px 5px 15px;
     border: 1px solid black;
     border-radius: 5px;
     background: white;
@@ -83,7 +94,7 @@ canvas {
 /*-------------------- Blocs : --------------------*/
 
 .bloc {
-    width: 150px; height: 40px; 
+    width: 150px; height: 40px;
     margin: 5px; float: right;
 }
 

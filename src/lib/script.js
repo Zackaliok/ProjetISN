@@ -18,17 +18,26 @@ document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction 
 
 
 //---------------------------Switch Menu vers les niveaux et Initialisation de ceux-ci-----------------------
+var chapitre=0;
+var niveau=0;       //On les mets en variable globale c'est plus simple
 
-function affichageDuNiveauSouhaité(z,n){
-    chapitre = z; 
-    niveau = n;
-    
-    alert("Vous êtes dans la zone " + chapitre + " au niveau " + niveau + ".");
+function AffichageMapZone(h) {
+  chapitre=h;
+  alert("On affiche la zone "+h);
+  document.querySelector(".MapMonde").style.display="none";
+  document.querySelector(".MapZone"+h).style.display="block";
+}
 
-    document.querySelector(".menu").style.display="none";
-    document.querySelector(".wrapper").style.display="flex";
-    document.querySelector(".en-tete").style.display="flex";
-    infoZone = partieCode.getBoundingClientRect(); 
+//function affichageDuNiveauSouhaité(z,n){
+//    chapitre = z;
+//    niveau = n;
+
+//    alert("Vous êtes dans la zone " + chapitre + " au niveau " + niveau + ".");
+
+//    document.querySelector(".menu").style.display="none";
+//    document.querySelector(".wrapper").style.display="flex";
+//    document.querySelector(".en-tete").style.display="flex";
+//    infoZone = partieCode.getBoundingClientRect();
 
 //    switch(z){
 //        case 1: //Affichage des blocs disponibles dans la zone 1:
@@ -39,7 +48,7 @@ function affichageDuNiveauSouhaité(z,n){
 //            document.getElementById('Attaquer').style.display="block";
 //            document.getElementById('TirerAlArc').style.display="block";
 //        break;
-//            
+//
 //        case 2: //Affichage des blocs disponibles dans la zone 2:
 //            document.getElementById('Avancer').style.display="block";
 //            document.getElementById('Sauter').style.display="block";
@@ -49,7 +58,7 @@ function affichageDuNiveauSouhaité(z,n){
 //            document.getElementById('TirerAlArc').style.display="block";
 //            document.getElementById('Répéter').style.display="block";
 //        break;
-//            
+//
 //        case 3: //Affichage des blocs disponibles dans la zone 3:
 //            document.getElementById('Avancer').style.display="block";
 //            document.getElementById('Sauter').style.display="block";
@@ -60,12 +69,12 @@ function affichageDuNiveauSouhaité(z,n){
 //            document.getElementById('Répéter').style.display="block";
 //            document.getElementById('If').style.display="block";
 //        break;
-//            
+//
 //        case 4: //Affichage des blocs disponibles dans la zone 4:
 //            //A continuer...
 //        break;
 //    }
-}
+//}
 
 
 //------------------------------ Trier les blocs & les coller ------------------------------
@@ -84,7 +93,7 @@ function detectionCollage(){
     for(var i=0;i<blocArray.length;i++){
         var rect1 = blocArray[indexBloc].getBoundingClientRect();
         var rect2 = blocArray[i].getBoundingClientRect();
-        
+
         if(rect1.top-10 <= rect2.bottom && rect1.left >= rect2.left-20 && rect1.right <= rect2.right+20 && blocArray[i].dataset.stackedbot=="false" && indexBloc > i){
             blocArray[i].children[1].style.display = "block";
         }else{
@@ -98,7 +107,7 @@ function collageBloc(){
         if(blocArray[i].children[1].style.display == "block"){
             blocEnMouvement.style.left = getComputedStyle(blocArray[i]).left;
             blocEnMouvement.style.top = (parseInt(getComputedStyle(blocArray[i]).top)+33).toString()+"px";
-            
+
             blocEnMouvement.dataset.stackedtop = "true";
             blocArray[i].dataset.stackedbot = "true";
             blocArray[i].children[1].style.display = "none";
@@ -127,12 +136,12 @@ document.onmouseup = function(e){
 
 function deplacerBloc(e){
 	indexBloc = blocArray.indexOf(blocEnMouvement);
-    
+
     if(e.clientX-75 > infoZone.left && e.clientX+75 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+20 < infoZone.bottom){
         sourisX = e.clientX - 75; sourisY = e.clientY - 20;
         blocEnMouvement.style.left = sourisX+"px";
         blocEnMouvement.style.top = sourisY+"px";
-        
+
         if(blocEnMouvement.dataset.stackedbot == "true"){
             for(var i=0;i<blocArray.length;i++){
                 if(blocArray[i].dataset.stackedtop == "true"){
@@ -141,12 +150,12 @@ function deplacerBloc(e){
                 }
             }
         }
-        
+
         if(blocEnMouvement.dataset.stackedtop == "true"){
             blocEnMouvement.dataset.stackedtop = "false";
 //            blocParent.dataset.stackedbot = "false";
         }
-        
+
         trierBloc();
         detectionCollage();
     }
@@ -170,16 +179,16 @@ partieCode.ondrop = function(e){
     indexBloc = blocArray.indexOf(blocEnMouvement);
     blocEnMouvement.removeAttribute("draggable");
     blocEnMouvement.style.position = "absolute";
-    
+
     if(e.clientX-75 > infoZone.left && e.clientX+75 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+20 < infoZone.bottom){
         sourisX = e.clientX - 75; sourisY = e.clientY - 20;
         blocEnMouvement.style.left = sourisX+"px";
         blocEnMouvement.style.top = sourisY+"px";
     }else{
-        blocEnMouvement.style.left = "50%"; 
+        blocEnMouvement.style.left = "50%";
         blocEnMouvement.style.top = "50%";
     }
-    
+
     trierBloc();
 };
 

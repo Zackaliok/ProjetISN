@@ -11,11 +11,30 @@
         <header class="en-tete">
             Scratchly : Décrouvez l'algorithmie ! <!-- A remplacer avec le vrai nom -->
          </header>
-         
+
         <div class="menu">
             <img src="src/media/logoMenu.png" alt="Logo du site et du menu"/>
-            
-			<h2>Zone 1 :</h2>
+          <div class="MapMonde">
+            <img src="src/media/Map-Monde.png" alt="Map Monde">
+            <button type="button" class="BouttonsDeZone" id="BouttonZone1" onclick="AffichageMapZone(1)">Zone 1</button>
+            <button type="button" class="BouttonsDeZone" id="BouttonZone2" onclick="AffichageMapZone(2)">Zone 2</button>
+            <button type="button" class="BouttonsDeZone" id="BouttonZone3" onclick="AffichageMapZone(3)">Zone 3</button>
+            <button type="button" class="BouttonsDeZone" id="BouttonZone4" onclick="AffichageMapZone(4)">Zone 4</button>
+          </div>
+          <div class="MapZone1" style="display:none;">
+            <img src="" alt="MapZone1">
+            <!--On va utiliser les flèches gauche et droit pour déplacer le joueur sur la map pour choisir le niveau. Un coup vers la droite augmentera une variable de 1 et placera le personnage en conséquences et un coup à gauche diminuera cette même variable de 1. Avec une autre touche, on pourra lancer la partie en récupérant la variable qui nous donne le niveau voulu.-->
+          </div>
+          <div class="MapZone2" style="display:none;">
+            <img src="" alt="MapZone2">
+          </div>
+          <div class="MapZone3" style="display:none;">
+            <img src="" alt="MapZone3">
+          </div>
+          <div class="MapZone4" style="display:none;">
+            <img src="" alt="MapZone4">
+          </div>
+			<!--<h2>Zone 1 :</h2>
 			<div class="boutonNiveau">
 			    <input type="button" value="1" onclick="affichageDuNiveauSouhaité(1,1)"/>
                 <input type="button" value="2" onclick="affichageDuNiveauSouhaité(1,2)"/>
@@ -23,7 +42,7 @@
                 <input type="button" value="4" onclick="affichageDuNiveauSouhaité(1,4)"/>
                 <input type="button" value="5" onclick="affichageDuNiveauSouhaité(1,5)"/>
             </div>
-			
+
 			<h2>Zone 2 :</h2>
 			<div class="boutonNiveau">
                 <input type="button" value="1" onclick="affichageDuNiveauSouhaité(2,1)"/>
@@ -32,7 +51,7 @@
                 <input type="button" value="4" onclick="affichageDuNiveauSouhaité(2,4)"/>
                 <input type="button" value="5" onclick="affichageDuNiveauSouhaité(2,5)"/>
 			</div>
-            
+
 			<h2>Zone 3 :</h2>
             <div class="boutonNiveau">
                 <input type="button" value="1" onclick="affichageDuNiveauSouhaité(3,1)"/>
@@ -41,7 +60,7 @@
                 <input type="button" value="4" onclick="affichageDuNiveauSouhaité(3,4)"/>
                 <input type="button" value="5" onclick="affichageDuNiveauSouhaité(3,5)"/>
 			</div>
-			
+
 			<h2>Zone 4 :</h2>
 			<div class="boutonNiveau">
                 <input type="button" value="1" onclick="affichageDuNiveauSouhaité(4,1)"/>
@@ -49,14 +68,14 @@
                 <input type="button" value="3" onclick="affichageDuNiveauSouhaité(4,3)"/>
                 <input type="button" value="4" onclick="affichageDuNiveauSouhaité(4,4)"/>
                 <input type="button" value="5" onclick="affichageDuNiveauSouhaité(4,5)"/>
-			</div>
-        </div>
-       
+			</div>-->
+    </div>
+
         <div class="wrapper">
             <div id="partieCanvas">
                 <canvas id="canvas" height="576" width="576"></canvas>
             </div>
-            
+
             <div id="partieDroite">
                 <div id="partieBanque">
                     <div class="bloc" id="Avancer" draggable="true" data-type="deplacement" data-statut="arreter" data-stackedtop="false" data-stackedbot="false">
@@ -116,11 +135,11 @@
                         <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                     </div>
 				</div>
-                
+
                 <div id="partieCode"></div>
             </div>
         </div>
-        
+
         <script type="text/javascript" src="src/lib/script.js"></script>
     </body>
 </html>
