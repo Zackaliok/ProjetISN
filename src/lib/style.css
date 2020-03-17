@@ -32,7 +32,7 @@ canvas {
 /*--------------------- Menu : ----------------------*/
 
 .menu {
-    display: flex; 
+    display: flex;
     width: 100vw;
     height: 100vh;
     align-items: center;
@@ -101,7 +101,7 @@ canvas {
 }
 
 .bloc {
-    width: 150px; height: 40px; 
+    width: 150px; height: 40px;
     margin: 5px; float: right;
 }
 

@@ -45,7 +45,7 @@ function affichageNiveau(n){
 //            document.getElementById('Attaquer').style.display="block";
 //            document.getElementById('TirerAlArc').style.display="block";
 //        break;
-//            
+//
 //        case 2: //Affichage des blocs disponibles dans la zone 2:
 //            document.getElementById('Avancer').style.display="block";
 //            document.getElementById('Sauter').style.display="block";
@@ -55,7 +55,7 @@ function affichageNiveau(n){
 //            document.getElementById('TirerAlArc').style.display="block";
 //            document.getElementById('Répéter').style.display="block";
 //        break;
-//            
+//
 //        case 3: //Affichage des blocs disponibles dans la zone 3:
 //            document.getElementById('Avancer').style.display="block";
 //            document.getElementById('Sauter').style.display="block";
@@ -66,12 +66,12 @@ function affichageNiveau(n){
 //            document.getElementById('Répéter').style.display="block";
 //            document.getElementById('If').style.display="block";
 //        break;
-//            
+//
 //        case 4: //Affichage des blocs disponibles dans la zone 4:
 //            //A continuer...
 //        break;
 //    }
-}
+//}
 
 
 //------------------------------ Trier les blocs & les coller ------------------------------
@@ -103,7 +103,7 @@ function collageBloc(){
         if(blocArray[i].children[1].style.display == "block"){
             blocEnMouvement.style.left = getComputedStyle(blocArray[i]).left;
             blocEnMouvement.style.top = (parseInt(getComputedStyle(blocArray[i]).top)+33).toString()+"px";
-            
+
             blocEnMouvement.dataset.stackedtop = "true";
             blocArray[i].dataset.stackedbot = "true";
             blocArray[i].children[1].style.display = "none";
@@ -132,12 +132,12 @@ document.onmouseup = function(e){
 
 function deplacerBloc(e){
 	indexBloc = blocArray.indexOf(blocEnMouvement);
-    
+
     if(e.clientX-75 > infoZone.left && e.clientX+75 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+20 < infoZone.bottom){
         sourisX = e.clientX - 75; sourisY = e.clientY - 20;
         blocEnMouvement.style.left = sourisX+"px";
         blocEnMouvement.style.top = sourisY+"px";
-        
+
         if(blocEnMouvement.dataset.stackedbot == "true"){
             for(var i=0;i<blocArray.length;i++){
                 if(blocArray[i].dataset.stackedtop == "true"){
@@ -146,12 +146,12 @@ function deplacerBloc(e){
                 }
             }
         }
-        
+
         if(blocEnMouvement.dataset.stackedtop == "true"){
             blocEnMouvement.dataset.stackedtop = "false";
 //            blocParent.dataset.stackedbot = "false";
         }
-        
+
         trierBloc();
         detectionCollage();
     }
@@ -175,16 +175,16 @@ partieCode.ondrop = function(e){
     
     blocEnMouvement.removeAttribute("draggable");
     blocEnMouvement.style.position = "absolute";
-    
+
     if(e.clientX-75 > infoZone.left && e.clientX+75 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+20 < infoZone.bottom){
         sourisX = e.clientX - 75; sourisY = e.clientY - 20;
         blocEnMouvement.style.left = sourisX+"px";
         blocEnMouvement.style.top = sourisY+"px";
     }else{
-        blocEnMouvement.style.left = "50%"; 
+        blocEnMouvement.style.left = "50%";
         blocEnMouvement.style.top = "50%";
     }
-    
+
     trierBloc();
 };
 
