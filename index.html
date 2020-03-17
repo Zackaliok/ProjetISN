@@ -15,41 +15,59 @@
         <div class="menu">
             <img src="src/media/logoMenu.png" alt="Logo du site et du menu"/>
             
-			<h2>Zone 1 :</h2>
-			<div class="boutonNiveau">
-			    <input type="button" value="1" onclick="affichageDuNiveauSouhaité(1,1)"/>
-                <input type="button" value="2" onclick="affichageDuNiveauSouhaité(1,2)"/>
-                <input type="button" value="3" onclick="affichageDuNiveauSouhaité(1,3)"/>
-                <input type="button" value="4" onclick="affichageDuNiveauSouhaité(1,4)"/>
-                <input type="button" value="5" onclick="affichageDuNiveauSouhaité(1,5)"/>
+            <div class="MapMonde">
+                <img src="src/media/Map-Monde.png" alt="Map Monde">
+                <button type="button" class="BouttonsDeZone" id="BouttonZone1" onclick="affichageZone(1)">Zone 1</button>
+                <button type="button" class="BouttonsDeZone" id="BouttonZone2" onclick="affichageZone(2)">Zone 2</button>
+                <button type="button" class="BouttonsDeZone" id="BouttonZone3" onclick="affichageZone(3)">Zone 3</button>
+                <button type="button" class="BouttonsDeZone" id="BouttonZone4" onclick="affichageZone(4)">Zone 4</button>
             </div>
-			
-			<h2>Zone 2 :</h2>
-			<div class="boutonNiveau">
-                <input type="button" value="1" onclick="affichageDuNiveauSouhaité(2,1)"/>
-                <input type="button" value="2" onclick="affichageDuNiveauSouhaité(2,2)"/>
-                <input type="button" value="3" onclick="affichageDuNiveauSouhaité(2,3)"/>
-                <input type="button" value="4" onclick="affichageDuNiveauSouhaité(2,4)"/>
-                <input type="button" value="5" onclick="affichageDuNiveauSouhaité(2,5)"/>
-			</div>
             
-			<h2>Zone 3 :</h2>
-            <div class="boutonNiveau">
-                <input type="button" value="1" onclick="affichageDuNiveauSouhaité(3,1)"/>
-                <input type="button" value="2" onclick="affichageDuNiveauSouhaité(3,2)"/>
-                <input type="button" value="3" onclick="affichageDuNiveauSouhaité(3,3)"/>
-                <input type="button" value="4" onclick="affichageDuNiveauSouhaité(3,4)"/>
-                <input type="button" value="5" onclick="affichageDuNiveauSouhaité(3,5)"/>
-			</div>
-			
-			<h2>Zone 4 :</h2>
-			<div class="boutonNiveau">
-                <input type="button" value="1" onclick="affichageDuNiveauSouhaité(4,1)"/>
-                <input type="button" value="2" onclick="affichageDuNiveauSouhaité(4,2)"/>
-                <input type="button" value="3" onclick="affichageDuNiveauSouhaité(4,3)"/>
-                <input type="button" value="4" onclick="affichageDuNiveauSouhaité(4,4)"/>
-                <input type="button" value="5" onclick="affichageDuNiveauSouhaité(4,5)"/>
-			</div>
+            <div class="MapZone1" style="display:none;">
+                <img src="" alt="MapZone1">
+                <div class="boutonNiveau">
+                    <input type="button" value="1" onclick="affichageNiveau(1)"/>
+                    <input type="button" value="2" onclick="affichageNiveau(2)"/>
+                    <input type="button" value="3" onclick="affichageNiveau(3)"/>
+                    <input type="button" value="4" onclick="affichageNiveau(4)"/>
+                    <input type="button" value="5" onclick="affichageNiveau(5)"/>
+                </div>
+            </div>
+          
+            <div class="MapZone2" style="display:none;">
+                <img src="" alt="MapZone2">
+                <div class="boutonNiveau">
+                    <input type="button" value="1" onclick="affichageNiveau(1)"/>
+                    <input type="button" value="2" onclick="affichageNiveau(2)"/>
+                    <input type="button" value="3" onclick="affichageNiveau(3)"/>
+                    <input type="button" value="4" onclick="affichageNiveau(4)"/>
+                    <input type="button" value="5" onclick="affichageNiveau(5)"/>
+                </div>
+            </div>
+            
+            <div class="MapZone3" style="display:none;">
+                <img src="" alt="MapZone3">
+                <div class="boutonNiveau">
+                    <input type="button" value="1" onclick="affichageNiveau(1)"/>
+                    <input type="button" value="2" onclick="affichageNiveau(2)"/>
+                    <input type="button" value="3" onclick="affichageNiveau(3)"/>
+                    <input type="button" value="4" onclick="affichageNiveau(4)"/>
+                    <input type="button" value="5" onclick="affichageNiveau(5)"/>
+                </div>
+            </div>
+            
+            <div class="MapZone4" style="display:none;">
+                <img src="" alt="MapZone4">
+                <div class="boutonNiveau">
+                    <input type="button" value="1" onclick="affichageNiveau(1)"/>
+                    <input type="button" value="2" onclick="affichageNiveau(2)"/>
+                    <input type="button" value="3" onclick="affichageNiveau(3)"/>
+                    <input type="button" value="4" onclick="affichageNiveau(4)"/>
+                    <input type="button" value="5" onclick="affichageNiveau(5)"/>
+                </div>
+            </div>
+            
+            <!--On va utiliser les flèches gauche et droit pour déplacer le joueur sur la map pour choisir le niveau. Un coup vers la droite augmentera une variable de 1 et placera le personnage en conséquences et un coup à gauche diminuera cette même variable de 1. Avec une autre touche, on pourra lancer la partie en récupérant la variable qui nous donne le niveau voulu.-->
         </div>
        
         <div class="wrapper">
@@ -59,28 +77,28 @@
             
             <div id="partieDroite">
                 <div id="partieBanque">
-                    <div class="bloc" id="Avancer" draggable="true" data-type="deplacement" data-statut="arreter" data-stackedtop="false" data-stackedbot="false">
+                    <div class="bloc" id="Avancer" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
                             <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
                             <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Avancer d'une case</text>
                         </svg>
                         <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                     </div>
-                    <div class="bloc" id="Sauter" draggable="true" data-type="deplacement" data-statut="arreter" data-stackedtop="false" data-stackedbot="false">
+                    <div class="bloc" id="Sauter" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
                             <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
                             <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Sauter d'une case</text>
                         </svg>
                         <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                     </div>
-					<div class="bloc" id="TournerADroite" draggable="true" data-type="deplacement" data-statut="arreter" data-stackedtop="false" data-stackedbot="false">
+					<div class="bloc" id="TournerADroite" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
                             <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
                             <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Tourner à droite</text>
                         </svg>
                         <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                     </div>
-					<div class="bloc" id="TournerAGauche" draggable="true" data-type="deplacement" data-statut="arreter" data-stackedtop="false" data-stackedbot="false">
+					<div class="bloc" id="TournerAGauche" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
                             <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
                             <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Tourner à gauche</text>
@@ -94,21 +112,21 @@
                         </svg>
                         <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                     </div>
-                    <div class="bloc" id="Répéter" draggable="true" data-type="logique" data-statut="arreter" data-stackedtop="false" data-stackedbot="false">
+                    <div class="bloc" id="Répéter" draggable="true" data-type="logique" data-stackedtop="false" data-stackedbot="false">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
                             <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="orange" stroke="black" stroke-width="0.5"/>
                             <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Répéter ... fois</text>
                         </svg>
                         <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                     </div>
-                    <div class="bloc" id="Attaquer" draggable="true" data-type="action" data-statut="arreter" data-stackedtop="false" data-stackedbot="false">
+                    <div class="bloc" id="Attaquer" draggable="true" data-type="action" data-stackedtop="false" data-stackedbot="false">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
                             <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a528ed" stroke="black" stroke-width="0.5"/>
                             <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Attaquer</text>
                         </svg>
                         <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                     </div>
-                    <div class="bloc" id="TirerAlArc" draggable="true" data-type="action" data-statut="arreter" data-stackedtop="false" data-stackedbot="false">
+                    <div class="bloc" id="TirerAlArc" draggable="true" data-type="action" data-stackedtop="false" data-stackedbot="false">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
                             <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a528ed" stroke="black" stroke-width="0.5"/>
                             <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Tirer à l'arc</text>
@@ -117,7 +135,14 @@
                     </div>
 				</div>
                 
-                <div id="partieCode"></div>
+                <div id="partieCode">
+                    <div class="blocDepart" id="blocDepart" data-type="evenement" data-stackedtop="false" data-stackedbot="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="50" viewBox="0 0 150 50">
+                            <path d="m 1 8 l 10 0 q 25 -14 50 0 l 88 0 v 36 l -118 0 l -5 5 l -10 0 l -5 -5 l -10 0 v -36 z" fill="#6aa827" stroke="black" stroke-width="0.5"/>
+                            <text x="48%" y="52%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Tirer à l'arc</text>
+                        </svg>
+                    </div>
+                </div>
             </div>
         </div>
         

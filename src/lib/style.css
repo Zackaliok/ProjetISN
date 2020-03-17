@@ -51,12 +51,23 @@ canvas {
     font-size: 20px;
 }
 
+.BouttonsDeZone {
+    background: transparent;
+    border: none;
+    z-index: 10;
+}
+
+#BouttonZone1{position: absolute;left: 40%;top: 45%;}
+#BouttonZone2{position: absolute;left: 52.5%;top: 50%;}
+#BouttonZone3{position: absolute;left: 45%;top: 75%;}         /*Positionnement de tout les boutons pour les placer sur les îles*/
+#BouttonZone4{position: absolute;left: 62.5%;top: 75%;}  
+
 /*-------------------- Zones : --------------------*/
 
 #partieDroite {
     width: -moz-available;
     width: -webkit-fill-available;
-	height: calc(100% - 66px);
+/*	height: 100%;*/
     margin: 0 5px 5px 15px; 
     border: 1px solid black;
     border-radius: 5px;
@@ -81,6 +92,13 @@ canvas {
 
 
 /*-------------------- Blocs : --------------------*/
+
+.blocDepart {
+    width: 150px; height: 50px;
+    position: relative;
+    left: calc(50% - 75px);
+    top: 5px;
+}
 
 .bloc {
     width: 150px; height: 40px; 

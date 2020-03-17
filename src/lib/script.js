@@ -19,12 +19,18 @@ document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction 
 
 //---------------------------Switch Menu vers les niveaux et Initialisation de ceux-ci-----------------------
 
-function affichageDuNiveauSouhaité(z,n){
-    chapitre = z; 
-    niveau = n;
-    
-    alert("Vous êtes dans la zone " + chapitre + " au niveau " + niveau + ".");
+function affichageZone(z) {
+    chapitre = z;
+    alert("Affiche de la zone "+z);
+    document.querySelector(".MapMonde").style.display="none";
+    document.querySelector(".MapZone"+z).style.display="block";
+}
 
+
+function affichageNiveau(n){
+    niveau = n;
+    alert("Vous êtes dans la zone " + chapitre + " au niveau " + niveau + ".");
+    
     document.querySelector(".menu").style.display="none";
     document.querySelector(".wrapper").style.display="flex";
     document.querySelector(".en-tete").style.display="flex";
@@ -84,7 +90,6 @@ function detectionCollage(){
     for(var i=0;i<blocArray.length;i++){
         var rect1 = blocArray[indexBloc].getBoundingClientRect();
         var rect2 = blocArray[i].getBoundingClientRect();
-        
         if(rect1.top-10 <= rect2.bottom && rect1.left >= rect2.left-20 && rect1.right <= rect2.right+20 && blocArray[i].dataset.stackedbot=="false" && indexBloc > i){
             blocArray[i].children[1].style.display = "block";
         }else{
@@ -160,14 +165,14 @@ partieBanque.ondragstart = function(e){
     e.dataTransfer.setData("text/html", this.innerHTML);
 };
 
-//partieBanque.ondragover = function(e){e.preventDefault();};
 partieCode.ondragenter = function(e){e.preventDefault();};
 partieCode.ondragover = function(e){e.preventDefault();};
 
-partieCode.ondrop = function(e){
-    partieCode.appendChild(blocEnMouvement);
+partieCode.ondrop = function(e){ 
+    partieCode.append(blocEnMouvement);
     blocArray.push(blocEnMouvement);
     indexBloc = blocArray.indexOf(blocEnMouvement);
+    
     blocEnMouvement.removeAttribute("draggable");
     blocEnMouvement.style.position = "absolute";
     
@@ -188,6 +193,6 @@ partieCode.ondrop = function(e){
 
 window.addEventListener("keydown", function(e){
     if(e.keyCode == 96){
-        console.log(partieCode.getBoundingClientRect().left)
+        console.log(blocArray)
     }
 });
