@@ -16,6 +16,14 @@ const ctx = canvas.getContext('2d'); //Variable représentant le "context" (la o
 //Empêcher la selection :
 document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction (texte, images) sur la page
 
+//Déclaration du chapitre actuel et du niveau :
+var chapitre = 1;
+var niveau = 1;
+
+//Variables pour savoir qui est affiché :
+var mapMonde = true;
+var mapZone = false;          //Touche pas j'en ai besoin (Tristan)
+var niveauAffiché = false;
 
 //---------------------------Switch Menu vers les niveaux et Initialisation de ceux-ci-----------------------
 
@@ -24,17 +32,49 @@ function affichageZone(z) {
     alert("Affiche de la zone "+z);
     document.querySelector(".MapMonde").style.display="none";
     document.querySelector(".MapZone"+z).style.display="block";
+    document.querySelector(".boutonNiveau"+z).style.display="block";
+    document.querySelector(".zoneFlèches").style.display="block";
+    mapMonde=false;
+    mapZone=true;     //Touche pas j'en ai besoin (Tristan)
 }
+
+//Abonnement pour le keydown avec la fonction
+document.addEventListener("keydown",(evt) => {
+  if (mapZone==true) {
+    switch (evt.keyCode) {
+      case 37://FlècheGauche
+          if (niveau!=1) {
+            niveau=niveau-1;
+          }
+          alert(niveau);
+        break;
+      case 39://FlècheDroite
+          if (niveau!=5) {
+            niveau=niveau+1;
+          }
+          alert(niveau);
+        break;
+      case 13://Touche Entrée   Avant c'était la touche P mais j'ai changé
+          affichageNiveau(niveau);
+        break;
+    }
+  } else {
+    //alert("Ya une couuille");
+  }
+});
 
 
 function affichageNiveau(n){
     niveau = n;
     alert("Vous êtes dans la zone " + chapitre + " au niveau " + niveau + ".");
-    
+
+    mapZone=false;      //Touche pas j'en ai besoin (Tristan)
+    niveauAffiché=true;
+
     document.querySelector(".menu").style.display="none";
     document.querySelector(".wrapper").style.display="flex";
     document.querySelector(".en-tete").style.display="flex";
-    infoZone = partieCode.getBoundingClientRect(); 
+    infoZone = partieCode.getBoundingClientRect();
 
 //    switch(z){
 //        case 1: //Affichage des blocs disponibles dans la zone 1:
@@ -71,7 +111,7 @@ function affichageNiveau(n){
 //            //A continuer...
 //        break;
 //    }
-//}
+}
 
 
 //------------------------------ Trier les blocs & les coller ------------------------------
@@ -168,11 +208,11 @@ partieBanque.ondragstart = function(e){
 partieCode.ondragenter = function(e){e.preventDefault();};
 partieCode.ondragover = function(e){e.preventDefault();};
 
-partieCode.ondrop = function(e){ 
+partieCode.ondrop = function(e){
     partieCode.append(blocEnMouvement);
     blocArray.push(blocEnMouvement);
     indexBloc = blocArray.indexOf(blocEnMouvement);
-    
+
     blocEnMouvement.removeAttribute("draggable");
     blocEnMouvement.style.position = "absolute";
 
