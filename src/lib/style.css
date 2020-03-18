@@ -56,7 +56,6 @@ canvas {
     z-index: 10;
     position: absolute;
 }
-
 .zoneFlèches{
   background: pink;
   height: 175px;
@@ -68,10 +67,10 @@ canvas {
   bottom: 20px;
 }
 
-#BouttonZone1 {left: 40%; top: 45%;}
-#BouttonZone2 {left: 52.5%; top: 50%;}
-#BouttonZone3 {left: 45%; top: 75%;}
-#BouttonZone4 {left: 62.5%; top: 75%;}
+#BouttonZone1{position: absolute;left: 40%;top: 45%;}
+#BouttonZone2{position: absolute;left: 52.5%;top: 50%;}
+#BouttonZone3{position: absolute;left: 45%;top: 75%;}         /*Positionnement de tout les boutons pour les placer sur les îles*/
+#BouttonZone4{position: absolute;left: 62.5%;top: 75%;}
 
 
 /*-------------------- Zones : --------------------*/

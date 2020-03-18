@@ -73,7 +73,7 @@ document.addEventListener("keydown",(evt) => {
 function affichageNiveau(n){
     niveau = n;
     alert("Vous êtes dans la zone " + chapitre + " au niveau " + niveau + ".");
-    
+
     mapZone=false;      //Touche pas j'en ai besoin (Tristan)
     niveauAffiché=true;
     
@@ -321,11 +321,11 @@ partieBanque.ondragstart = function(e){
 partieCode.ondragenter = function(e){e.preventDefault();};
 partieCode.ondragover = function(e){e.preventDefault();};
 
-partieCode.ondrop = function(e){ 
+partieCode.ondrop = function(e){
     partieCode.append(blocEnMouvement);
     blocArray.push(blocEnMouvement);
     indexBloc = blocArray.indexOf(blocEnMouvement);
-    
+
     blocEnMouvement.removeAttribute("draggable");
     blocEnMouvement.style.position = "absolute";
 
