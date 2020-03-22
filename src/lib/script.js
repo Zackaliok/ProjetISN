@@ -1,19 +1,22 @@
 //------------------------------ Initialisation ------------------------------
 
-//Bloc et joueur :
-var blocEnMouvement, indexBloc, imgJoueur, sourisX, sourisY, nbCollage=0; //Variables globales
+//Bloc, joueur et map :
+var blocEnMouvement, indexBloc, tileSet, sourisX, sourisY, nbCollage=0; //Variables globales
 var blocArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
+var map = new Array(); //Array à deux dimension (matrice) servant de carte pour construire les niveaux
 
 //Zones :
 const partieCode = document.getElementById("partieCode"); //Variable représentant la zone du code
 const partieBanque = document.getElementById("partieBanque"); //Variable représentant la zone de la banque de bloc
 const blocDepart = document.getElementById("blocDepart"); //Variable représentant le bloc de départ
-const menuContextuel = document.querySelector(".menuContextuel"); //Variable représentant la div du menu contextuel personnalisé
+const menuContextuel = document.querySelector(".menuContextuel"); //Variable représentant le menu contextuel personnalisé
+const wrapper = document.querySelector(".wrapper"); //Variable représentant le contenant principal de l'app
 var infoZone; //Variable représentant les caractèristiques (position, hauteur, etc) de la zone du code
 
-//Canvas :
+//Canvas + image :
 const canvas = document.getElementById('canvas'); //Variable représentant le canvas
 const ctx = canvas.getContext('2d'); //Variable représentant le "context" (la où on dessine)
+chargerImg("src/media/tileset.png"); //Charge le "tileset";
 
 //Empêcher la selection :
 document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction (texte, images) sur la page
@@ -28,10 +31,7 @@ var mapZone = false;          //Touche pas j'en ai besoin (Tristan)
 var niveauAffiché = false;
 
 
-//---------------------------Switch Menu vers les niveaux et Initialisation de ceux-ci-----------------------
-
-affichageNiveau(1); 
-//Bypass la selection de zone et niveaux
+//--------------------------- Switch Menu vers les niveaux et Initialisation de ceux-ci -----------------------
 
 function affichageZone(z){
     chapitre = z;
@@ -46,29 +46,28 @@ function affichageZone(z){
 
 //Abonnement pour le keydown avec la fonction
 document.addEventListener("keydown",(evt) => {
-  if (mapZone==true) {
-    switch (evt.keyCode) {
-      case 37://FlècheGauche
-          if (niveau!=1) {
-            niveau=niveau-1;
-          }
-          alert(niveau);
-        break;
-      case 39://FlècheDroite
-          if (niveau!=5) {
-            niveau=niveau+1;
-          }
-          alert(niveau);
-        break;
-      case 13://Touche Entrée   Avant c'était la touche P mais j'ai changé
-          affichageNiveau(niveau);
-        break;
+    if(mapZone==true){
+        switch (evt.keyCode){
+            case 37: //FlècheGauche
+                if(niveau!=1){
+                    niveau=niveau-1;
+                }
+                alert(niveau);
+            break;
+            case 39: //FlècheDroite
+                if(niveau!=5) {
+                    niveau=niveau+1;
+                }
+                alert(niveau);
+            break;
+            case 13: //Touche Entrée
+              affichageNiveau(niveau);
+            break;
+        }
+    }else{
+        //alert("Ya une couuille");
     }
-  } else {
-    //alert("Ya une couuille");
-  }
 });
-
 
 function affichageNiveau(n){
     niveau = n;
@@ -82,6 +81,8 @@ function affichageNiveau(n){
     document.querySelector(".en-tete").style.display="flex";
     infoZone = partieCode.getBoundingClientRect();
     blocArray.push(blocDepart);
+    
+    creerMap();
 
 //    switch(z){
 //        case 1: //Affichage des blocs disponibles dans la zone 1:
@@ -121,10 +122,14 @@ function affichageNiveau(n){
 }
 
 
+//------------------------------ Pop-up ! ------------------------------
+
+function popup(texte, durée='10'){
+    alert("JAI PAS FINI");
+}
+
+
 //------------------------------ Menu contextuel (clique-droit) ------------------------------
-
-
-
 
 document.oncontextmenu = (e) => {e.preventDefault();};
 
@@ -132,7 +137,7 @@ document.onmousedown = function(e){
     if(e.buttons == 1 && menuContextuel.style.display == "block" && e.target!==menuContextuel && e.target.tagName!=="BUTTON"){
         menuContextuel.style.display = "none";
     }
-    else if(e.buttons == 2 && e.target!==partieBanque && e.target.parentNode!==partieBanque){
+    else if(e.buttons == 2 && e.target!==partieBanque && e.target.parentNode!==partieBanque && wrapper.style.display=="flex"){
         var x = e.clientX + 10; var y = e.clientY;
         menuContextuel.style.display = "block";
         menuContextuel.style.left = x+"px";
@@ -153,8 +158,6 @@ function supprimerBloc(){
 }
 
 
-
-
 //------------------------------ Classe du joueur + déclaration ------------------------------
 /*
     Les classe représentent des objets ayant des caractéristiques.
@@ -172,26 +175,32 @@ class Joueur {
         this.dir=dir;
     }
     
+    pos(x,y,dir){
+        this.x=x;
+        this.y=y;
+        this.dir=dir;
+    }
+    
     afficher(x,y,dir){
         this.dir = dir;
         switch(dir){
             case 0: //HAUT
-                ctx.drawImage(imgJoueur,64,64,64,64,x,y,64,64);
+                ctx.drawImage(tileSet,64,64,64,64,x,y,64,64);
                 break;
             case 1: //DROITE
-                ctx.drawImage(imgJoueur,64,0,64,64,x,y,64,64);
+                ctx.drawImage(tileSet,64,0,64,64,x,y,64,64);
                 break;
             case 2: //BAS
-                ctx.drawImage(imgJoueur,0,64,64,64,x,y,64,64);
+                ctx.drawImage(tileSet,0,64,64,64,x,y,64,64);
                 break;
             case 3: //GAUCHE
-                ctx.drawImage(imgJoueur,0,0,64,64,x,y,64,64);
+                ctx.drawImage(tileSet,0,0,64,64,x,y,64,64);
                 break;
         }
     }
 }
 
-var joueur = new Joueur(400,400,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
+var joueur = new Joueur(384,384,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
 
 
 //------------------------------ Charger le "tileset" et l'afficher sur le canvas ------------------------------
@@ -210,13 +219,104 @@ function chargerImg(url){
             resolve(img);
         });
         img.src = url;
-        imgJoueur = img;
+        tileSet = img;
     });
 }
 
-chargerImg("src/media/joueurSet.png").then(img => {
+function creerMap(){
+    switch(chapitre + "-" + niveau){
+        case "1-1":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,0,0,0,0,0);
+            map[2] = Array(0,0,0,0,0,0,0,0,0);
+            map[3] = Array(0,0,0,0,0,0,2,0,0);
+            map[4] = Array(0,0,0,0,0,0,1,0,0);
+            map[5] = Array(0,0,0,0,0,0,1,0,0);
+            map[6] = Array(0,0,0,0,0,0,1,0,0);
+            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.pos(384,384,0);
+        break;
+            
+        case "1-2":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,0,0,0,0,0);
+            map[2] = Array(0,0,0,0,0,0,0,0,0);
+            map[3] = Array(0,0,0,0,0,0,2,0,0);
+            map[4] = Array(0,0,0,0,0,0,1,0,0);
+            map[5] = Array(0,0,0,0,0,0,1,0,0);
+            map[6] = Array(0,0,0,0,1,1,1,0,0);
+            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.pos(256,384,0);
+        break;
+            
+    }
+    afficherMap();
     joueur.afficher(joueur.x,joueur.y,joueur.dir);
-});
+}
+
+function afficherMap(){
+    for(var i=0;i<map.length;i++){
+        for(var j=0;j<map[i].length;j++){
+            switch(map[i][j]){
+                case 0: //Herbe
+                    ctx.drawImage(tileSet,128,0,64,64,64*j,64*i,64,64);
+                break;
+                    
+                case 1: //Sol
+                    ctx.drawImage(tileSet,0,128,64,64,64*j,64*i,64,64);
+                break;
+                    
+                case 2: //Case Cible
+                    ctx.drawImage(tileSet,64,128,64,64,64*j,64*i,64,64);
+                break;
+            }
+        }
+    }
+}
+
+
+//------------------------------ Executer le code + vérifier si le joueur a gagner ------------------------------
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms)); //Méthode asynchrone permettant de créer un 'temps d'arret' (ex : sleep(1000) arretera le code pendant 1sec)
+}
+
+async function win(){
+    if(map[joueur.y/64][joueur.x/64] == 2){
+        await sleep(200);
+        alert("Tu as gagner !");
+    }
+}
+
+async function executionCode(){
+    remiseAZero();
+    
+    await sleep(800);
+    
+    if(blocArray.length>1 && blocDepart.dataset.stackedbot=="true"){
+        for(var i=1;i<blocArray.length;i++){
+            if(blocArray[i].dataset.stackedtop=="true"){
+                switch(blocArray[i].id){
+                    case "Avancer":
+                        afficherMap();
+                        joueur.y-=64;
+                        joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                        win();
+                    break;
+                }
+                await sleep(1000);
+            }
+        }
+    }
+}
+
+function remiseAZero(){
+    afficherMap();
+    joueur.x = 384; joueur.y = 384; joueur.dir=0;
+    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+}
 
 
 //------------------------------ Trier les blocs & les coller ------------------------------
@@ -342,15 +442,10 @@ partieCode.ondrop = function(e){
 };
 
 
-
-
-
-
-
 //------------------------------ Debugage et tests ------------------------------
 
 window.addEventListener("keydown", function(e){
     if(e.keyCode == 96){
-        console.log(blocArray)
+        console.log("");
     }
 });

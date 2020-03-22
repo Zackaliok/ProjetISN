@@ -17,8 +17,12 @@
                 Supprimer le bloc sélectionné
             </button>
             <hr size='1px'>
-            <button onClick="alert('cliqué')">
+            <button onClick="alert('zebi jtai di ca marche pas')">
                 Supprimer tout les blocs (non. fonct)
+            </button>
+            <hr size='1px'>
+            <button onClick="alert('zebi jtai di ca marche pas')">
+                Dupliquer le bloc sélectionné (non. fonct)
             </button>
         </div>
        
@@ -90,8 +94,8 @@
             <div id="partieCanvas">
                 <canvas id="canvas" height="576" width="576"></canvas>
                 <div class="controles">
-                    <button id="depart" onclick=""></button>
-                    <button id="stop" onclick=""></button>
+                    <button id="depart" onclick="executionCode()"></button>
+                    <button id="stop" onclick="remiseAZero()"></button>
                 </div>
             </div>
 
@@ -154,7 +158,6 @@
                         <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                     </div>
 				</div>
-
                 <div id="partieCode">
                     <div class="blocDepart" id="blocDepart" data-type="evenement" data-stackedtop="false" data-stackedbot="false">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="50" viewBox="0 0 150 50">
