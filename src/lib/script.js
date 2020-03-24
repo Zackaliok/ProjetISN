@@ -59,7 +59,7 @@ document.addEventListener("keydown",async function(evt) {
                 if(niveau!=1){
                     niveau=niveau-1;
                 }
-                alert(niveau);
+                //alert(niveau);
             break;
             case 39: //FlècheDroite
                 document.getElementById("FlècheDroite").src="src/media/FlècheDroiteGlow.png";
@@ -68,11 +68,24 @@ document.addEventListener("keydown",async function(evt) {
                 if(niveau!=5) {
                     niveau=niveau+1;
                 }
-                alert(niveau);
+                //alert(niveau);
             break;
             case 13: //Touche Entrée
+              document.getElementById("Jouer").src="src/media/TouchePGlow.png";
+              await sleep(100);
+              document.getElementById("Jouer").src="src/media/ToucheP.png";
               affichageNiveau(niveau);
             break;
+            case 27: //Touche Echap
+              document.getElementById('Echap').src="src/media/EchapGlow.png";
+              await sleep(100);
+              document.getElementById('Echap').src="src/media/Echap.png";
+              mapZone = false;
+              mapMonde = true;
+              document.querySelector(".MapMonde").style.display="block";
+              document.querySelector(".MapZone"+chapitre).style.display="none";
+              document.querySelector(".zoneFlèches").style.display="none";
+              break;
         }
     }else{
         //alert("Ya une couuille");
