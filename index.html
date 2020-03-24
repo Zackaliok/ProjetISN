@@ -25,12 +25,12 @@
                 Dupliquer le bloc sélectionné (non. fonct)
             </button>
         </div>
-        
+
         <div class="popup">
             <div id="texte"></div>
             <button onclick="fermerPopup">OK</button>
         </div>
-       
+
         <div class="menu">
             <img src="src/media/logoMenu.png" alt="Logo du site et du menu"/>
 
@@ -44,52 +44,52 @@
 
             <div class="MapZone1" style="display:none;">
                 <img src="src/media/MapZone1.png" alt="MapZone1">
-                <div class="boutonNiveau1" style="display:none;">
+              <!--  <div class="boutonNiveau1" style="display:none;">
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(1)">Niveau 1</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(2)">Niveau 2</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(3)">Niveau 3</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(4)">Niveau 4</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(5)">Niveau 5</button>
-                </div>
+                </div>-->
             </div>
 
             <div class="MapZone2" style="display:none;">
                 <img src="src/media/MapZone2.png" alt="MapZone2">
-                <div class="boutonNiveau2" style="display:none;">
+              <!--  <div class="boutonNiveau2" style="display:none;">
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(1)">Niveau 1</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(2)">Niveau 2</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(3)">Niveau 3</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(4)">Niveau 4</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(5)">Niveau 5</button>
-                </div>
+                </div>-->
             </div>
 
             <div class="MapZone3" style="display:none;">
                 <img src="src/media/MapZone3.png" alt="MapZone3">
-                <div class="boutonNiveau3" style="display:none;">
+              <!--  <div class="boutonNiveau3" style="display:none;">
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(1)">Niveau 1</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(2)">Niveau 2</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(3)">Niveau 3</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(4)">Niveau 4</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(5)">Niveau 5</button>
-                </div>
+                </div>-->
             </div>
 
             <div class="MapZone4" style="display:none;">
                 <img src="src/media/MapZone4.png" alt="MapZone4">
-                <div class="boutonNiveau4" style="display:none;">
+              <!--  <div class="boutonNiveau4" style="display:none;">
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(1)">Niveau 1</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(2)">Niveau 2</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(3)">Niveau 3</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(4)">Niveau 4</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(5)">Niveau 5</button>
-                </div>
+                </div>-->
             </div>
-            
+
             <div class="zoneFlèches" style="display:none;">
-                <img src="src/media/FlècheGauche.png" alt="Flèche de gauche">
-                <img src="src/media/FlècheDroite.png" alt="Flèche de droite">
-                <img src="src/media/ToucheP.png" alt="Lancer le niveau">
+                <img src="src/media/FlècheGauche.png" alt="Flèche de gauche" id="FlècheGauche">
+                <img src="src/media/FlècheDroite.png" alt="Flèche de droite" id="FlècheDroite">
+                <img src="src/media/ToucheP.png" alt="Lancer le niveau" id="Jouer">
                 <p>On rajoutera une image "Back" pour revenir au menu</p>
             </div>
              <!--On va utiliser les flèches gauche et droit pour déplacer le joueur sur la map pour choisir le niveau. Un coup vers la droite augmentera une variable de 1 et placera le personnage en conséquences et un coup à gauche diminuera cette même variable de 1. Avec une autre touche, on pourra lancer la partie en récupérant la variable qui nous donne le niveau voulu.-->

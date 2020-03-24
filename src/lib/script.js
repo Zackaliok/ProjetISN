@@ -34,31 +34,37 @@ var niveauAffiché = false;
 //--------------------------- Switch Menu vers les niveaux et Initialisation de ceux-ci -----------------------
 
 //Bypass des menus :
-affichageZone(1);
-setTimeout(function (){affichageNiveau(1);},10);
+//affichageZone(1);
+//setTimeout(function (){affichageNiveau(1);},10);
 
 function affichageZone(z){
     chapitre = z;
     alert("Affiche de la zone "+z);
     document.querySelector(".MapMonde").style.display="none";
     document.querySelector(".MapZone"+z).style.display="block";
-    document.querySelector(".boutonNiveau"+z).style.display="block";
+    //document.querySelector(".boutonNiveau"+z).style.display="block";   //A mettre s'il y a un problème avec la selection de niveaux
     document.querySelector(".zoneFlèches").style.display="block";
     mapMonde=false;
     mapZone=true;     //Touche pas j'en ai besoin (Tristan)
 }
 
 //Abonnement pour le keydown avec la fonction
-document.addEventListener("keydown",(evt) => {
+document.addEventListener("keydown",async function(evt) {
     if(mapZone==true){
         switch (evt.keyCode){
             case 37: //FlècheGauche
+                document.getElementById("FlècheGauche").src="src/media/FlècheGaucheGlow.png";
+                await sleep(100);
+                document.getElementById("FlècheGauche").src="src/media/FlècheGauche.png";
                 if(niveau!=1){
                     niveau=niveau-1;
                 }
                 alert(niveau);
             break;
             case 39: //FlècheDroite
+                document.getElementById("FlècheDroite").src="src/media/FlècheDroiteGlow.png";
+                await sleep(100);
+                document.getElementById("FlècheDroite").src="src/media/FlècheDroite.png";
                 if(niveau!=5) {
                     niveau=niveau+1;
                 }
@@ -79,13 +85,13 @@ function affichageNiveau(n){
 
     mapZone=false;      //Touche pas j'en ai besoin (Tristan)
     niveauAffiché=true;
-    
+
     document.querySelector(".menu").style.display="none";
     document.querySelector(".wrapper").style.display="flex";
     document.querySelector(".en-tete").style.display="flex";
     infoZone = partieCode.getBoundingClientRect();
     blocArray.push(blocDepart);
-    
+
     creerMap();
 
 //    switch(z){
@@ -159,7 +165,7 @@ function supprimerBloc(){
         indexBloc = blocArray.indexOf(blocEnMouvement);
         blocArray.splice(indexBloc,1);
         blocEnMouvement.parentNode.removeChild(blocEnMouvement);
-        menuContextuel.style.display = "none"; 
+        menuContextuel.style.display = "none";
     }else{
         menuContextuel.style.display = "none";
     }
@@ -182,13 +188,13 @@ class Joueur {
         this.y=y;
         this.dir=dir;
     }
-    
+
     pos(x,y,dir){
         this.x=x;
         this.y=y;
         this.dir=dir;
     }
-    
+
     afficher(x,y,dir){
         this.dir = dir;
         switch(dir){
@@ -213,7 +219,7 @@ var joueur = new Joueur(384,384,0); //Déclaration de l'objet Joueur avec 3 para
 
 //------------------------------ Charger le "tileset" et l'afficher sur le canvas ------------------------------
 /*
-    Pour faire court, lorque l'on créer un objet 'Image()' et qu'on souhaite lui attribuer une source, le navigateur doit 
+    Pour faire court, lorque l'on créer un objet 'Image()' et qu'on souhaite lui attribuer une source, le navigateur doit
     d'abords charger l'image, sauf que le reste du code est exécuté en même temps et l'image n'a pas fini de charger avant
     qu'on lui attribue la source (qui ducoup n'existe pas). Pour palier à ce problème, on utilise la méthode asynchrone "Promise"
     qui représente littéralement une promesse. Cette promesse peut-être résolue dans le temps et bloque l'éxécution du code.
@@ -245,7 +251,7 @@ function creerMap(){
             map[8] = Array(0,0,0,0,0,0,0,0,0);
             joueur.pos(384,384,0);
         break;
-            
+
         case "1-2":
             map[0] = Array(0,0,0,0,0,0,0,0,0);
             map[1] = Array(0,0,0,0,0,0,0,0,0);
@@ -258,7 +264,7 @@ function creerMap(){
             map[8] = Array(0,0,0,0,0,0,0,0,0);
             joueur.pos(256,384,0);
         break;
-            
+
     }
     afficherMap();
     joueur.afficher(joueur.x,joueur.y,joueur.dir);
@@ -271,11 +277,11 @@ function afficherMap(){
                 case 0: //Herbe
                     ctx.drawImage(tileSet,128,0,64,64,64*j,64*i,64,64);
                 break;
-                    
+
                 case 1: //Sol
                     ctx.drawImage(tileSet,0,128,64,64,64*j,64*i,64,64);
                 break;
-                    
+
                 case 2: //Case Cible
                     ctx.drawImage(tileSet,64,128,64,64,64*j,64*i,64,64);
                 break;
@@ -345,7 +351,7 @@ function detectionCollage(){
         if(child!==blocEnMouvement && (child.dataset.stackedtop=="true" || child.id=="blocDepart") && child.dataset.stackedbot=="false"){
             if(rect1.top-15 <= rect2.bottom && rect1.top-15 >= rect2.bottom-20 && rect1.left >= rect2.left-30 && rect1.right <= rect2.right+30){
                 partieCode.children[i].children[1].style.display = "block";
-                
+
             }else{
                 partieCode.children[i].children[1].style.display = "none";
             }
@@ -452,7 +458,7 @@ partieCode.ondrop = function(e){
 
 window.addEventListener("keydown", function(e){
     if(e.keyCode == 96){
-        popup("Prends un bloc et glisse-le faire la zone du milieu")
+        //popup("Prends un bloc et glisse-le faire la zone du milieu")
+        popup("Suce ta race");
     }
 });
-

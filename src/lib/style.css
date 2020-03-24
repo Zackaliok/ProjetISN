@@ -56,6 +56,13 @@ canvas {
     z-index: 10;
     position: absolute;
 }
+
+
+#BouttonZone1{position: absolute;left: 40%;top: 45%;}
+#BouttonZone2{position: absolute;left: 52.5%;top: 50%;}
+#BouttonZone3{position: absolute;left: 45%;top: 75%;}         /*Positionnement de tout les boutons pour les placer sur les îles*/
+#BouttonZone4{position: absolute;left: 62.5%;top: 75%;}
+
 .zoneFlèches{
     background: pink;
     height: 175px;
@@ -66,12 +73,6 @@ canvas {
     right: 20px;
     bottom: 20px;
 }
-
-#BouttonZone1{position: absolute;left: 40%;top: 45%;}
-#BouttonZone2{position: absolute;left: 52.5%;top: 50%;}
-#BouttonZone3{position: absolute;left: 45%;top: 75%;}         /*Positionnement de tout les boutons pour les placer sur les îles*/
-#BouttonZone4{position: absolute;left: 62.5%;top: 75%;}
-
 
 /*-------------------- Zones : --------------------*/
 
@@ -102,10 +103,10 @@ canvas {
 
 #partieControle button {
     height: 40px; width: 40px;
-    border: none; padding: 0; 
+    border: none; padding: 0;
     background: transparent;
     margin: 10px; outline:0;
-    cursor: pointer; display: flex; 
+    cursor: pointer; display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -170,7 +171,7 @@ svg, path, text {pointer-events: none;}
     height: 100px; width: 500px;
     border: 1px solid gray; z-index: 200;
     border-radius: 5px;
-    background: rgb(60,60,60); 
+    background: rgb(60,60,60);
     align-items: center;
     justify-content: center;
     box-shadow: 2px 2px 5px 0px #656565;
