@@ -25,6 +25,11 @@
                 Dupliquer le bloc sélectionné (non. fonct)
             </button>
         </div>
+        
+        <div class="popup">
+            <div id="texte"></div>
+            <button onclick="fermerPopup">OK</button>
+        </div>
        
         <div class="menu">
             <img src="src/media/logoMenu.png" alt="Logo du site et du menu"/>
@@ -91,81 +96,79 @@
         </div>
 
         <div class="wrapper">
-            <div id="partieCanvas">
+            <div id="partieGauche">
                 <canvas id="canvas" height="576" width="576"></canvas>
-                <div class="controles">
-                    <button id="depart" onclick="executionCode()"></button>
-                    <button id="stop" onclick="remiseAZero()"></button>
+                <div id="partieControle">
+                    <button onclick="executionCode()"><img id="play" src="src/media/btn_play.png"></button>
+                    <button onclick="remiseAZero()"><img id="reset" src="src/media/btn_reset.png"></button>
+                    <button onclick=""><img id="settings" src="src/media/btn_settings.png"></button>
                 </div>
             </div>
-
-            <div id="partieDroite">
-                <div id="partieBanque">
-                    <div class="bloc" id="Avancer" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Avancer d'une case</text>
-                        </svg>
-                        <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
-                    </div>
-                    <div class="bloc" id="Sauter" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Sauter d'une case</text>
-                        </svg>
-                        <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
-                    </div>
-					<div class="bloc" id="TournerADroite" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Tourner à droite</text>
-                        </svg>
-                        <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
-                    </div>
-					<div class="bloc" id="TournerAGauche" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Tourner à gauche</text>
-                        </svg>
-                        <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
-                    </div>
-					<div class="bloc" id="Si" draggable="true" data-type="logique" data-state="idle" data-stackedtop="false" data-stackedbot="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="orange" stroke="black" stroke-width="0.5"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Si ... Alors</text>
-                        </svg>
-                        <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
-                    </div>
-                    <div class="bloc" id="Répéter" draggable="true" data-type="logique" data-stackedtop="false" data-stackedbot="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="orange" stroke="black" stroke-width="0.5"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Répéter ... fois</text>
-                        </svg>
-                        <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
-                    </div>
-                    <div class="bloc" id="Attaquer" draggable="true" data-type="action" data-stackedtop="false" data-stackedbot="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a528ed" stroke="black" stroke-width="0.5"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Attaquer</text>
-                        </svg>
-                        <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
-                    </div>
-                    <div class="bloc" id="TirerAlArc" draggable="true" data-type="action" data-stackedtop="false" data-stackedbot="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                            <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a528ed" stroke="black" stroke-width="0.5"/>
-                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Tirer à l'arc</text>
-                        </svg>
-                        <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
-                    </div>
-				</div>
-                <div id="partieCode">
-                    <div class="blocDepart" id="blocDepart" data-type="evenement" data-stackedtop="false" data-stackedbot="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="50" viewBox="0 0 150 50">
-                            <path d="m 1 8 l 10 0 q 25 -14 50 0 l 88 0 v 36 l -118 0 l -5 5 l -10 0 l -5 -5 l -10 0 v -36 z" fill="#6aa827" stroke="black" stroke-width="0.5"/>
-                            <text x="48%" y="53%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Départ</text>
-                        </svg>
-                        <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
-                    </div>
+            <div id="partieCode">
+                <div class="blocDepart" id="blocDepart" data-type="evenement" data-stackedtop="false" data-stackedbot="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="50" viewBox="0 0 150 50">
+                        <path d="m 1 8 l 10 0 q 25 -14 50 0 l 88 0 v 36 l -118 0 l -5 5 l -10 0 l -5 -5 l -10 0 v -36 z" fill="#6aa827" stroke="black" stroke-width="0.5"/>
+                        <text x="48%" y="53%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Départ</text>
+                    </svg>
+                    <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
+                </div>
+            </div>
+            <div id="partieBanque">
+                <div class="bloc" id="Avancer" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
+                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Avancer d'une case</text>
+                    </svg>
+                    <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
+                </div>
+                <div class="bloc" id="Sauter" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
+                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Sauter d'une case</text>
+                    </svg>
+                    <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
+                </div>
+                <div class="bloc" id="TournerADroite" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
+                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Tourner à droite</text>
+                    </svg>
+                    <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
+                </div>
+                <div class="bloc" id="TournerAGauche" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
+                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Tourner à gauche</text>
+                    </svg>
+                    <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
+                </div>
+                <div class="bloc" id="Si" draggable="true" data-type="logique" data-state="idle" data-stackedtop="false" data-stackedbot="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
+                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="orange" stroke="black" stroke-width="0.5"/>
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Si ... Alors</text>
+                    </svg>
+                    <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
+                </div>
+                <div class="bloc" id="Répéter" draggable="true" data-type="logique" data-stackedtop="false" data-stackedbot="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
+                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="orange" stroke="black" stroke-width="0.5"/>
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Répéter ... fois</text>
+                    </svg>
+                    <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
+                </div>
+                <div class="bloc" id="Attaquer" draggable="true" data-type="action" data-stackedtop="false" data-stackedbot="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
+                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a528ed" stroke="black" stroke-width="0.5"/>
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Attaquer</text>
+                    </svg>
+                    <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
+                </div>
+                <div class="bloc" id="TirerAlArc" draggable="true" data-type="action" data-stackedtop="false" data-stackedbot="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
+                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a528ed" stroke="black" stroke-width="0.5"/>
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Tirer à l'arc</text>
+                    </svg>
+                    <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                 </div>
             </div>
         </div>

@@ -33,6 +33,10 @@ var niveauAffiché = false;
 
 //--------------------------- Switch Menu vers les niveaux et Initialisation de ceux-ci -----------------------
 
+//Bypass des menus :
+affichageZone(1);
+setTimeout(function (){affichageNiveau(1);},10);
+
 function affichageZone(z){
     chapitre = z;
     alert("Affiche de la zone "+z);
@@ -124,8 +128,12 @@ function affichageNiveau(n){
 
 //------------------------------ Pop-up ! ------------------------------
 
-function popup(texte, durée='10'){
-    alert("JAI PAS FINI");
+function popup(texte){
+    var popup = document.querySelector(".popup");
+    popup.style.display = "flex";
+    popup.style.top = "100px";
+    popup.style.left = "calc(50% - 50px)";
+    popup.children[0].innerHTML = texte;
 }
 
 
@@ -292,15 +300,13 @@ async function win(){
 
 async function executionCode(){
     remiseAZero();
-    
     await sleep(800);
-    
     if(blocArray.length>1 && blocDepart.dataset.stackedbot=="true"){
         for(var i=1;i<blocArray.length;i++){
             if(blocArray[i].dataset.stackedtop=="true"){
                 switch(blocArray[i].id){
                     case "Avancer":
-                        afficherMap();
+                        ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
                         joueur.y-=64;
                         joueur.afficher(joueur.x,joueur.y,joueur.dir);
                         win();
@@ -446,6 +452,7 @@ partieCode.ondrop = function(e){
 
 window.addEventListener("keydown", function(e){
     if(e.keyCode == 96){
-        console.log("");
+        popup("Prends un bloc et glisse-le faire la zone du milieu")
     }
 });
+

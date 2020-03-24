@@ -57,14 +57,14 @@ canvas {
     position: absolute;
 }
 .zoneFlèches{
-  background: pink;
-  height: 175px;
-  width: 200px;
-  border: 2px solid black;
-  border-radius: 5px;
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
+    background: pink;
+    height: 175px;
+    width: 200px;
+    border: 2px solid black;
+    border-radius: 5px;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
 }
 
 #BouttonZone1{position: absolute;left: 40%;top: 45%;}
@@ -75,54 +75,46 @@ canvas {
 
 /*-------------------- Zones : --------------------*/
 
-#partieDroite {
-    width: -moz-available;
-    width: -webkit-fill-available;
-    margin: 0 5px 5px 15px; 
-    border: 1px solid black;
-    border-radius: 5px;
-    background: white;
-    z-index: 0;
-}
-
 #partieBanque {
-    display: flex;
-    flex-flow: column;
-    align-items: flex-end;
-    float: right;
-    width: 20vw; height: 100%;
-    border-left: 1px solid black;
+    display: flex; background: white;
+    flex-flow: column; align-items: flex-end;
+    float: right; width: 30vw; margin: 0 5px 5px 0;
+    border: 1px solid black; border-radius: 0 5px 5px 0;
 }
 
 #partieCode {
-	height: 100%;
-    width: calc(100% - 20vw);
-    z-index: 10;
+    width: 100%; background: white;
+    border: 1px solid black; border-right: none;
+    border-radius: 5px 0 0 5px; margin: 0 0 5px 10px;
 }
 
 
 /*-------------------- Controles : --------------------*/
 
-.controles {
-    height: calc(100% - 589px);
-    width: -moz-available; display: flex;
+#partieControle {
+    height: calc(100% - 589px); display: flex;
+    width: -moz-available;
     width: -webkit-fill-available;
     border: 1px solid black; background: white;
     border-radius: 5px; margin-left: 5px;
     align-items: center; justify-content: center;
 }
 
-#depart {
-    width: 50px; height: 50px; border: none;
-    background: url('../media/depart.png'); 
-    margin-right: 15px;
+#partieControle button {
+    height: 40px; width: 40px;
+    border: none; padding: 0; 
+    background: transparent;
+    margin: 10px; outline:0;
+    cursor: pointer; display: flex; 
+    align-items: center;
+    justify-content: center;
 }
 
-#stop {
-    width: 50px; height: 50px; border: none;
-    background: url('../media/stop.png'); 
-    margin-left: 15px;
-}
+#partieControle img {height: 30px; width: 30px;}
+#partieControle #reset:hover {transform: rotate(20deg);}
+#partieControle #settings:hover {transform: rotate(30deg);}
+#partieControle img:active {height: 28px; width: 28px;}
+#partieControle button:hover {background: #e8e8e8;}
 
 /*-------------------- Blocs : --------------------*/
 
@@ -168,6 +160,26 @@ svg, path, text {pointer-events: none;}
     padding-left: 25px;
 }
 
-.menuContextuel hr {
-    margin: 0; opacity: 0.5;  
+.menuContextuel hr {margin: 0; opacity: 0.5;}
+
+
+/*-------------------- Pop-up : --------------------*/
+
+.popup {
+    display: none; position: absolute;
+    height: 100px; width: 500px;
+    border: 1px solid gray; z-index: 200;
+    border-radius: 5px;
+    background: rgb(60,60,60); 
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 5px 0px #656565;
+    flex-direction: row;
+}
+
+.popup button {
+    border: none; background: orange;
+    width: 50px; height: 30px;
+    border-radius: 15px; color: white;
+    position: relative; top: 20%; left: 38%;
 }
