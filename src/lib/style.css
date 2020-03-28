@@ -1,3 +1,24 @@
+@keyframes fermeturePopup {
+    from {
+        top: 10%;
+    }
+    to {
+        top: 7%;
+        opacity: 0;
+    }
+}
+
+@keyframes ouverturePopup {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/*-------------------- Général : --------------------*/
+
 body {
     height: 100vh; width: 100vw;
     margin: 0; padding: 0;
@@ -32,11 +53,8 @@ canvas {
 /*--------------------- Menu : ----------------------*/
 
 .menu {
-    display: flex;
-    width: 100vw;
-    height: 100vh;
-    align-items: center;
-    flex-direction: column;
+    display: flex; width: 100vw; height: 100vh;
+    align-items: center; flex-direction: column;
     background: url(../media/fondMenu.png); /*Fond a changer si cela ne convient pas (ce qui est fort probable)*/
 }
 
@@ -127,7 +145,8 @@ canvas {
 .bloc {
     width: 150px; height: 40px;
     margin: 5px; float: right;
-/*    filter: drop-shadow(0px 40px 2px rgba(128,128,128,0.7)); Autre solution pour le bloc gris lors du collage */
+    display: none;
+    
 }
 
 .bloc:hover {cursor: grab;}
@@ -135,10 +154,8 @@ canvas {
 svg, path, text {pointer-events: none;}
 
 .bloc-shadow {
-    display: none;
-    transform: translate(0px, -4px);
-    filter: blur(2px);
-    opacity: 0.7;
+    display: none; filter: blur(2px);
+    transform: translate(0px, -4px); opacity: 0.7;
 }
 
 
@@ -168,18 +185,29 @@ svg, path, text {pointer-events: none;}
 .popup {
     display: none; position: absolute;
     height: 100px; width: 500px;
+    top: 10%; left: calc(50% - 250px);
     border: 1px solid gray; z-index: 200;
-    border-radius: 5px;
-    background: rgb(60,60,60); 
-    align-items: center;
-    justify-content: center;
+    border-radius: 5px; background: rgb(60,60,60); 
     box-shadow: 2px 2px 5px 0px #656565;
-    flex-direction: row;
+    flex-direction: column; align-items: center;
+    justify-content: flex-end;
+}
+
+.popup #texte {
+    width: 500px; height: 70px;
+    display: flex; text-align: center;
+    align-items: center; justify-content: center;
+}
+
+.popup #btn {
+    width: 500px; height: 30px;
+    align-items: center; justify-content: flex-end;
+    margin: 0 10px 5px 0; display: flex;
 }
 
 .popup button {
     border: none; background: orange;
     width: 50px; height: 30px;
     border-radius: 15px; color: white;
-    position: relative; top: 20%; left: 38%;
 }
+
