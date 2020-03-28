@@ -5,12 +5,13 @@ var blocEnMouvement, indexBloc, tileSet, sourisX, sourisY, nbCollage=0; //Variab
 var blocArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
 var map = new Array(); //Array à deux dimension (matrice) servant de carte pour construire les niveaux
 
-//Zones :
+//Elements DOM :
 const partieCode = document.getElementById("partieCode"); //Variable représentant la zone du code
 const partieBanque = document.getElementById("partieBanque"); //Variable représentant la zone de la banque de bloc
 const blocDepart = document.getElementById("blocDepart"); //Variable représentant le bloc de départ
 const menuContextuel = document.querySelector(".menuContextuel"); //Variable représentant le menu contextuel personnalisé
 const wrapper = document.querySelector(".wrapper"); //Variable représentant le contenant principal de l'app
+const popups = document.querySelector(".popup"); //Variable représentant la popup
 var infoZone; //Variable représentant les caractèristiques (position, hauteur, etc) de la zone du code
 
 //Canvas + image :
@@ -57,7 +58,7 @@ document.addEventListener("keydown",async function(evt) {
                 await sleep(100);
                 document.getElementById("FlècheGauche").src="src/media/FlècheGauche.png";
                 if(niveau!=1){
-                    niveau=niveau-1;
+                    niveau -= 1;
                 }
                 //alert(niveau);
             break;
@@ -66,10 +67,11 @@ document.addEventListener("keydown",async function(evt) {
                 await sleep(100);
                 document.getElementById("FlècheDroite").src="src/media/FlècheDroite.png";
                 if(niveau!=5) {
-                    niveau=niveau+1;
+                    niveau += 1;
                 }
                 //alert(niveau);
             break;
+
             case 13: //Touche Entrée
               document.getElementById("Jouer").src="src/media/TouchePGlow.png";
               await sleep(100);
@@ -87,8 +89,6 @@ document.addEventListener("keydown",async function(evt) {
               document.querySelector(".zoneFlèches").style.display="none";
               break;
         }
-    }else{
-        //alert("Ya une couuille");
     }
 });
 
@@ -106,53 +106,27 @@ function affichageNiveau(n){
     blocArray.push(blocDepart);
 
     creerMap();
-
-//    switch(z){
-//        case 1: //Affichage des blocs disponibles dans la zone 1:
-//            document.getElementById('Avancer').style.display="block";
-//            document.getElementById('Sauter').style.display="block";
-//            document.getElementById('TournerAGauche').style.display="block";
-//            document.getElementById('TournerADroite').style.display="block";
-//            document.getElementById('Attaquer').style.display="block";
-//            document.getElementById('TirerAlArc').style.display="block";
-//        break;
-//
-//        case 2: //Affichage des blocs disponibles dans la zone 2:
-//            document.getElementById('Avancer').style.display="block";
-//            document.getElementById('Sauter').style.display="block";
-//            document.getElementById('TournerAGauche').style.display="block";
-//            document.getElementById('TournerADroite').style.display="block";
-//            document.getElementById('Attaquer').style.display="block";
-//            document.getElementById('TirerAlArc').style.display="block";
-//            document.getElementById('Répéter').style.display="block";
-//        break;
-//
-//        case 3: //Affichage des blocs disponibles dans la zone 3:
-//            document.getElementById('Avancer').style.display="block";
-//            document.getElementById('Sauter').style.display="block";
-//            document.getElementById('TournerAGauche').style.display="block";
-//            document.getElementById('TournerADroite').style.display="block";
-//            document.getElementById('Attaquer').style.display="block";
-//            document.getElementById('TirerAlArc').style.display="block";
-//            document.getElementById('Répéter').style.display="block";
-//            document.getElementById('If').style.display="block";
-//        break;
-//
-//        case 4: //Affichage des blocs disponibles dans la zone 4:
-//            //A continuer...
-//        break;
-//    }
 }
 
 
 //------------------------------ Pop-up ! ------------------------------
 
+var audio = new Audio();
+audio.src = "src/media/orb.mp3";
+
 function popup(texte){
-    var popup = document.querySelector(".popup");
-    popup.style.display = "flex";
-    popup.style.top = "100px";
-    popup.style.left = "calc(50% - 50px)";
-    popup.children[0].innerHTML = texte;
+    popups.style.display = "flex";
+    popups.children[0].innerHTML = texte;
+    popups.style.animation = "ouverturePopup 0.2s ease-in 0s 1 normal forwards";
+    audio.play();
+}
+
+function fermerPopup(){
+    popups.style.animation = "fermeturePopup 1s ease-out 0.2s 1 normal forwards";
+    setTimeout(() => {
+        popups.style.display = "none";
+        popups.style.animation = "";
+    },1200)
 }
 
 
@@ -175,12 +149,39 @@ document.onmousedown = function(e){
 
 function supprimerBloc(){
     if(blocEnMouvement.className=="bloc" && blocEnMouvement.dataset.stackedtop=="false" && blocEnMouvement.dataset.stackedbot=="false"){
+        menuContextuel.style.display = "none";
         indexBloc = blocArray.indexOf(blocEnMouvement);
         blocArray.splice(indexBloc,1);
         blocEnMouvement.parentNode.removeChild(blocEnMouvement);
-        menuContextuel.style.display = "none";
     }else{
         menuContextuel.style.display = "none";
+    }
+}
+
+function supprimerToutLesBloc(){
+    if(partieCode.children.length > 1){
+        menuContextuel.style.display = "none";
+        while(partieCode.children.length > 1){
+            blocArray.splice(1,1);
+            partieCode.removeChild(partieCode.children[1]);
+        }
+        blocDepart.dataset.stackedbot = "false";
+        nbCollage = 0;
+    }else{
+        menuContextuel.style.display = "none";
+    }
+}
+
+function dupliquerBloc(e){
+    if(blocEnMouvement.className=="bloc"){
+        menuContextuel.style.display = "none";
+        blocEnMouvement = blocEnMouvement.cloneNode(true);
+        partieCode.append(blocEnMouvement);
+        blocArray.push(blocEnMouvement);
+        blocEnMouvement.style.left = parseInt(blocEnMouvement.style.left)+10+"px";
+        blocEnMouvement.style.top = parseInt(blocEnMouvement.style.top)+10+"px";
+        blocEnMouvement.dataset.stackedtop = "false";
+        blocEnMouvement.dataset.stackedbot = "false"
     }
 }
 
@@ -230,7 +231,7 @@ class Joueur {
 var joueur = new Joueur(384,384,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
 
 
-//------------------------------ Charger le "tileset" et l'afficher sur le canvas ------------------------------
+//------------------------------ Gestion du "tileset" et de la map ------------------------------
 /*
     Pour faire court, lorque l'on créer un objet 'Image()' et qu'on souhaite lui attribuer une source, le navigateur doit
     d'abords charger l'image, sauf que le reste du code est exécuté en même temps et l'image n'a pas fini de charger avant
@@ -250,6 +251,12 @@ function chargerImg(url){
     });
 }
 
+function afficherBloc(liste){
+    for(var i=0;i<liste.length;i++){
+        document.getElementById(liste[i]).style.display = "block";
+    }
+}
+
 function creerMap(){
     switch(chapitre + "-" + niveau){
         case "1-1":
@@ -263,6 +270,7 @@ function creerMap(){
             map[7] = Array(0,0,0,0,0,0,0,0,0);
             map[8] = Array(0,0,0,0,0,0,0,0,0);
             joueur.pos(384,384,0);
+            afficherBloc(["Avancer"]);
         break;
 
         case "1-2":
@@ -276,6 +284,7 @@ function creerMap(){
             map[7] = Array(0,0,0,0,0,0,0,0,0);
             map[8] = Array(0,0,0,0,0,0,0,0,0);
             joueur.pos(256,384,0);
+            afficherBloc(["Sauter"]);
         break;
 
     }
@@ -313,34 +322,30 @@ function sleep(ms) {
 async function win(){
     if(map[joueur.y/64][joueur.x/64] == 2){
         await sleep(200);
-        alert("Tu as gagner !");
+        popup("Tu as gagner !");
     }
 }
 
 async function executionCode(){
     remiseAZero();
     await sleep(800);
-    if(blocArray.length>1 && blocDepart.dataset.stackedbot=="true"){
-        for(var i=1;i<blocArray.length;i++){
-            if(blocArray[i].dataset.stackedtop=="true"){
-                switch(blocArray[i].id){
-                    case "Avancer":
-                        ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
-                        joueur.y-=64;
-                        joueur.afficher(joueur.x,joueur.y,joueur.dir);
-                        win();
-                    break;
-                }
-                await sleep(1000);
+    for(var i=1;i<blocArray.length;i++){
+        if(blocArray.length>1 && blocDepart.dataset.stackedbot=="true" && blocArray[i].dataset.stackedtop=="true"){
+            switch(blocArray[i].id){
+                case "Avancer":
+                    ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
+                    joueur.y-=64;
+                    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                    win();
+                break;
             }
+            await sleep(1000);
         }
     }
 }
 
 function remiseAZero(){
-    afficherMap();
-    joueur.x = 384; joueur.y = 384; joueur.dir=0;
-    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+    creerMap();
 }
 
 
@@ -471,7 +476,7 @@ partieCode.ondrop = function(e){
 
 window.addEventListener("keydown", function(e){
     if(e.keyCode == 96){
-        //popup("Prends un bloc et glisse-le faire la zone du milieu")
-        popup("Suce ta race");
+        console.log(blocArray);
+//        popup("zebi je test des trucs alors ftg un peu");
     }
 });
