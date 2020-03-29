@@ -35,8 +35,8 @@ var niveauAffiché = false;
 //--------------------------- Switch Menu vers les niveaux et Initialisation de ceux-ci -----------------------
 
 //Bypass des menus :
-//affichageZone(1);
-//setTimeout(function (){affichageNiveau(1);},10);
+affichageZone(1);
+setTimeout(function (){affichageNiveau(1);},10);
 
 function affichageZone(z){
     chapitre = z;
@@ -195,9 +195,11 @@ var modeSombreActive = false; //Pour activer le mode sombre.
 function AfficherSettings() {
   if (settingsActive==false) {
     settingsActive=true;
+    document.querySelector(".boutonsPlayResetSettings").style.display="none";
     document.querySelector(".menuSettings").style.display="block";
   } else {
     document.querySelector(".menuSettings").style.display="none";
+    document.querySelector(".boutonsPlayResetSettings").style.display="block";
     settingsActive=false;
   }
 }
@@ -224,10 +226,20 @@ function ModeSombre() {
   if (modeSombreActive==false) {
     document.getElementById("imgBoutonModeSombre").src="src/media/moon-white.png";
     modeSombreActive=true;
+    document.getElementById("partieBanque").style.background="rgb(60,60,60)";
+    document.getElementById("partieCode").style.background="rgb(60,60,60)";
+    document.querySelector(".en-tete").style.background="#3c5a96";
+    document.getElementById("partieControle").style.background="rgb(60,60,60)";
+    document.body.style.background="#6a758a";
     //A compléter (Tristan)
   } else {
     document.getElementById("imgBoutonModeSombre").src="src/media/moon-black.png";
     modeSombreActive=false;
+    document.getElementById("partieBanque").style.background="white";
+    document.getElementById("partieCode").style.background="white";
+    document.querySelector(".en-tete").style.background="#6699ff";
+    document.getElementById("partieControle").style.background="white";
+    document.body.style.background="#bbcdf0";
     //A compléter (Tristan)
   }
 }
@@ -247,6 +259,7 @@ function RetournerAuMenu() {
 
     settingsActive = false;
     document.querySelector(".menuSettings").style.display="none";
+    document.querySelector(".boutonsPlayResetSettings").style.display="block";
 }
 
 

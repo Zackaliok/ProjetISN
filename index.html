@@ -26,21 +26,6 @@
             </button>
         </div>
 
-        <div class="menuSettings" style="display:none;">
-            <button onclick="RetournerAuMenu()">
-              Retourner dans le menu
-            </button>
-            <button onclick="ActiverDésactiverMusique()">
-              <img src="src/media/audio-icon.png" alt="Activer/Désactiver la musique" id="imgBoutonMusique" style="height:53px;width:54px;">
-            </button>
-            <button onclick="ModeSombre()">
-              <img src="src/media/moon-black.png" alt="Activer/Désactiver le mode sombre" id="imgBoutonModeSombre" style="height:53px;width:54px;">
-            </button>
-            <button onclick="AfficherCodeSource()">
-              Afficher le code javascript
-            </button>
-        </div>
-
         <div class="popup">
             <div id="texte"></div>
             <div id="btn">
@@ -109,16 +94,33 @@
                 <img src="src/media/ToucheP.png" alt="Lancer le niveau" id="Jouer">
                 <img src="src/media/Echap.png" alt="Revenir au Menu" id="Echap">
             </div>
-             <!--On va utiliser les flèches gauche et droit pour déplacer le joueur sur la map pour choisir le niveau. Un coup vers la droite augmentera une variable de 1 et placera le personnage en conséquences et un coup à gauche diminuera cette même variable de 1. Avec une autre touche, on pourra lancer la partie en récupérant la variable qui nous donne le niveau voulu.-->
         </div>
 
         <div class="wrapper">
             <div id="partieGauche">
                 <canvas id="canvas" height="576" width="576"></canvas>
                 <div id="partieControle">
-                    <button onclick="executionCode()"><img id="play" src="src/media/btn_play.png"></button>
-                    <button onclick="remiseAZero()"><img id="reset" src="src/media/btn_reset.png"></button>
-                    <button onclick="AfficherSettings()"><img id="settings" src="src/media/btn_settings.png"></button>
+                    <div class="boutonsPlayResetSettings">
+                      <button onclick="executionCode()"><img id="play" src="src/media/btn_play.png"></button>
+                      <button onclick="remiseAZero()"><img id="reset" src="src/media/btn_reset.png"></button>
+                      <button onclick="AfficherSettings()"><img id="settings" src="src/media/btn_settings.png"></button>
+                    </div>
+                    <div class="menuSettings" style="display:none;">
+                        <button onclick="RetournerAuMenu()">
+                          <img src="src/media/Echap.png" alt="Retourner au menu principal." title="Retourner au menu principal.">
+                        </button>
+                        <button onclick="ActiverDésactiverMusique()">
+                          <img src="src/media/audio-icon.png" alt="Activer/Désactiver la musique" title="Activer/Désactiver la musique." id="imgBoutonMusique" style="height:53px;width:54px;">
+                        </button>
+                        <button onclick="ModeSombre()">
+                          <img src="src/media/moon-black.png" alt="Activer/Désactiver le mode sombre" title="Activer/Désactiver le mode sombre" id="imgBoutonModeSombre" style="height:53px;width:54px;">
+                        </button>
+                        <button onclick="AfficherCodeSource()">
+                          <img src="src/media/pages.png" alt="codeSource" title="Afficher le code javascript." style="height:53px;width:54px;">
+                        </button>
+                        <button onclick="AfficherSettings()"><img id="settings" src="src/media/btn_settings.png" style="height:50px;width:50px;"></button>
+                    </div>
+
                 </div>
             </div>
             <div id="partieCode">
