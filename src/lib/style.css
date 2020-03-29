@@ -92,6 +92,8 @@ canvas {
     bottom: 20px;
 }
 
+
+
 /*-------------------- Zones : --------------------*/
 
 #partieBanque {
@@ -210,4 +212,13 @@ svg, path, text {pointer-events: none;}
     border: none; background: orange;
     width: 50px; height: 30px;
     border-radius: 15px; color: white;
+}
+
+/*--------- Menu Settings :---------------*/
+
+.menuSettings {
+  position: absolute;
+  left: 200px
+  height: 100px;
+  width: 200px;
 }

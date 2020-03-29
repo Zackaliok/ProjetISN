@@ -26,6 +26,21 @@
             </button>
         </div>
 
+        <div class="menuSettings" style="display:none;">
+            <button onclick="RetournerAuMenu()">
+              Retourner dans le menu
+            </button>
+            <button onclick="ActiverDésactiverMusique()">
+              <img src="src/media/audio-icon.png" alt="Activer/Désactiver la musique" id="imgBoutonMusique" style="height:53px;width:54px;">
+            </button>
+            <button onclick="ModeSombre()">
+              <img src="src/media/moon-black.png" alt="Activer/Désactiver le mode sombre" id="imgBoutonModeSombre" style="height:53px;width:54px;">
+            </button>
+            <button onclick="AfficherCodeSource()">
+              Afficher le code javascript
+            </button>
+        </div>
+
         <div class="popup">
             <div id="texte"></div>
             <div id="btn">
@@ -103,7 +118,7 @@
                 <div id="partieControle">
                     <button onclick="executionCode()"><img id="play" src="src/media/btn_play.png"></button>
                     <button onclick="remiseAZero()"><img id="reset" src="src/media/btn_reset.png"></button>
-                    <button onclick=""><img id="settings" src="src/media/btn_settings.png"></button>
+                    <button onclick="AfficherSettings()"><img id="settings" src="src/media/btn_settings.png"></button>
                 </div>
             </div>
             <div id="partieCode">

@@ -80,7 +80,7 @@ document.addEventListener("keydown",async function(evt) {
             break;
             case 27: //Touche Echap
               document.getElementById('Echap').src="src/media/EchapGlow.png";
-              await sleep(100);
+              await sleep(150);
               document.getElementById('Echap').src="src/media/Echap.png";
               mapZone = false;
               mapMonde = true;
@@ -183,6 +183,70 @@ function dupliquerBloc(e){
         blocEnMouvement.dataset.stackedtop = "false";
         blocEnMouvement.dataset.stackedbot = "false"
     }
+}
+
+
+//------------------------------ Menu paramètres : -------------------------------------------
+
+var settingsActive = false;
+var musiqueActive = true; //Pour activer Désactiver la musique du jeu.
+var modeSombreActive = false; //Pour activer le mode sombre.
+
+function AfficherSettings() {
+  if (settingsActive==false) {
+    settingsActive=true;
+    document.querySelector(".menuSettings").style.display="block";
+  } else {
+    document.querySelector(".menuSettings").style.display="none";
+    settingsActive=false;
+  }
+}
+
+
+function ActiverDésactiverMusique() {
+
+  if (musiqueActive==true) {
+    musiqueActive=false;
+    document.getElementById("imgBoutonMusique").src="src/media/audio-off-icon.png";
+    //alert("Musique désactivée");
+    //A compléter (Tristan)
+  } else {
+    musiqueActive=true;
+    document.getElementById("imgBoutonMusique").src="src/media/audio-icon.png";
+    //alert("Musique activée");
+    //A compléter (Tristan)
+  }
+
+}
+
+function ModeSombre() {
+
+  if (modeSombreActive==false) {
+    document.getElementById("imgBoutonModeSombre").src="src/media/moon-white.png";
+    modeSombreActive=true;
+    //A compléter (Tristan)
+  } else {
+    document.getElementById("imgBoutonModeSombre").src="src/media/moon-black.png";
+    modeSombreActive=false;
+    //A compléter (Tristan)
+  }
+}
+
+function RetournerAuMenu() {
+    document.querySelector(".MapZone"+chapitre).style.display="none";
+    document.querySelector(".zoneFlèches").style.display="none";
+    niveau = 1;
+    chapitre = 1;
+
+    niveauAffiché=false;
+    mapMonde=true;
+    document.querySelector(".menu").style.display="flex";
+    document.querySelector(".MapMonde").style.display="block";
+    document.querySelector(".wrapper").style.display="none";
+    document.querySelector(".en-tete").style.display="none";
+
+    settingsActive = false;
+    document.querySelector(".menuSettings").style.display="none";
 }
 
 
