@@ -34,8 +34,8 @@ var niveauAffiché = false;
 //--------------------------- Map Monde et choix du niveau -----------------------
 
 //Bypass des menus :
-//affichageZone(1);
-//setTimeout(function (){affichageNiveau(1);},10);
+affichageZone(1);
+setTimeout(function (){affichageNiveau(1);},10);
 
 function affichageZone(z){
     chapitre = z;
