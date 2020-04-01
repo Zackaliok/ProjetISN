@@ -13,32 +13,11 @@
          </header>
 
         <div class="menuContextuel">
-            <button onClick="supprimerBloc()">
-                Supprimer le bloc sélectionné
-            </button>
+            <button onClick="supprimerBloc()">Supprimer le bloc sélectionné</button>
             <hr size='1px'>
-            <button onClick="supprimerToutLesBloc()">
-                Supprimer tout les blocs
-            </button>
+            <button onClick="supprimerToutLesBloc()">Supprimer tout les blocs</button>
             <hr size='1px'>
-            <button onClick="dupliquerBloc()">
-                Dupliquer le bloc sélectionné
-            </button>
-        </div>
-
-        <div class="menuSettings" style="display:none;">
-            <button onclick="RetournerAuMenu()">
-              Retourner dans le menu
-            </button>
-            <button onclick="ActiverDésactiverMusique()">
-              <img src="src/media/audio-icon.png" alt="Activer/Désactiver la musique" id="imgBoutonMusique" style="height:53px;width:54px;">
-            </button>
-            <button onclick="ModeSombre()">
-              <img src="src/media/moon-black.png" alt="Activer/Désactiver le mode sombre" id="imgBoutonModeSombre" style="height:53px;width:54px;">
-            </button>
-            <button onclick="AfficherCodeSource()">
-              Afficher le code javascript
-            </button>
+            <button onClick="dupliquerBloc()">Dupliquer le bloc sélectionné</button>
         </div>
 
         <div class="popup">
@@ -49,10 +28,10 @@
         </div>
 
         <div class="menu">
-            <img src="src/media/logoMenu.png" alt="Logo du site et du menu"/>
+            <img src="src/media/menu/logoMenu.png" alt="Logo du site et du menu"/>
 
             <div class="MapMonde">
-                <img src="src/media/Map-Monde.png" alt="Map Monde">
+                <img src="src/media/map/Map-Monde.png" alt="Map Monde">
                 <button class="BouttonsDeZone" id="BouttonZone1" onclick="affichageZone(1)">Zone 1</button>
                 <button class="BouttonsDeZone" id="BouttonZone2" onclick="affichageZone(2)">Zone 2</button>
                 <button class="BouttonsDeZone" id="BouttonZone3" onclick="affichageZone(3)">Zone 3</button>
@@ -60,7 +39,7 @@
             </div>
 
             <div class="MapZone1" style="display:none;">
-                <img src="src/media/MapZone1.png" alt="MapZone1">
+                <img src="src/media/map/MapZone1.png" alt="MapZone1">
               <!--  <div class="boutonNiveau1" style="display:none;">
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(1)">Niveau 1</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(2)">Niveau 2</button>
@@ -71,7 +50,7 @@
             </div>
 
             <div class="MapZone2" style="display:none;">
-                <img src="src/media/MapZone2.png" alt="MapZone2">
+                <img src="src/media/map/MapZone2.png" alt="MapZone2">
               <!--  <div class="boutonNiveau2" style="display:none;">
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(1)">Niveau 1</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(2)">Niveau 2</button>
@@ -82,7 +61,7 @@
             </div>
 
             <div class="MapZone3" style="display:none;">
-                <img src="src/media/MapZone3.png" alt="MapZone3">
+                <img src="src/media/map/MapZone3.png" alt="MapZone3">
               <!--  <div class="boutonNiveau3" style="display:none;">
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(1)">Niveau 1</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(2)">Niveau 2</button>
@@ -93,7 +72,7 @@
             </div>
 
             <div class="MapZone4" style="display:none;">
-                <img src="src/media/MapZone4.png" alt="MapZone4">
+                <img src="src/media/map/MapZone4.png" alt="MapZone4">
               <!--  <div class="boutonNiveau4" style="display:none;">
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(1)">Niveau 1</button>
                     <button type="button" class="boutonNiveau" onclick="affichageNiveau(2)">Niveau 2</button>
@@ -103,22 +82,30 @@
                 </div>-->
             </div>
 
-            <div class="zoneFlèches" style="display:none;">
-                <img src="src/media/FlècheGauche.png" alt="Flèche de gauche" id="FlècheGauche">
-                <img src="src/media/FlècheDroite.png" alt="Flèche de droite" id="FlècheDroite">
-                <img src="src/media/ToucheP.png" alt="Lancer le niveau" id="Jouer">
-                <img src="src/media/Echap.png" alt="Revenir au Menu" id="Echap">
+            <div class="zoneFleches" style="display:none;">
+                <img id="toucheEchap" src="src/media/touche/toucheEchap.png" alt="Revenir au Menu">
+                <img id="toucheFlecheGauche" src="src/media/touche/toucheFlecheGauche.png" alt="Flèche de gauche">
+                <img id="toucheFlecheDroite" src="src/media/touche/toucheFlecheDroite.png" alt="Flèche de droite">
+                <img id="toucheEntree" src="src/media/touche/toucheEntree.png" alt="Lancer le niveau">
             </div>
-             <!--On va utiliser les flèches gauche et droit pour déplacer le joueur sur la map pour choisir le niveau. Un coup vers la droite augmentera une variable de 1 et placera le personnage en conséquences et un coup à gauche diminuera cette même variable de 1. Avec une autre touche, on pourra lancer la partie en récupérant la variable qui nous donne le niveau voulu.-->
         </div>
 
         <div class="wrapper">
             <div id="partieGauche">
                 <canvas id="canvas" height="576" width="576"></canvas>
                 <div id="partieControle">
-                    <button onclick="executionCode()"><img id="play" src="src/media/btn_play.png"></button>
-                    <button onclick="remiseAZero()"><img id="reset" src="src/media/btn_reset.png"></button>
-                    <button onclick="AfficherSettings()"><img id="settings" src="src/media/btn_settings.png"></button>
+                    <div class="controles" id="controlesJeu">
+                        <button onclick="executionCode()"><img id="imgPlay" src="src/media/icon/btn_play.png"></button>
+                        <button onclick="remiseAZero()"><img id="imgReset" src="src/media/icon/btn_reset.png"></button>
+                        <button onclick="afficherParametres()"><img id="imgParametres" src="src/media/icon/btn_settings.png"></button>
+                    </div>
+                    <div class="controles" id="menuParametres">
+                        <button onclick="retournerAuMenu()"><img id="imgMenu" src="src/media/touche/toucheEchap.png" title="Retourner au menu principal"></button>
+                        <button onclick="switchMusique()"><img id="imgMusique" src="src/media/icon/audio-icon.png" title="Activer/Désactiver la musique"></button>
+                        <button onclick="switchModeSombre()"><img id="imgModeSombre" src="src/media/icon/moon-black.png" title="Activer/Désactiver le mode sombre"></button>
+                        <button onclick="switchCodeSource()"><img id="imgCodeJS" src="src/media/icon/pages.png" title="Afficher le code javascript"></button>
+                        <button onclick="afficherParametres()"><img id="imgParametres2" src="src/media/icon/btn_settings.png" title="Retour en arrière"></button>
+                    </div>
                 </div>
             </div>
             <div id="partieCode">

@@ -1,7 +1,7 @@
 //------------------------------ Initialisation ------------------------------
 
 //Bloc, joueur et map :
-var blocEnMouvement, indexBloc, tileSet, sourisX, sourisY, nbCollage=0; //Variables globales
+var blocEnMouvement, indexBloc, tileSet, sourisX, sourisY, nbCollage=0, chapitre=1, niveau=1; //Variables globales
 var blocArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
 var map = new Array(); //Array à deux dimension (matrice) servant de carte pour construire les niveaux
 
@@ -19,12 +19,11 @@ const canvas = document.getElementById('canvas'); //Variable représentant le ca
 const ctx = canvas.getContext('2d'); //Variable représentant le "context" (la où on dessine)
 chargerImg("src/media/tileset.png"); //Charge le "tileset";
 
+//Audio :
+var audio = new Audio();
+
 //Empêcher la selection :
 document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction (texte, images) sur la page
-
-//Déclaration du chapitre actuel et du niveau :
-var chapitre = 1;
-var niveau = 1;
 
 //Variables pour savoir qui est affiché :
 var mapMonde = true;
@@ -32,7 +31,7 @@ var mapZone = false;          //Touche pas j'en ai besoin (Tristan)
 var niveauAffiché = false;
 
 
-//--------------------------- Switch Menu vers les niveaux et Initialisation de ceux-ci -----------------------
+//--------------------------- Map Monde et choix du niveau -----------------------
 
 //Bypass des menus :
 //affichageZone(1);
@@ -40,54 +39,49 @@ var niveauAffiché = false;
 
 function affichageZone(z){
     chapitre = z;
-    alert("Affiche de la zone "+z);
+    alert("Affiche de la zone "+z); //A enlever à la fin
     document.querySelector(".MapMonde").style.display="none";
     document.querySelector(".MapZone"+z).style.display="block";
     //document.querySelector(".boutonNiveau"+z).style.display="block";   //A mettre s'il y a un problème avec la selection de niveaux
-    document.querySelector(".zoneFlèches").style.display="block";
-    mapMonde=false;
-    mapZone=true;     //Touche pas j'en ai besoin (Tristan)
+    document.querySelector(".zoneFleches").style.display="flex";
+    mapMonde=false; mapZone=true;     //Touche pas j'en ai besoin (Tristan)
 }
 
 //Abonnement pour le keydown avec la fonction
-document.addEventListener("keydown",async function(evt) {
+document.addEventListener("keydown", async (e) => {
     if(mapZone==true){
-        switch (evt.keyCode){
-            case 37: //FlècheGauche
-                document.getElementById("FlècheGauche").src="src/media/FlècheGaucheGlow.png";
+        switch(e.keyCode){
+            case 37: //Flèche Gauche
+                document.getElementById("toucheFlecheGauche").src="src/media/touche/toucheFlecheGaucheGlow.png";
                 await sleep(100);
-                document.getElementById("FlècheGauche").src="src/media/FlècheGauche.png";
+                document.getElementById("toucheFlecheGauche").src="src/media/touche/toucheFlecheGauche.png";
                 if(niveau!=1){
                     niveau -= 1;
                 }
-                //alert(niveau);
             break;
-            case 39: //FlècheDroite
-                document.getElementById("FlècheDroite").src="src/media/FlècheDroiteGlow.png";
+            case 39: //Flèche Droite
+                document.getElementById("toucheFlecheDroite").src="src/media/touche/toucheFlecheDroiteGlow.png";
                 await sleep(100);
-                document.getElementById("FlècheDroite").src="src/media/FlècheDroite.png";
+                document.getElementById("toucheFlecheDroite").src="src/media/touche/toucheFlecheDroite.png";
                 if(niveau!=5) {
                     niveau += 1;
                 }
-                //alert(niveau);
             break;
-
             case 13: //Touche Entrée
-              document.getElementById("Jouer").src="src/media/TouchePGlow.png";
-              await sleep(100);
-              document.getElementById("Jouer").src="src/media/ToucheP.png";
-              affichageNiveau(niveau);
+                document.getElementById("toucheEntree").src="src/media/touche/toucheEntreeGlow.png";
+                await sleep(100);
+                document.getElementById("toucheEntree").src="src/media/touche/toucheEntree.png";
+                affichageNiveau(niveau);
             break;
             case 27: //Touche Echap
-              document.getElementById('Echap').src="src/media/EchapGlow.png";
-              await sleep(150);
-              document.getElementById('Echap').src="src/media/Echap.png";
-              mapZone = false;
-              mapMonde = true;
-              document.querySelector(".MapMonde").style.display="block";
-              document.querySelector(".MapZone"+chapitre).style.display="none";
-              document.querySelector(".zoneFlèches").style.display="none";
-              break;
+                document.getElementById('toucheEchap').src="src/media/touche/toucheEchapGlow.png";
+                await sleep(150);
+                document.getElementById('toucheEchap').src="src/media/touche/toucheEchap.png";
+                mapZone = false; mapMonde = true;
+                document.querySelector(".MapMonde").style.display="block";
+                document.querySelector(".MapZone"+chapitre).style.display="none";
+                document.querySelector(".zoneFleches").style.display="none";
+            break;
         }
     }
 });
@@ -111,22 +105,17 @@ function affichageNiveau(n){
 
 //------------------------------ Pop-up ! ------------------------------
 
-var audio = new Audio();
-audio.src = "src/media/orb.mp3";
-
-function popup(texte){
+async function popup(texte){
+    popups.style.visibility = "visible";
     popups.style.display = "flex";
     popups.children[0].innerHTML = texte;
     popups.style.animation = "ouverturePopup 0.2s ease-in 0s 1 normal forwards";
+    audio.src = "src/media/son/orb.mp3";
     audio.play();
 }
 
 function fermerPopup(){
     popups.style.animation = "fermeturePopup 1s ease-out 0.2s 1 normal forwards";
-    setTimeout(() => {
-        popups.style.display = "none";
-        popups.style.animation = "";
-    },1200)
 }
 
 
@@ -186,67 +175,75 @@ function dupliquerBloc(e){
 }
 
 
-//------------------------------ Menu paramètres : -------------------------------------------
+//------------------------------ Menu paramètres -------------------------------------------
 
 var settingsActive = false;
-var musiqueActive = true; //Pour activer Désactiver la musique du jeu.
 var modeSombreActive = false; //Pour activer le mode sombre.
 
-function AfficherSettings() {
-  if (settingsActive==false) {
-    settingsActive=true;
-    document.querySelector(".menuSettings").style.display="block";
-  } else {
-    document.querySelector(".menuSettings").style.display="none";
-    settingsActive=false;
-  }
+function afficherParametres(){
+    if(settingsActive==false){
+        settingsActive=true;
+        document.getElementById("controlesJeu").style.display="none";
+        document.getElementById("menuParametres").style.display="flex";
+    }else{
+        document.getElementById("menuParametres").style.display="none";
+        document.getElementById("controlesJeu").style.display="flex";
+        settingsActive=false;
+    }
 }
 
-
-function ActiverDésactiverMusique() {
-
-  if (musiqueActive==true) {
-    musiqueActive=false;
-    document.getElementById("imgBoutonMusique").src="src/media/audio-off-icon.png";
-    //alert("Musique désactivée");
-    //A compléter (Tristan)
-  } else {
-    musiqueActive=true;
-    document.getElementById("imgBoutonMusique").src="src/media/audio-icon.png";
-    //alert("Musique activée");
-    //A compléter (Tristan)
-  }
-
+function switchMusique(){
+    if(audio.muted==false){
+        audio.muted = true;
+        document.getElementById("imgMusique").src="src/media/icon/audio-off-icon.png";
+        popup("Musique désactivée !");
+    }else{
+        audio.muted = false;
+        document.getElementById("imgMusique").src="src/media/icon/audio-icon.png";
+        popup("Musique activée !");
+    }
 }
 
-function ModeSombre() {
-
-  if (modeSombreActive==false) {
-    document.getElementById("imgBoutonModeSombre").src="src/media/moon-white.png";
-    modeSombreActive=true;
-    //A compléter (Tristan)
-  } else {
-    document.getElementById("imgBoutonModeSombre").src="src/media/moon-black.png";
-    modeSombreActive=false;
-    //A compléter (Tristan)
-  }
+function switchModeSombre() {
+    if(modeSombreActive==false){
+        document.getElementById("imgModeSombre").src="src/media/icon/moon-white.png";
+        modeSombreActive=true;
+        document.getElementById("partieBanque").style.background="rgb(60,60,60)";
+        document.getElementById("partieCode").style.background="rgb(60,60,60)";
+        document.querySelector(".en-tete").style.background="#3c5a96";
+        document.getElementById("partieControle").style.background="rgb(60,60,60)";
+        document.body.style.background="#6a758a";
+        //A compléter (Tristan)
+    }else{
+        document.getElementById("imgModeSombre").src="src/media/icon/moon-black.png";
+        modeSombreActive=false;
+        document.getElementById("partieBanque").style.background="white";
+        document.getElementById("partieCode").style.background="white";
+        document.querySelector(".en-tete").style.background="#6699ff";
+        document.getElementById("partieControle").style.background="white";
+        document.body.style.background="#bbcdf0";
+        //A compléter (Tristan)
+    }
 }
 
-function RetournerAuMenu() {
+function switchCodeSource(){
+    //Bon euh faudrait qu'on complete ca a la fin
+}
+
+function retournerAuMenu(){
     document.querySelector(".MapZone"+chapitre).style.display="none";
-    document.querySelector(".zoneFlèches").style.display="none";
-    niveau = 1;
-    chapitre = 1;
+    document.querySelector(".zoneFleches").style.display="none";
+    niveau = 1; chapitre = 1;
 
-    niveauAffiché=false;
-    mapMonde=true;
+    niveauAffiché=false; mapMonde=true;
     document.querySelector(".menu").style.display="flex";
     document.querySelector(".MapMonde").style.display="block";
     document.querySelector(".wrapper").style.display="none";
     document.querySelector(".en-tete").style.display="none";
 
     settingsActive = false;
-    document.querySelector(".menuSettings").style.display="none";
+    document.getElementById("menuParametres").style.display="none";
+    document.getElementById("controlesJeu").style.display="flex";
 }
 
 
@@ -536,11 +533,14 @@ partieCode.ondrop = function(e){
 };
 
 
+
+
+
 //------------------------------ Debugage et tests ------------------------------
 
 window.addEventListener("keydown", function(e){
     if(e.keyCode == 96){
-        console.log(blocArray);
-//        popup("zebi je test des trucs alors ftg un peu");
+        console.log(audio.muted);
+//        popup("zebi je test des trucs");
     }
 });

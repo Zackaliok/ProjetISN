@@ -5,6 +5,7 @@
     to {
         top: 7%;
         opacity: 0;
+        visibility: hidden;
     }
 }
 
@@ -22,7 +23,7 @@
 body {
     height: 100vh; width: 100vw;
     margin: 0; padding: 0;
-    background: #bbcdf0; color: white;
+    background: #bbcdf0; color: white;   /* #bbcdf0 */
     font-family: 'Source Sans Pro', sans-serif;
     box-sizing: border-box;
 }
@@ -55,7 +56,7 @@ canvas {
 .menu {
     display: flex; width: 100vw; height: 100vh;
     align-items: center; flex-direction: column;
-    background: url(../media/fondMenu.png); /*Fond a changer si cela ne convient pas (ce qui est fort probable)*/
+    background: url(../media/menu/fondMenu.png);
 }
 
 .boutonNiveau button {
@@ -75,23 +76,20 @@ canvas {
     position: absolute;
 }
 
-
 #BouttonZone1{position: absolute;left: 40%;top: 45%;}
 #BouttonZone2{position: absolute;left: 52.5%;top: 50%;}
-#BouttonZone3{position: absolute;left: 45%;top: 75%;}         /*Positionnement de tout les boutons pour les placer sur les îles*/
+#BouttonZone3{position: absolute;left: 45%;top: 75%;}
 #BouttonZone4{position: absolute;left: 62.5%;top: 75%;}
 
-.zoneFlèches{
-    background: pink;
-    height: 175px;
-    width: 200px;
-    border: 2px solid black;
-    border-radius: 5px;
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
+.zoneFleches {
+    background: pink; position: absolute; 
+    height: 150px; width: 300px;
+    border: 2px solid black; border-radius: 5px;
+    right: 20px; bottom: 20px; display: flex;
+    justify-content: center; align-items: center;
 }
 
+.zoneFleches img {margin: 0 5px 0 5px;}
 
 
 /*-------------------- Zones : --------------------*/
@@ -109,9 +107,6 @@ canvas {
     border-radius: 5px 0 0 5px; margin: 0 0 5px 10px;
 }
 
-
-/*-------------------- Controles : --------------------*/
-
 #partieControle {
     height: calc(100% - 589px); display: flex;
     width: -moz-available;
@@ -121,21 +116,29 @@ canvas {
     align-items: center; justify-content: center;
 }
 
-#partieControle button {
-    height: 40px; width: 40px;
-    border: none; padding: 0;
-    background: transparent;
-    margin: 10px; outline:0;
-    cursor: pointer; display: flex;
-    align-items: center;
-    justify-content: center;
+
+/*-------------------- Controles et menu des parametres : --------------------*/
+
+.controles {
+    height: 100%; width: 100%; display: flex;
+    align-items: center; justify-content: center;
 }
 
-#partieControle img {height: 30px; width: 30px;}
-#partieControle #reset:hover {transform: rotate(20deg);}
-#partieControle #settings:hover {transform: rotate(30deg);}
-#partieControle img:active {height: 28px; width: 28px;}
-#partieControle button:hover {background: #e8e8e8;}
+#menuParametres {display: none;}
+
+.controles button {
+    height: 40px; width: 40px; border: none;
+    margin: 0 10px 0 10px; background: transparent;
+    cursor: pointer; outline: 0; display: flex;
+    align-items: center; justify-content: center;
+}
+
+.controles img {height: 30px; width: 30px;}
+.controles #imgReset:hover {transform: rotate(20deg);}
+.controles #imgParametres:hover {transform: rotate(30deg);}
+.controles img:active {height: 28px; width: 28px;}
+.controles button:hover {background: #e8e8e8;}
+
 
 /*-------------------- Blocs : --------------------*/
 
@@ -149,7 +152,6 @@ canvas {
     width: 150px; height: 40px;
     margin: 5px; float: right;
     display: none;
-
 }
 
 .bloc:hover {cursor: grab;}
@@ -210,15 +212,6 @@ svg, path, text {pointer-events: none;}
 
 .popup button {
     border: none; background: orange;
-    width: 50px; height: 30px;
+    width: 50px; height: 30px; outline: 0;
     border-radius: 15px; color: white;
-}
-
-/*--------- Menu Settings :---------------*/
-
-.menuSettings {
-  position: absolute;
-  left: 200px
-  height: 100px;
-  width: 200px;
 }
