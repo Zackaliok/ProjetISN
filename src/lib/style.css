@@ -18,6 +18,15 @@
     }
 }
 
+@keyframes test {
+    from {
+        background-position: 100% 0;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
 /*-------------------- Général : --------------------*/
 
 body {
@@ -56,36 +65,50 @@ canvas {
 .menu {
     display: flex; width: 100vw; height: 100vh;
     align-items: center; flex-direction: column;
-    background: url(../media/menu/fondMenu.png);
+    background: url(../media/menu/fondMenu2.png);
 }
 
-.boutonNiveau button {
-    background: transparent;
-    border: 1px solid black;
-    border-radius: 10px;
-    height: 50px; width: 50px;
-    margin: 0 5px 0 5px;
+/*---- Acceuil : ----*/
+
+.accueil {
+    display: flex; width: 100vw; height: 100vh;
+    align-items: center; flex-direction: column;
+}
+
+.accueil p {
+    text-align: center; font-weight: 450; line-height: 50px;
+    font-size: 22px; margin: 50px 0 100px 0;
+}
+
+.commencerJeu {
+    background: linear-gradient(to right, white 0%, white 50%, transparent 50%, transparent 100%);
+    border: 2px solid white; border-radius: 5px;
+    height: 75px; width: 200px; color: white;
+    padding: 5px; font-weight: bold;
     font-family: 'Source Sans Pro', sans-serif;
-    font-size: 20px;
+    cursor: pointer; outline: 0; font-size: 24px;
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    transition: all 0.5s;
 }
 
-.BouttonsDeZone {
-    background: transparent;
-    border: none;
-    z-index: 10;
-    position: absolute;
-}
+.commencerJeu:hover { background-position: 0 0; color: #333;}
 
-#BouttonZone1{position: absolute;left: 40%;top: 45%;}
-#BouttonZone2{position: absolute;left: 52.5%;top: 50%;}
-#BouttonZone3{position: absolute;left: 45%;top: 75%;}
-#BouttonZone4{position: absolute;left: 62.5%;top: 75%;}
+.accueil i {font-size: 18px; position: absolute; bottom: 10px;}
+
+
+/*---- Map Monde/Zone : ----*/
+
+.mapMonde {
+    display: none; width: 100vw; height: 100vh;
+    align-items: center; justify-content: center;
+}
 
 .zoneFleches {
     background: pink; position: absolute; 
     height: 150px; width: 300px;
     border: 2px solid black; border-radius: 5px;
-    right: 20px; bottom: 20px; display: flex;
+    right: 20px; bottom: 20px; display: none;
     justify-content: center; align-items: center;
 }
 

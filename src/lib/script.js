@@ -34,14 +34,28 @@ var niveauAffiché = false;
 //--------------------------- Map Monde et choix du niveau -----------------------
 
 //Bypass des menus :
-affichageZone(1);
-setTimeout(function (){affichageNiveau(1);},10);
+//affichageZone(1);
+//setTimeout(function (){affichageNiveau(1);},10);
+
+//Ajoute un evenement "onclick" aux "area" :
+var area = document.getElementsByTagName("area");
+for(var i=0;i<area.length;i++){
+    area[i].addEventListener("click", function() {
+        affichageZone(parseInt(this.title.match(/\d+/)));
+    });
+}
+
+function afficherMenu(){
+    document.querySelector(".accueil").style.display = "none";
+    document.querySelector(".mapMonde").style.display = "flex";
+}
+
 
 function affichageZone(z){
     chapitre = z;
     alert("Affiche de la zone "+z); //A enlever à la fin
-    document.querySelector(".MapMonde").style.display="none";
-    document.querySelector(".MapZone"+z).style.display="block";
+    document.querySelector(".mapMonde").style.display="none";
+    document.querySelector(".mapZone"+z).style.display="block";
     //document.querySelector(".boutonNiveau"+z).style.display="block";   //A mettre s'il y a un problème avec la selection de niveaux
     document.querySelector(".zoneFleches").style.display="flex";
     mapMonde=false; mapZone=true;     //Touche pas j'en ai besoin (Tristan)
@@ -78,8 +92,8 @@ document.addEventListener("keydown", async (e) => {
                 await sleep(150);
                 document.getElementById('toucheEchap').src="src/media/touche/toucheEchap.png";
                 mapZone = false; mapMonde = true;
-                document.querySelector(".MapMonde").style.display="block";
-                document.querySelector(".MapZone"+chapitre).style.display="none";
+                document.querySelector(".mapMonde").style.display="block";
+                document.querySelector(".mapZone"+chapitre).style.display="none";
                 document.querySelector(".zoneFleches").style.display="none";
             break;
         }
@@ -231,13 +245,15 @@ function switchCodeSource(){
 }
 
 function retournerAuMenu(){
-    document.querySelector(".MapZone"+chapitre).style.display="none";
+    supprimerToutLesBloc();
+    
+    document.querySelector(".mapZone"+chapitre).style.display="none";
     document.querySelector(".zoneFleches").style.display="none";
     niveau = 1; chapitre = 1;
 
     niveauAffiché=false; mapMonde=true;
     document.querySelector(".menu").style.display="flex";
-    document.querySelector(".MapMonde").style.display="block";
+    document.querySelector(".mapMonde").style.display="block";
     document.querySelector(".wrapper").style.display="none";
     document.querySelector(".en-tete").style.display="none";
 
