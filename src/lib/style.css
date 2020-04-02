@@ -18,14 +18,6 @@
     }
 }
 
-@keyframes test {
-    from {
-        background-position: 100% 0;
-    }
-    to {
-        background-position: 0 0;
-    }
-}
 
 /*-------------------- Général : --------------------*/
 
@@ -40,13 +32,6 @@ body {
 .wrapper {
     display: none; flex-direction: row;
     width: 100vw; height: calc(100vh - 67px);
-}
-
-canvas {
-    border: 1px solid black;
-    background: white;
-    border-radius: 5px;
-    margin-left: 5px;
 }
 
 
@@ -66,6 +51,7 @@ canvas {
     display: flex; width: 100vw; height: 100vh;
     align-items: center; flex-direction: column;
     background: url(../media/menu/fondMenu2.png);
+    justify-content: center;
 }
 
 /*---- Acceuil : ----*/
@@ -99,11 +85,6 @@ canvas {
 
 /*---- Map Monde/Zone : ----*/
 
-.mapMonde {
-    display: none; width: 100vw; height: 100vh;
-    align-items: center; justify-content: center;
-}
-
 .zoneFleches {
     background: pink; position: absolute; 
     height: 150px; width: 300px;
@@ -121,12 +102,12 @@ canvas {
     display: flex; background: white;
     flex-flow: column; align-items: flex-end;
     float: right; width: 30vw; margin: 0 5px 5px 0;
-    border: 1px solid black; border-radius: 0 5px 5px 0;
+    border: 1px solid #454545; border-radius: 0 5px 5px 0;
 }
 
 #partieCode {
     width: 100%; background: white;
-    border: 1px solid black; border-right: none;
+    border: 1px solid #454545; border-right: none;
     border-radius: 5px 0 0 5px; margin: 0 0 5px 10px;
 }
 
@@ -134,9 +115,14 @@ canvas {
     height: calc(100% - 589px); display: flex;
     width: -moz-available;
     width: -webkit-fill-available;
-    border: 1px solid black; background: white;
+    border: 1px solid #454545; background: white;
     border-radius: 5px; margin-left: 5px;
     align-items: center; justify-content: center;
+}
+
+canvas {
+    border: 1px solid #454545; background: white;
+    border-radius: 5px; margin-left: 5px;
 }
 
 
@@ -172,9 +158,9 @@ canvas {
 }
 
 .bloc {
+    display: none;
     width: 150px; height: 40px;
     margin: 5px; float: right;
-    display: none;
 }
 
 .bloc:hover {cursor: grab;}
@@ -202,7 +188,7 @@ svg, path, text {pointer-events: none;}
     border: none; color: white;
     font-size: 16px; text-align: left;
     font-family: 'Source Sans Pro', sans-serif;
-    padding-left: 25px;
+    padding-left: 25px; outline: 0;
 }
 
 .menuContextuel hr {margin: 0; opacity: 0.5;}

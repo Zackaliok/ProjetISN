@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" dir=ltr>
     <head>
-        <title>Scratchly : Décrouvez l'algorithmie </title> <!-- A remplacer avec le vrai nom -->
+        <title>Scratchly : Décrouvez l'algorithmie !</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="src/lib/style.css">
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
     </head>
     <body>
-        <header class="en-tete">
-            Scratchly : Décrouvez l'algorithmie ! <!-- A remplacer avec le vrai nom -->
-         </header>
+        <header class="en-tete"></header>
 
         <div class="menuContextuel">
             <button onClick="supprimerBloc()">Supprimer le bloc sélectionné</button>
@@ -35,12 +33,12 @@
                     Malheureusement, pendant le transfert, votre conscience a été transmise dans un monde virtuel, à l'intérieur de cet ordinateur. <br>
                     Pour vous délivrer, vous devrez progresser au sein de plusieurs niveaux matérialisés par l'ordinateur. Mais attention... une seule erreur pourrez vous coûter la vie !
                 </p>
-                <button class="commencerJeu" onclick="afficherMenu()">C'est parti !</button>
+                <button class="commencerJeu" onclick="affichageMenu()">C'est parti !</button>
                 <i>Scratchly est une application éducative visant à apprendre les bases de l'algorithmie aux jeunes ados.</i>
             </div>
 
-            <div class="mapMonde">
-                <img src="src/media/map/Map-Monde.png" alt="Map Monde" usemap="#image-map">
+            <div class="mapMonde" style="display:none;">
+                <img src="src/media/map/mapMonde.png" alt="Map Monde" usemap="#image-map">
                 <map name="image-map">
                     <area target="" alt="Zone 1" title="Zone 1" href="#" style="outline: 0;" coords="117,249,138,248,152,242,167,236,188,225,206,211,221,196,228,186,229,170,230,151,229,132,229,116,232,92,230,75,221,67,212,66,204,67,194,67,187,62,183,57,173,53,151,49,140,56,134,65,122,77,112,84,105,89,96,104,92,123,94,139,95,162,92,178,92,203,94,225,105,238,110,247" shape="poly">
                     <area target="" alt="Zone 2" title="Zone 2" href="#" style="outline: 0;" coords="342,234,352,233,361,238,368,246,377,250,388,250,398,247,407,240,411,233,419,231,432,226,438,212,445,200,452,188,454,168,456,153,453,143,447,131,435,125,419,128,408,128,402,122,401,113,402,105,398,90,396,74,392,61,378,48,369,43,354,45,346,55,351,67,350,79,346,92,344,107,337,118,336,135,333,149,331,165,333,187,333,209,334,226,334,232" shape="poly">
@@ -50,19 +48,19 @@
             </div>
 
             <div class="mapZone1" style="display:none;">
-                <img src="src/media/map/MapZone1.png" alt="MapZone1">
+                <img src="src/media/map/mapZone1.png" alt="Map Zone 1">
             </div>
 
             <div class="mapZone2" style="display:none;">
-                <img src="src/media/map/MapZone2.png" alt="MapZone2">
+                <img src="src/media/map/mapZone2.png" alt="Map Zone 2">
             </div>
 
             <div class="mapZone3" style="display:none;">
-                <img src="src/media/map/MapZone3.png" alt="MapZone3">
+                <img src="src/media/map/mapZone3.png" alt="Map Zone 3">
             </div>
 
             <div class="mapZone4" style="display:none;">
-                <img src="src/media/map/MapZone4.png" alt="MapZone4">
+                <img src="src/media/map/mapZone4.png" alt="Map Zone 4">
             </div>
 
             <div class="zoneFleches">
@@ -103,33 +101,33 @@
             <div id="partieBanque">
                 <div class="bloc" id="Avancer" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
+                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#4C97FF" stroke="black" stroke-width="0.5"/>
                         <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Avancer d'une case</text>
                     </svg>
                     <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                 </div>
                 <div class="bloc" id="Sauter" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
+                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#4C97FF" stroke="black" stroke-width="0.5"/>
                         <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Sauter d'une case</text>
                     </svg>
                     <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                 </div>
                 <div class="bloc" id="TournerADroite" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
+                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#4C97FF" stroke="black" stroke-width="0.5"/>
                         <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Tourner à droite</text>
                     </svg>
                     <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                 </div>
                 <div class="bloc" id="TournerAGauche" draggable="true" data-type="deplacement" data-stackedtop="false" data-stackedbot="false">
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#a5bee8" stroke="black" stroke-width="0.5"/>
+                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="#4C97FF" stroke="black" stroke-width="0.5"/>
                         <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Tourner à gauche</text>
                     </svg>
                     <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                 </div>
-                <div class="bloc" id="Si" draggable="true" data-type="logique" data-state="idle" data-stackedtop="false" data-stackedbot="false">
+                <div class="bloc" id="Si" draggable="true" data-type="logique"  data-stackedtop="false" data-stackedbot="false">
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
                         <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="orange" stroke="black" stroke-width="0.5"/>
                         <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Si ... Alors</text>

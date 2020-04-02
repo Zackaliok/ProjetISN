@@ -12,6 +12,8 @@ const blocDepart = document.getElementById("blocDepart"); //Variable représenta
 const menuContextuel = document.querySelector(".menuContextuel"); //Variable représentant le menu contextuel personnalisé
 const wrapper = document.querySelector(".wrapper"); //Variable représentant le contenant principal de l'app
 const popups = document.querySelector(".popup"); //Variable représentant la popup
+const menu = document.querySelector(".menu"); //Variable représentant le menu
+const enTete = document.querySelector(".en-tete"); //Variable représentant l'en-tete
 var infoZone; //Variable représentant les caractèristiques (position, hauteur, etc) de la zone du code
 
 //Canvas + image :
@@ -33,9 +35,10 @@ var niveauAffiché = false;
 
 //--------------------------- Map Monde et choix du niveau -----------------------
 
-//Bypass des menus :
-//affichageZone(1);
-//setTimeout(function (){affichageNiveau(1);},10);
+//Bypass les menus :
+affichageMenu();
+affichageZone(1);
+setTimeout(function (){affichageNiveau(1);},10);
 
 //Ajoute un evenement "onclick" aux "area" :
 var area = document.getElementsByTagName("area");
@@ -45,7 +48,7 @@ for(var i=0;i<area.length;i++){
     });
 }
 
-function afficherMenu(){
+function affichageMenu(){
     document.querySelector(".accueil").style.display = "none";
     document.querySelector(".mapMonde").style.display = "flex";
 }
@@ -56,9 +59,25 @@ function affichageZone(z){
     alert("Affiche de la zone "+z); //A enlever à la fin
     document.querySelector(".mapMonde").style.display="none";
     document.querySelector(".mapZone"+z).style.display="block";
-    //document.querySelector(".boutonNiveau"+z).style.display="block";   //A mettre s'il y a un problème avec la selection de niveaux
     document.querySelector(".zoneFleches").style.display="flex";
     mapMonde=false; mapZone=true;     //Touche pas j'en ai besoin (Tristan)
+}
+
+function affichageNiveau(n){
+    niveau = n;
+    alert("Vous êtes dans la zone " + chapitre + " au niveau " + niveau + ".");
+
+    mapZone=false;      //Touche pas j'en ai besoin (Tristan)
+    niveauAffiché=true;
+
+    menu.style.display="none";
+    wrapper.style.display="flex";
+    enTete.style.display="flex";
+    enTete.innerHTML = "Zone "+chapitre+" &nbsp; | &nbsp; Niveau "+niveau;
+    infoZone = partieCode.getBoundingClientRect();
+    blocArray.push(blocDepart);
+
+    creerMap();
 }
 
 //Abonnement pour le keydown avec la fonction
@@ -100,22 +119,6 @@ document.addEventListener("keydown", async (e) => {
     }
 });
 
-function affichageNiveau(n){
-    niveau = n;
-    alert("Vous êtes dans la zone " + chapitre + " au niveau " + niveau + ".");
-
-    mapZone=false;      //Touche pas j'en ai besoin (Tristan)
-    niveauAffiché=true;
-
-    document.querySelector(".menu").style.display="none";
-    document.querySelector(".wrapper").style.display="flex";
-    document.querySelector(".en-tete").style.display="flex";
-    infoZone = partieCode.getBoundingClientRect();
-    blocArray.push(blocDepart);
-
-    creerMap();
-}
-
 
 //------------------------------ Pop-up ! ------------------------------
 
@@ -135,13 +138,17 @@ function fermerPopup(){
 
 //------------------------------ Menu contextuel (clique-droit) ------------------------------
 
-document.oncontextmenu = (e) => {e.preventDefault();};
+document.oncontextmenu = (e) => {
+    if(e.target==partieCode || e.target==blocDepart || e.target.className=="bloc" || e.target.tagName=="BUTTON"){
+        e.preventDefault();
+    }
+};
 
 document.onmousedown = function(e){
-    if(e.buttons == 1 && menuContextuel.style.display == "block" && e.target!==menuContextuel && e.target.tagName!=="BUTTON"){
+    if(menuContextuel.style.display=="block" && e.target!==menuContextuel && e.target.tagName!=="BUTTON"){
         menuContextuel.style.display = "none";
     }
-    else if(e.buttons == 2 && e.target!==partieBanque && e.target.parentNode!==partieBanque && wrapper.style.display=="flex"){
+    else if(e.buttons==2 && wrapper.style.display=="flex" && ((e.target.className=="bloc" && e.target.parentNode!==partieBanque) || e.target==partieCode)){
         var x = e.clientX + 10; var y = e.clientY;
         menuContextuel.style.display = "block";
         menuContextuel.style.left = x+"px";
@@ -185,6 +192,8 @@ function dupliquerBloc(e){
         blocEnMouvement.style.top = parseInt(blocEnMouvement.style.top)+10+"px";
         blocEnMouvement.dataset.stackedtop = "false";
         blocEnMouvement.dataset.stackedbot = "false"
+    }else{
+        menuContextuel.style.display = "none";
     }
 }
 
@@ -360,8 +369,8 @@ function creerMap(){
             map[6] = Array(0,0,0,0,1,1,1,0,0);
             map[7] = Array(0,0,0,0,0,0,0,0,0);
             map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.pos(256,384,0);
-            afficherBloc(["Sauter"]);
+            joueur.pos(256,384,1);
+            afficherBloc(["Avancer","Sauter"]);
         break;
 
     }
@@ -396,10 +405,14 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms)); //Méthode asynchrone permettant de créer un 'temps d'arret' (ex : sleep(1000) arretera le code pendant 1sec)
 }
 
-async function win(){
-    if(map[joueur.y/64][joueur.x/64] == 2){
-        await sleep(200);
-        popup("Tu as gagner !");
+function win(){
+    if(map[joueur.y/64][joueur.x/64]==2){
+        popup("Tu as completé le niveau "+niveau+" de la zone "+chapitre+" !");
+        setTimeout(() => {
+            fermerPopup();
+            supprimerToutLesBloc();
+            affichageNiveau(niveau+1);
+        },3000);
     }
 }
 
@@ -411,14 +424,27 @@ async function executionCode(){
             switch(blocArray[i].id){
                 case "Avancer":
                     ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
-                    joueur.y-=64;
+                    switch(joueur.dir){
+                        case 0: //HAUT
+                            joueur.y-=64;
+                            break;
+                        case 1: //DROITE
+                            joueur.x+=64;
+                            break;
+                        case 2: //BAS
+                            joueur.y+=64;
+                            break;
+                        case 3: //GAUCHE
+                            joueur.x-=64;
+                            break;
+                    }
                     joueur.afficher(joueur.x,joueur.y,joueur.dir);
-                    win();
                 break;
             }
-            await sleep(1000);
+            await sleep(800);
         }
     }
+    win();
 }
 
 function remiseAZero(){
@@ -478,14 +504,16 @@ partieCode.onmousedown = function(e){
         window.addEventListener('mousemove', deplacerBloc, true);
         blocEnMouvement = e.target;
         blocEnMouvement.style.cursor = "grabbing";
+        blocEnMouvement.style.filter = "drop-shadow(1px 1px 4px gray)";
     }
 };
 
 document.onmouseup = function(e){
-    if(e.target.className=="bloc"){
+    if(blocEnMouvement!==undefined && wrapper.style.display=="flex"){
         window.removeEventListener('mousemove', deplacerBloc, true);
         blocEnMouvement.style.cursor = "grab";
         blocEnMouvement.style.zIndex = 0;
+        blocEnMouvement.style.filter = "";
         collageBloc();
     }
 };
