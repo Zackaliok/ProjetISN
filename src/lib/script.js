@@ -1,69 +1,232 @@
 //------------------------------ Initialisation ------------------------------
 
-//Bloc et joueur :
-var imgJoueur, blocEnMouvement, sourisX, sourisY, indexBloc; //Variables globales
+//Bloc, joueur, map et audio :
+var blocEnMouvement, indexBloc, tileSet, infoZone, zone=1, niveau=1; //Variables globales
 var blocArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
+var map = new Array(); //Array à deux dimension (matrice) servant de carte pour construire les niveaux
+var audio = new Audio(); //Variable représenant l'audio de la page
+var joueur = new Joueur(384,384,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
 
-//Zones :
-const zoneDuCode = document.getElementById("zoneDuCode"); //Variable représentant la zone du code
-const zoneDesBlocs = document.getElementById("zoneDesBlocs"); //Variable représentant la zone des blocs
-var infoZone = zoneDuCode.getBoundingClientRect(); //Variable représentant les caractèristiques (position, hauteur, etc) de la zone du code
-
-//Canvas :
+//Canvas + image :
 const canvas = document.getElementById('canvas'); //Variable représentant le canvas
 const ctx = canvas.getContext('2d'); //Variable représentant le "context" (la où on dessine)
+chargerImg("src/media/tileset.png"); //Charge le "tileset";
 
 //Empêcher la selection :
 document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction (texte, images) sur la page
 
+//Bypass les menus :
+affichageMenu();
+affichageZone(3);
+setTimeout(function (){affichageNiveau(2);},10);
 
-//------------------------------ Classe du joueur + déclaration ------------------------------
-/*
-    Les classe représentent des objets ayant des caractéristiques.
-    Le "contructor" est l'élément obligatoire d'une classe, il permet d'enregistrer les différents paramètres.
-    Par exemple, ici l'objet 'Joueur' a 3 paramètres, les positions x et y ainsi que la direction (dir).
-    Par abus de langage on peut dire que le "constructor" agit comme une fonction au sein de la classe.
-    Ainsi, "afficher" peut-être considérer (et remplacer) comme une fonction, elle sera appeler de cette manière :
-    'joueur.afficher(x,y,dir)'.
-*/
+//Créer un temps d'arret :
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-class Joueur {
-    constructor(x,y,dir){
-        this.x=x;
-        this.y=y;
-        this.dir=dir;
-    }
-    
-    afficher(x,y,dir){
-        this.dir = dir;
-        switch(dir){
-            case "HAUT":
-                ctx.drawImage(imgJoueur,64,64,64,64,x,y,64,64);
-                break;
-            case "BAS":
-                ctx.drawImage(imgJoueur,0,64,64,64,x,y,64,64);
-                break;
-            case "GAUCHE":
-                ctx.drawImage(imgJoueur,0,0,64,64,x,y,64,64);
-                break;
-            case "DROITE":
-                ctx.drawImage(imgJoueur,64,0,64,64,x,y,64,64);
-                break;
+
+//--------------------------- Menu, map monde et choix du niveau -----------------------
+
+//Ajoute un evenement "onclick" aux "area" :
+var area = document.getElementsByTagName("area");
+for(var i=0;i<area.length;i++){
+    area[i].addEventListener("click", function() {
+        affichageZone(parseInt(this.title.match(/\d+/)));
+    });
+}
+
+function affichageMenu(){
+    document.querySelector(".accueil").style.display = "none";
+    mapMonde.style.display = "flex";
+}
+
+function affichageZone(z){
+    zone = z;
+    mapMonde.style.display = "none";
+    document.querySelector(".mapZone"+z).style.display = "block";
+    document.querySelector(".zoneFleches").style.display = "flex";
+}
+
+function affichageNiveau(n){
+    niveau = n;
+    alert("Vous êtes dans la zone " + zone + " au niveau " + niveau + ".");
+    menu.style.display = "none";
+    wrapper.style.display = "flex";
+    enTete.style.display = "flex";
+    document.querySelector(".mapZone"+zone).style.display = "none";
+    enTete.innerHTML = "Zone "+zone+" &nbsp; | &nbsp; Niveau "+niveau;
+    infoZone = partieCode.getBoundingClientRect();
+    blocArray.push(blocDepart);
+    creerMap();
+}
+
+document.addEventListener("keydown", (e) => {
+    if(document.querySelector(".mapZone"+zone).style.display=="block"){
+        switch(e.keyCode){
+            case 37: //Flèche Gauche
+                toucheFlecheGauche.src = "src/media/touche/toucheFlecheGaucheGlow.png";
+                setTimeout('toucheFlecheGauche.src="src/media/touche/toucheFlecheGauche.png"',100);
+                if(niveau!=1){niveau -= 1;}
+            break;
+            case 39: //Flèche Droite
+                toucheFlecheDroite.src = "src/media/touche/toucheFlecheDroiteGlow.png";
+                setTimeout('toucheFlecheDroite.src="src/media/touche/toucheFlecheDroite.png"',100);
+                if(niveau!=5){niveau += 1;}
+            break;
+            case 13: //Touche Entrée
+                toucheEntree.src = "src/media/touche/toucheEntreeGlow.png";
+                setTimeout('toucheEntree.src="src/media/touche/toucheEntree.png"',100);
+                affichageNiveau(niveau);
+            break;
+            case 27: //Touche Echap
+                toucheEchap.src = "src/media/touche/toucheEchapGlow.png";
+                setTimeout('toucheEchap.src="src/media/touche/toucheEchap.png"',100);
+                mapMonde.style.display = "block";
+                document.querySelector(".mapZone"+zone).style.display = "none";
+                document.querySelector(".zoneFleches").style.display = "none";
+            break;
         }
+    }
+});
+
+
+//------------------------------ Pop-up ! ------------------------------
+
+function popup(texte){
+    popups.style.visibility = "visible";
+    popups.style.display = "flex";
+    popups.children[0].innerHTML = texte;
+    popups.style.animation = "ouverturePopup 0.2s ease-in 0s 1 normal forwards";
+    audio.src = "src/media/son/orb.mp3";
+    audio.play();
+}
+
+function fermerPopup(){
+    popups.style.animation = "fermeturePopup 1s ease-out 0.2s 1 normal forwards";
+}
+
+
+//------------------------------ Menu contextuel (clique-droit) ------------------------------
+
+document.oncontextmenu = (e) => {
+    if(e.target==partieCode || e.target==blocDepart || e.target.className=="bloc" || e.target.tagName=="BUTTON"){
+        e.preventDefault();
+    }
+};
+
+document.onmousedown = function(e){
+    if(menuContextuel.style.display=="block" && e.target!==menuContextuel && e.target.tagName!=="BUTTON"){
+        menuContextuel.style.display = "none";
+    }
+    else if(e.buttons==2 && wrapper.style.display=="flex" && ((e.target.className=="bloc" && e.target.parentNode!==partieBanque) || e.target==partieCode)){
+        var x = e.clientX + 10; var y = e.clientY;
+        menuContextuel.style.display = "block";
+        menuContextuel.style.left = x+"px";
+        menuContextuel.style.top = y+"px";
+        blocEnMouvement = e.target;
+    }
+};
+
+function supprimerBloc(){
+    if(blocEnMouvement.className=="bloc" && blocEnMouvement.dataset.stackedtop=="false" && blocEnMouvement.dataset.stackedbot=="false"){
+        menuContextuel.style.display = "none";
+        blocEnMouvement.parentNode.removeChild(blocEnMouvement);
+    }else{
+        menuContextuel.style.display = "none";
     }
 }
 
-var joueur = new Joueur(400,400,"HAUT"); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
+function supprimerToutLesBloc(){
+    if(partieCode.children.length > 1){
+        menuContextuel.style.display = "none";
+        while(partieCode.children.length > 1){partieCode.removeChild(partieCode.children[1]);}
+        blocArray.splice(0,blocArray.length);
+        blocDepart.dataset.stackedbot = "false";
+    }else{
+        menuContextuel.style.display = "none";
+    }
+}
+
+function dupliquerBloc(e){
+    if(blocEnMouvement.className=="bloc"){
+        menuContextuel.style.display = "none";
+        blocEnMouvement = blocEnMouvement.cloneNode(true);
+        partieCode.append(blocEnMouvement);
+        blocEnMouvement.style.left = parseInt(blocEnMouvement.style.left)+10+"px";
+        blocEnMouvement.style.top = parseInt(blocEnMouvement.style.top)+10+"px";
+        blocEnMouvement.dataset.stackedtop = "false";
+        blocEnMouvement.dataset.stackedbot = "false"
+    }else{
+        menuContextuel.style.display = "none";
+    }
+}
 
 
-//------------------------------ Charger le "tileset" et l'afficher sur le canvas ------------------------------
-/*
-    Pour faire court, lorque l'on créer un objet 'Image()' et qu'on souhaite lui attribuer une source, le navigateur doit 
-    d'abords charger l'image, sauf que le reste du code est exécuté en même temps et l'image n'a pas fini de charger avant
-    qu'on lui attribue la source (qui ducoup n'existe pas). Pour palier à ce problème, on utilise la méthode asynchrone "Promise"
-    qui représente littéralement une promesse. Cette promesse peut-être résolue dans le temps et bloque l'éxécution du code.
-    Ainsi, lorque la promesse est résolue (ici le chargement de l'image) la méthode renvoie le résultat et permet l'exécution du code.
-*/
+//------------------------------ Menu paramètres -------------------------------------------
+
+var modeSombre = false; //Pour activer le mode sombre.
+
+function afficherParametres(){
+    if(menuParametres.style.display=="none"){
+        controlesJeu.style.display = "none";
+        menuParametres.style.display = "flex";
+    }else{
+        menuParametres.style.display = "none";
+        controlesJeu.style.display = "flex";
+    }
+}
+
+function switchMusique(){
+    if(audio.muted==false){
+        audio.muted = true;
+        imgMusique.src="src/media/icon/audio-off-icon.png";
+        popup("Musique désactivée !");
+    }else{
+        audio.muted = false;
+        imgMusique.src="src/media/icon/audio-icon.png";
+        popup("Musique activée !");
+    }
+}
+
+function switchModeSombre() {
+    if(modeSombre==false){
+        modeSombre = true;
+        imgModeSombre.src = "src/media/icon/moon-white.png";
+        partieBanque.style.background = "rgb(60,60,60)";
+        partieCode.style.background = "rgb(60,60,60)";
+        enTete.style.background = "#3c5a96";
+        partieControle.style.background = "rgb(60,60,60)";
+        document.body.style.background = "#6a758a";
+    }else{
+        modeSombre = false;
+        imgModeSombre.src="src/media/icon/moon-black.png";
+        partieBanque.style.background = "white";
+        partieCode.style.background = "white";
+        enTete.style.background = "#6699ff";
+        partieControle.style.background = "white";
+        document.body.style.background = "#bbcdf0";
+    }
+}
+
+function switchCodeSource(){
+    //Bon euh faudrait qu'on complete ca a la fin
+}
+
+function retournerAuMenu(){
+    supprimerToutLesBloc();
+    document.querySelector(".mapZone"+zone).style.display="none";
+    document.querySelector(".zoneFleches").style.display="none";
+    menu.style.display = "flex";
+    mapMonde.style.display = "block";
+    wrapper.style.display = "none";
+    enTete.style.display = "none";
+    menuParametres.style.display="none";
+    controlesJeu.style.display="flex";
+}
+
+
+//------------------------------ Gestion du "tileset" et de la map ------------------------------
 
 function chargerImg(url){
     return new Promise(resolve => {
@@ -72,64 +235,218 @@ function chargerImg(url){
             resolve(img);
         });
         img.src = url;
-        imgJoueur = img;
+        tileSet = img;
     });
 }
 
-chargerImg("src/media/joueurSet.png").then(img => {
-    joueur.afficher(joueur.x,joueur.y,joueur.dir);
-});
-
-
-//------------------------------ Executer le code mis en place dans la zone de code ------------------------------
-
-var audio = new Audio();
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms)); //Méthode asynchrone permettant de créer un 'temps d'arret' (ex : sleep(1000) arretera le code pendant 1sec)
+function afficherBloc(liste){
+    for(var i=0;i<partieBanque.children.length;i++){
+        document.getElementById(partieBanque.children[i].id).style.display = "none";
+    }
+    for(var i=0;i<liste.length;i++){
+        document.getElementById(liste[i]).style.display = "block";
+    }
 }
 
-async function executerCode(){
-    if(zoneDuCode.hasChildNodes()){
-        remiseAZero();
-        await sleep(500);
-        for (var i = 0; i < blocArray.length; i++){
-			if(blocArray[i].dataset.type=="musique"){
-				var idBloc = blocArray[i].id;
-				audio.src="src/media/noteMusique/piano/"+idBloc+".mp3";
-				audio.play();
-				await sleep(800);
-			}
-			else if(blocArray[i].dataset.type=="deplacement"){
-				alert("Deplacement du joueur");
-			}
-			else{
-				alert("erreur");
-			}
-		}
-    }else{
-        alert("Il n'y a pas de bloc dans la zone !");
+function creerMap(){
+    switch(zone + "-" + niveau){
+        case "1-1":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,0,0,0,0,0);
+            map[2] = Array(0,0,0,0,0,0,0,0,0);
+            map[3] = Array(0,0,0,0,0,0,2,0,0);
+            map[4] = Array(0,0,0,0,0,0,1,0,0);
+            map[5] = Array(0,0,0,0,0,0,1,0,0);
+            map[6] = Array(0,0,0,0,0,0,1,0,0);
+            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.pos(384,384,0);
+//            afficherBloc(["Avancer"]);
+        break;
+
+        case "1-2":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,0,0,0,0,0);
+            map[2] = Array(0,0,0,0,0,0,0,0,0);
+            map[3] = Array(0,0,0,0,0,0,2,0,0);
+            map[4] = Array(0,0,0,0,0,0,1,0,0);
+            map[5] = Array(0,0,0,0,0,0,1,0,0);
+            map[6] = Array(0,0,0,0,1,1,1,0,0);
+            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.pos(256,384,1);
+//            afficherBloc(["Avancer","Sauter"]);
+        break;
+
+        case "3-1":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,2,0,0,0,0);
+            map[2] = Array(0,0,0,0,1,0,0,0,0);
+            map[3] = Array(0,0,0,0,1,0,0,0,0);
+            map[4] = Array(0,0,0,0,1,0,0,0,0);
+            map[5] = Array(0,0,0,0,1,0,0,0,0);
+            map[6] = Array(0,0,0,0,1,0,0,0,0);
+            map[7] = Array(0,0,0,0,1,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.pos(256,448,0);
+            afficherBloc(["Avancer","Repeter"]);
+          break;
+        case "3-2":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,0,0,0,0,0);
+            map[2] = Array(0,0,0,0,0,1,2,0,0);
+            map[3] = Array(0,0,0,0,1,1,0,0,0);
+            map[4] = Array(0,0,0,1,1,0,0,0,0);
+            map[5] = Array(0,0,1,1,0,0,0,0,0);
+            map[6] = Array(0,0,0,0,0,0,0,0,0);
+            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.pos(128,320,1);
+            afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche"]);
+          break;
+        case "3-3":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,0,0,0,0,0);
+            map[2] = Array(0,0,0,0,0,0,0,0,0);
+            map[3] = Array(0,0,0,0,0,0,0,0,0);
+            map[4] = Array(0,0,0,0,0,0,0,0,0);
+            map[5] = Array(0,0,0,0,0,0,0,0,0);
+            map[6] = Array(0,0,0,0,0,0,0,0,0);
+            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.pos(128,320,1);
+            afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche"]);
+          break;
+    }
+    afficherMap();
+    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+}
+
+function afficherMap(){
+    for(var i=0;i<map.length;i++){
+        for(var j=0;j<map[i].length;j++){
+            switch(map[i][j]){
+                case 0: //Herbe
+                    ctx.drawImage(tileSet,128,0,64,64,64*j,64*i,64,64);
+                break;
+
+                case 1: //Sol
+                    ctx.drawImage(tileSet,0,128,64,64,64*j,64*i,64,64);
+                break;
+
+                case 2: //Case Cible
+                    ctx.drawImage(tileSet,64,128,64,64,64*j,64*i,64,64);
+                break;
+            }
+        }
     }
 }
 
 
-//------------------------------ Remettre à zéro le canvas, etc ------------------------------
+//------------------------------ Executer le code + vérifier si le joueur a gagner ------------------------------
 
-function remiseAZero(){
-    ctx.clearRect(joueur.x,joueur.y,64,64);
-    joueur.x = 400; joueur.y = 400;
-    joueur.afficher(joueur.x,joueur.y,"HAUT");
+function win(){
+    if(map[joueur.y/64][joueur.x/64]==2){
+        popup("Tu as completé le niveau "+niveau+" de la zone "+zone+" !");
+        setTimeout(() => {
+            fermerPopup();
+            supprimerToutLesBloc();
+            affichageNiveau(niveau+1);
+        },3000);
+    }
+}
+
+async function executionCode(){
+    creerMap();
+    await sleep(800);
+    for(var i=1;i<blocArray.length;i++){
+        if(blocArray.length>1){
+            switch(blocArray[i].id){
+                case "Avancer":
+                    var sauvPos = [joueur.x,joueur.y];
+                    ctx.drawImage(tileSet,0,128,64,64,sauvPos[0],sauvPos[1],64,64);
+                    switch(joueur.dir){
+                        case 0: joueur.y-=64; break;
+                        case 1: joueur.x+=64; break;
+                        case 2: joueur.y+=64; break;
+                        case 3: joueur.x-=64; break;
+                    }
+                    if(map[joueur.y/64][joueur.x/64]!==0){
+                        joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                    }else{
+                        joueur.afficher(sauvPos[0],sauvPos[1],joueur.dir);
+                    }
+                break;
+                case "Sauter":
+                    ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
+                    switch (joueur.dir) {
+                      case 0://HAUT
+                          joueur.y-=128;
+                        break;
+                      case 1://DROITE
+                          joueur.x+=128;
+                        break;
+                      case 2://BAS
+                          joueur.y+=128;
+                        break;
+                      case 3://GAUCHE
+                          joueur.x-=128;
+                        break;
+                    }
+                    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                  break;
+                case "TournerADroite":
+                    ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
+                    joueur.dir++;
+                    if (joueur.dir==4) {
+                      joueur.dir=0
+                    }
+                    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                  break;
+                case "TournerAGauche":
+                    ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
+                    joueur.dir--;
+                    if (joueur.dir==-1) {
+                      joueur.dir=3
+                    }
+                    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                  break;
+            }
+            win();
+            await sleep(800);
+        }
+    }
 }
 
 
-//------------------------------ Trier les blocs dans le tableau selon leur position en X ------------------------------
+//------------------------------ Attacher les blocs entre eux ------------------------------
 
-function trierBloc(){
-    for(var i=0;i<blocArray.length;i++){
-        var bloc1Haut = blocArray[indexBloc].getBoundingClientRect().top;
-        var bloc2Haut = blocArray[i].getBoundingClientRect().top;
-        if((bloc1Haut < bloc2Haut && indexBloc > i) || (bloc1Haut > bloc2Haut && indexBloc < i)){
-            blocArray[i] = blocArray.splice(indexBloc, 1, blocArray[i])[0];
+function detectionCollage(){
+    for(var i=0;i<partieCode.children.length;i++){
+        var child = partieCode.children[i];
+        var rect1 = blocEnMouvement.getBoundingClientRect();
+        var rect2 = partieCode.children[i].getBoundingClientRect();
+        if(child!==blocEnMouvement && (child.dataset.stackedtop=="true" || child.id=="blocDepart") && child.dataset.stackedbot=="false"){
+            if(rect1.top-15 <= rect2.bottom && rect1.top-15 >= rect2.bottom-20 && rect1.left >= rect2.left-30 && rect1.right <= rect2.right+30){
+                partieCode.children[i].children[1].style.display = "block";
+
+            }else{
+                partieCode.children[i].children[1].style.display = "none";
+            }
+        }
+    }
+}
+
+function collageBloc(){
+    for(var i=0;i<partieCode.children.length;i++){
+        if(partieCode.children[i]!==blocEnMouvement && partieCode.children[i].children[1].style.display == "block"){
+            blocEnMouvement.style.left = partieCode.children[i].getBoundingClientRect().left-5+"px";
+            blocEnMouvement.style.top = partieCode.children[i].getBoundingClientRect().bottom-12+"px";
+            blocEnMouvement.dataset.stackedtop = "true";
+            partieCode.children[i].dataset.stackedbot = "true";
+            partieCode.children[i].children[1].style.display = "none";
+            
+            blocArray.push(blocEnMouvement);
         }
     }
 }
@@ -137,78 +454,74 @@ function trierBloc(){
 
 //------------------------------ Déplacement des blocs à l'intérieur de la zone de code ------------------------------
 
-zoneDuCode.onmousedown = function(e){
-    if(e.target.dataset.parent=="zoneDuCode" && e.which !== 3){
+partieCode.onmousedown = function(e){
+    if(e.target.className=="bloc" && e.buttons == 1){
         window.addEventListener('mousemove', deplacerBloc, true);
         blocEnMouvement = e.target;
+        blocEnMouvement.style.cursor = "grabbing";
+        blocEnMouvement.style.filter = "drop-shadow(1px 1px 4px gray)";
     }
 };
 
-window.onmouseup = function(){
-    window.removeEventListener('mousemove', deplacerBloc, true);
+document.onmouseup = function(e){
+    if(blocEnMouvement!==undefined && wrapper.style.display=="flex"){
+        window.removeEventListener('mousemove', deplacerBloc, true);
+        blocEnMouvement.style.cursor = "grab";
+        blocEnMouvement.style.zIndex = 0;
+        blocEnMouvement.style.filter = "";
+        collageBloc();
+    }
 };
 
 function deplacerBloc(e){
 	indexBloc = blocArray.indexOf(blocEnMouvement);
+    blocEnMouvement.style.zIndex = 100;
     if(e.clientX-75 > infoZone.left && e.clientX+75 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+20 < infoZone.bottom){
-        blocEnMouvement.style.left = sourisX + 'px';
-        blocEnMouvement.style.top = sourisY + 'px';
-        sourisX = e.clientX - 75; sourisY = e.clientY - 20;
-        trierBloc();
+        if(blocEnMouvement.dataset.stackedtop == "true"){
+            if(blocEnMouvement.dataset.stackedbot == "false"){
+                var sourisX = e.clientX - 75; var sourisY = e.clientY - 20;
+                blocEnMouvement.style.left = sourisX+"px";
+                blocEnMouvement.style.top = sourisY+"px";
+                blocEnMouvement.dataset.stackedtop = "false";
+                blocArray[indexBloc-1].dataset.stackedbot = "false";
+                blocArray.splice(indexBloc,1);
+            }
+        }else{
+            var sourisX = e.clientX - 75; var sourisY = e.clientY - 20;
+            blocEnMouvement.style.left = sourisX+"px";
+            blocEnMouvement.style.top = sourisY+"px";
+        }
+        detectionCollage();
     }
 }
 
 
-//------------------------------ Evenements de début et de fin de drag dans la zone des blocs ------------------------------
+//------------------------------ Drag & Drop ------------------------------
 
-zoneDesBlocs.ondragstart = function(e){
-    blocEnMouvement = e.target.cloneNode(true);
-    blocEnMouvement.style.opacity = .2;
-    e.dataTransfer.setData("text/html", this.innerHTML);
-};
+partieBanque.ondragstart = function(e){blocEnMouvement = e.target.cloneNode(true);};
+partieCode.ondragenter = function(e){e.preventDefault();};
+partieCode.ondragover = function(e){e.preventDefault();};
 
-zoneDesBlocs.ondragend = function(e){
-    blocEnMouvement.style.opacity = "";
-};
+partieCode.ondrop = function(e){
+    partieCode.append(blocEnMouvement);
+    blocEnMouvement.removeAttribute("draggable");
+    blocEnMouvement.style.position = "absolute";
 
-
-//------------------------------ Evenements lorsqu'on entre, survole et drop dans la zone de code ------------------------------
-
-zoneDuCode.ondragenter = function(e){
-    e.preventDefault();
-};
-
-zoneDuCode.ondragover = function(e){
-    e.preventDefault();
-};
-
-zoneDuCode.ondrop = function(e){
-    if(blocEnMouvement.dataset.parent=="zoneDesBlocs"){
-        zoneDuCode.appendChild(blocEnMouvement);
-        blocArray.push(blocEnMouvement);
-		indexBloc = blocArray.indexOf(blocEnMouvement);
-        
-        sourisX = e.clientX - 75; sourisY = e.clientY - 20;
-        blocEnMouvement.style.left = sourisX + 'px';
-        blocEnMouvement.style.top = sourisY + 'px';
-        
-        blocEnMouvement.setAttribute("draggable",false);
-        blocEnMouvement.dataset.parent = "zoneDuCode";
-        blocEnMouvement.style.position = "absolute";
-		
-		trierBloc();
+    if(e.clientX-75 > infoZone.left && e.clientX+75 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+20 < infoZone.bottom){
+        var sourisX = e.clientX - 75; var sourisY = e.clientY - 20;
+        blocEnMouvement.style.left = sourisX+"px";
+        blocEnMouvement.style.top = sourisY+"px";
+    }else{
+        blocEnMouvement.style.left = "50%";
+        blocEnMouvement.style.top = "50%";
     }
 };
 
 
+//------------------------------ Debugage et tests ------------------------------
 
-
-window.addEventListener("keydown",function(e){
-	switch(e.keyCode){
-		case 96:
-			var wrapper = document.querySelector(".wrapper");
-			console.log(window.getComputedStyle(wrapper,"display"));
-			break;
-	}
+window.addEventListener("keydown", function(e){
+    if(e.keyCode == 96){
+        console.log(blocArray);
+    }
 });
-

@@ -1,71 +1,235 @@
+@keyframes fermeturePopup {
+    from {
+        top: 10%;
+    }
+    to {
+        top: 7%;
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+@keyframes ouverturePopup {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+/*-------------------- Général : --------------------*/
+
 body {
-    padding: 0; margin: 0;
     height: 100vh; width: 100vw;
-    -webkit-font-smoothing: antialiased;
-    background: linear-gradient(90deg, #2a4d69 0%, rgba(255,255,255,1) 100%);
+    margin: 0; padding: 0;
+    background: #bbcdf0; color: white;   /* #bbcdf0 */
     font-family: 'Source Sans Pro', sans-serif;
+    box-sizing: border-box;
 }
 
 .wrapper {
-    display: flex; 
-    justify-content: center;
-    align-items: center;
-    height: 100vh; width: 100vw;
-    flex-direction: column;
+    display: none; flex-direction: row;
+    width: 100vw; height: calc(100vh - 67px);
 }
 
-canvas {
-    background-color: white; /* couleur test */
+.en-tete {
+    display: none; width: 100vw; height: 50px;
+    border-bottom: 1px solid black; margin-bottom: 15px;
+    background: #6699ff; justify-content: center;
+    align-items: center; font-weight: bold; font-size: 24px;
 }
+
+
+/*--------------------- Menu : ----------------------*/
+
+.menu {
+    display: flex; width: 100vw; height: 100vh;
+    align-items: center; flex-direction: column;
+    background: url(../media/menu/fondMenu.png);
+    justify-content: center;
+}
+
+/*---- Acceuil : ----*/
+
+.accueil {
+    display: flex; width: 100vw; height: 100vh;
+    align-items: center; flex-direction: column;
+}
+
+.accueil p {
+    text-align: center; font-weight: 450; line-height: 50px;
+    font-size: 22px; margin: 50px 0 100px 0;
+}
+
+.commencerJeu {
+    background: linear-gradient(to right, white 0%, white 50%, transparent 50%, transparent 100%);
+    border: 2px solid white; border-radius: 5px;
+    height: 75px; width: 200px; color: white;
+    padding: 5px; font-weight: bold;
+    font-family: 'Source Sans Pro', sans-serif;
+    cursor: pointer; outline: 0; font-size: 24px;
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    transition: all 0.5s;
+}
+
+.commencerJeu:hover { background-position: 0 0; color: #333;}
+
+.accueil i {font-size: 18px; position: absolute; bottom: 10px;}
+
+
+/*---- Map Monde/Zone : ----*/
+
+.zoneFleches {
+    background: pink; position: absolute; 
+    height: 150px; width: 300px;
+    border: 2px solid black; border-radius: 5px;
+    right: 20px; bottom: 20px; display: none;
+    justify-content: center; align-items: center;
+}
+
+.zoneFleches img {margin: 0 5px 0 5px;}
 
 
 /*-------------------- Zones : --------------------*/
 
-.zone {
-    border: 2px solid black;
+#partieBanque {
+    display: flex; background: white;
+    flex-flow: column; align-items: flex-end;
+    float: right; width: 30vw; margin: 0 5px 5px 0;
+    border: 1px solid #454545; border-radius: 0 5px 5px 0;
 }
 
-.partieZone {
-    display: flex;
-    align-content: center;
-    align-items: center;
-    margin-bottom: 2%;
+#partieCode {
+    width: 100%; background: white;
+    border: 1px solid #454545; border-right: none;
+    border-radius: 5px 0 0 5px; margin: 0 0 5px 10px;
 }
 
-.partieBoutons {
-    display: flex;
-    align-items: center;
+#partieControle {
+    height: calc(100% - 589px); display: flex;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    border: 1px solid #454545; background: white;
+    border-radius: 5px; margin-left: 5px;
+    align-items: center; justify-content: center;
 }
 
-#zoneDuNiveau {
-    width: 640px; height: 640px; padding: 0;
+canvas {
+    border: 1px solid #454545; background: white;
+    border-radius: 5px; margin-left: 5px;
 }
 
-#zoneDuCode, #zoneDesBlocs {
-    width: 400px; height: 640px;
-    margin-left: 2%;
+
+/*-------------------- Controles et menu parametres : --------------------*/
+
+.controles {
+    height: 100%; width: 100%; display: flex;
+    align-items: center; justify-content: center;
 }
+
+.controles button {
+    height: 40px; width: 40px; border: none;
+    margin: 0 10px 0 10px; background: transparent;
+    cursor: pointer; outline: 0; display: flex;
+    align-items: center; justify-content: center;
+}
+
+.controles img {height: 30px; width: 30px;}
+.controles #imgReset:hover {transform: rotate(20deg);}
+.controles #imgParametres:hover {transform: rotate(30deg);}
+.controles #imgParametres2:hover {transform: rotate(30deg);}
+.controles img:active {height: 28px; width: 28px;}
+.controles button:hover {background: #e8e8e8;}
 
 
 /*-------------------- Blocs : --------------------*/
 
+.blocDepart {
+    width: 150px; height: 50px;
+    position: relative; top: 5px;
+    left: calc(50% - 75px);
+}
+
 .bloc {
-    width: 150px;
-    height: 40px;
-    margin: 5px;
+/*    display: none;*/
+    width: 150px; height: 40px;
+    margin: 5px; float: right;
 }
 
-svg, path, text {
-    pointer-events: none;
+.bloc:hover {cursor: grab;}
+
+svg, path, text {pointer-events: none;}
+foreignObject {pointer-events: all;}
+
+.bloc-shadow {
+    display: none; filter: blur(2px);
+    transform: translate(0px, -4px); opacity: 0.7;
 }
 
-/*-------------------- Boutons : --------------------*/
+/*---- Répéter : ----*/
 
-.btn {
-    height: 74px; width: 74px;
-    padding: 2px; margin-left: 50px;
+#Repeter{height: 140px;}
+
+#inputRepeter {
+    width: 25px; height: 15px;
+    text-align: center; -moz-appearance: textfield;
+    border-radius: 3px; border: 1px solid gray;
+}
+
+#inputRepeter::-webkit-inner-spin-button {-webkit-appearance: none;}
+
+
+/*-------------------- Menu Contextuel : --------------------*/
+
+.menuContextuel {
+    display: none; z-index: 100;
+    width: 300px; height: 122px;
+    position: absolute; background: rgba(33,33,33,0.8);
+    border: 1px solid gray;
+}
+
+.menuContextuel button {
+    width: 300px; height: 40px;
     background: transparent;
-    border: 2px solid red;
+    border: none; color: white;
+    font-size: 16px; text-align: left;
     font-family: 'Source Sans Pro', sans-serif;
-    font-size: 20px; cursor: pointer;
+    padding-left: 25px; outline: 0;
+}
+
+.menuContextuel hr {margin: 0; opacity: 0.5;}
+
+
+/*-------------------- Pop-up : --------------------*/
+
+.popup {
+    display: none; position: absolute;
+    height: 100px; width: 500px;
+    top: 10%; left: calc(50% - 250px);
+    border: 1px solid gray; z-index: 200;
+    border-radius: 5px; background: rgb(60,60,60);
+    box-shadow: 2px 2px 5px 0px #656565;
+    flex-direction: column; align-items: center;
+    justify-content: flex-end;
+}
+
+.popup #texte {
+    width: 500px; height: 70px;
+    display: flex; text-align: center;
+    align-items: center; justify-content: center;
+}
+
+.popup #btn {
+    width: 500px; height: 30px;
+    align-items: center; justify-content: flex-end;
+    margin: 0 10px 5px 0; display: flex;
+}
+
+.popup button {
+    border: none; background: orange;
+    width: 50px; height: 30px; outline: 0;
+    border-radius: 15px; color: white;
 }
