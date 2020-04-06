@@ -17,8 +17,8 @@ document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction 
 
 //Bypass les menus :
 affichageMenu();
-affichageZone(1);
-setTimeout('affichageNiveau(1)',10);
+affichageZone(3);
+setTimeout(function (){affichageNiveau(2);},10);
 
 //Créer un temps d'arret :
 function sleep(ms) {
@@ -278,6 +278,45 @@ function creerMap(){
 //            afficherBloc(["Avancer","Sauter"]);
         break;
 
+        case "3-1":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,2,0,0,0,0);
+            map[2] = Array(0,0,0,0,1,0,0,0,0);
+            map[3] = Array(0,0,0,0,1,0,0,0,0);
+            map[4] = Array(0,0,0,0,1,0,0,0,0);
+            map[5] = Array(0,0,0,0,1,0,0,0,0);
+            map[6] = Array(0,0,0,0,1,0,0,0,0);
+            map[7] = Array(0,0,0,0,1,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.pos(256,448,0);
+            afficherBloc(["Avancer","Repeter"]);
+          break;
+        case "3-2":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,0,0,0,0,0);
+            map[2] = Array(0,0,0,0,0,1,2,0,0);
+            map[3] = Array(0,0,0,0,1,1,0,0,0);
+            map[4] = Array(0,0,0,1,1,0,0,0,0);
+            map[5] = Array(0,0,1,1,0,0,0,0,0);
+            map[6] = Array(0,0,0,0,0,0,0,0,0);
+            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.pos(128,320,1);
+            afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche"]);
+          break;
+        case "3-3":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,0,0,0,0,0);
+            map[2] = Array(0,0,0,0,0,0,0,0,0);
+            map[3] = Array(0,0,0,0,0,0,0,0,0);
+            map[4] = Array(0,0,0,0,0,0,0,0,0);
+            map[5] = Array(0,0,0,0,0,0,0,0,0);
+            map[6] = Array(0,0,0,0,0,0,0,0,0);
+            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.pos(128,320,1);
+            afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche"]);
+          break;
     }
     afficherMap();
     joueur.afficher(joueur.x,joueur.y,joueur.dir);
@@ -338,6 +377,40 @@ async function executionCode(){
                         joueur.afficher(sauvPos[0],sauvPos[1],joueur.dir);
                     }
                 break;
+                case "Sauter":
+                    ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
+                    switch (joueur.dir) {
+                      case 0://HAUT
+                          joueur.y-=128;
+                        break;
+                      case 1://DROITE
+                          joueur.x+=128;
+                        break;
+                      case 2://BAS
+                          joueur.y+=128;
+                        break;
+                      case 3://GAUCHE
+                          joueur.x-=128;
+                        break;
+                    }
+                    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                  break;
+                case "TournerADroite":
+                    ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
+                    joueur.dir++;
+                    if (joueur.dir==4) {
+                      joueur.dir=0
+                    }
+                    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                  break;
+                case "TournerAGauche":
+                    ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
+                    joueur.dir--;
+                    if (joueur.dir==-1) {
+                      joueur.dir=3
+                    }
+                    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                  break;
             }
             win();
             await sleep(800);
