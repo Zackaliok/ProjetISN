@@ -34,9 +34,6 @@ body {
     width: 100vw; height: calc(100vh - 67px);
 }
 
-
-/*-------------------- En-tête : --------------------*/
-
 .en-tete {
     display: none; width: 100vw; height: 50px;
     border-bottom: 1px solid black; margin-bottom: 15px;
@@ -50,7 +47,7 @@ body {
 .menu {
     display: flex; width: 100vw; height: 100vh;
     align-items: center; flex-direction: column;
-    background: url(../media/menu/fondMenu2.png);
+    background: url(../media/menu/fondMenu.png);
     justify-content: center;
 }
 
@@ -126,14 +123,12 @@ canvas {
 }
 
 
-/*-------------------- Controles et menu des parametres : --------------------*/
+/*-------------------- Controles et menu parametres : --------------------*/
 
 .controles {
     height: 100%; width: 100%; display: flex;
     align-items: center; justify-content: center;
 }
-
-#menuParametres {display: none;}
 
 .controles button {
     height: 40px; width: 40px; border: none;
@@ -145,6 +140,7 @@ canvas {
 .controles img {height: 30px; width: 30px;}
 .controles #imgReset:hover {transform: rotate(20deg);}
 .controles #imgParametres:hover {transform: rotate(30deg);}
+.controles #imgParametres2:hover {transform: rotate(30deg);}
 .controles img:active {height: 28px; width: 28px;}
 .controles button:hover {background: #e8e8e8;}
 
@@ -158,7 +154,7 @@ canvas {
 }
 
 .bloc {
-    display: none;
+/*    display: none;*/
     width: 150px; height: 40px;
     margin: 5px; float: right;
 }
@@ -166,11 +162,24 @@ canvas {
 .bloc:hover {cursor: grab;}
 
 svg, path, text {pointer-events: none;}
+foreignObject {pointer-events: all;}
 
 .bloc-shadow {
     display: none; filter: blur(2px);
     transform: translate(0px, -4px); opacity: 0.7;
 }
+
+/*---- Répéter : ----*/
+
+#Repeter{height: 140px;}
+
+#inputRepeter {
+    width: 25px; height: 15px;
+    text-align: center; -moz-appearance: textfield;
+    border-radius: 3px; border: 1px solid gray;
+}
+
+#inputRepeter::-webkit-inner-spin-button {-webkit-appearance: none;}
 
 
 /*-------------------- Menu Contextuel : --------------------*/

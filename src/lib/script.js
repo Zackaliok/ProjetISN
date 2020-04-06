@@ -1,44 +1,32 @@
 //------------------------------ Initialisation ------------------------------
 
-//Bloc, joueur et map :
-var blocEnMouvement, indexBloc, tileSet, sourisX, sourisY, nbCollage=0, chapitre=1, niveau=1; //Variables globales
+//Bloc, joueur, map et audio :
+var blocEnMouvement, indexBloc, tileSet, infoZone, zone=1, niveau=1; //Variables globales
 var blocArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
 var map = new Array(); //Array à deux dimension (matrice) servant de carte pour construire les niveaux
-
-//Elements DOM :
-const partieCode = document.getElementById("partieCode"); //Variable représentant la zone du code
-const partieBanque = document.getElementById("partieBanque"); //Variable représentant la zone de la banque de bloc
-const blocDepart = document.getElementById("blocDepart"); //Variable représentant le bloc de départ
-const menuContextuel = document.querySelector(".menuContextuel"); //Variable représentant le menu contextuel personnalisé
-const wrapper = document.querySelector(".wrapper"); //Variable représentant le contenant principal de l'app
-const popups = document.querySelector(".popup"); //Variable représentant la popup
-const menu = document.querySelector(".menu"); //Variable représentant le menu
-const enTete = document.querySelector(".en-tete"); //Variable représentant l'en-tete
-var infoZone; //Variable représentant les caractèristiques (position, hauteur, etc) de la zone du code
+var audio = new Audio(); //Variable représenant l'audio de la page
+var joueur = new Joueur(384,384,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
 
 //Canvas + image :
 const canvas = document.getElementById('canvas'); //Variable représentant le canvas
 const ctx = canvas.getContext('2d'); //Variable représentant le "context" (la où on dessine)
 chargerImg("src/media/tileset.png"); //Charge le "tileset";
 
-//Audio :
-var audio = new Audio();
-
 //Empêcher la selection :
 document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction (texte, images) sur la page
-
-//Variables pour savoir qui est affiché :
-var mapMonde = true;
-var mapZone = false;          //Touche pas j'en ai besoin (Tristan)
-var niveauAffiché = false;
-
-
-//--------------------------- Map Monde et choix du niveau -----------------------
 
 //Bypass les menus :
 affichageMenu();
 affichageZone(1);
-setTimeout(function (){affichageNiveau(1);},10);
+setTimeout('affichageNiveau(1)',10);
+
+//Créer un temps d'arret :
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+//--------------------------- Menu, map monde et choix du niveau -----------------------
 
 //Ajoute un evenement "onclick" aux "area" :
 var area = document.getElementsByTagName("area");
@@ -50,70 +38,53 @@ for(var i=0;i<area.length;i++){
 
 function affichageMenu(){
     document.querySelector(".accueil").style.display = "none";
-    document.querySelector(".mapMonde").style.display = "flex";
+    mapMonde.style.display = "flex";
 }
 
-
 function affichageZone(z){
-    chapitre = z;
-    alert("Affiche de la zone "+z); //A enlever à la fin
-    document.querySelector(".mapMonde").style.display="none";
-    document.querySelector(".mapZone"+z).style.display="block";
-    document.querySelector(".zoneFleches").style.display="flex";
-    mapMonde=false; mapZone=true;     //Touche pas j'en ai besoin (Tristan)
+    zone = z;
+    mapMonde.style.display = "none";
+    document.querySelector(".mapZone"+z).style.display = "block";
+    document.querySelector(".zoneFleches").style.display = "flex";
 }
 
 function affichageNiveau(n){
     niveau = n;
-    alert("Vous êtes dans la zone " + chapitre + " au niveau " + niveau + ".");
-
-    mapZone=false;      //Touche pas j'en ai besoin (Tristan)
-    niveauAffiché=true;
-
-    menu.style.display="none";
-    wrapper.style.display="flex";
-    enTete.style.display="flex";
-    enTete.innerHTML = "Zone "+chapitre+" &nbsp; | &nbsp; Niveau "+niveau;
+    alert("Vous êtes dans la zone " + zone + " au niveau " + niveau + ".");
+    menu.style.display = "none";
+    wrapper.style.display = "flex";
+    enTete.style.display = "flex";
+    document.querySelector(".mapZone"+zone).style.display = "none";
+    enTete.innerHTML = "Zone "+zone+" &nbsp; | &nbsp; Niveau "+niveau;
     infoZone = partieCode.getBoundingClientRect();
     blocArray.push(blocDepart);
-
     creerMap();
 }
 
-//Abonnement pour le keydown avec la fonction
-document.addEventListener("keydown", async (e) => {
-    if(mapZone==true){
+document.addEventListener("keydown", (e) => {
+    if(document.querySelector(".mapZone"+zone).style.display=="block"){
         switch(e.keyCode){
             case 37: //Flèche Gauche
-                document.getElementById("toucheFlecheGauche").src="src/media/touche/toucheFlecheGaucheGlow.png";
-                await sleep(100);
-                document.getElementById("toucheFlecheGauche").src="src/media/touche/toucheFlecheGauche.png";
-                if(niveau!=1){
-                    niveau -= 1;
-                }
+                toucheFlecheGauche.src = "src/media/touche/toucheFlecheGaucheGlow.png";
+                setTimeout('toucheFlecheGauche.src="src/media/touche/toucheFlecheGauche.png"',100);
+                if(niveau!=1){niveau -= 1;}
             break;
             case 39: //Flèche Droite
-                document.getElementById("toucheFlecheDroite").src="src/media/touche/toucheFlecheDroiteGlow.png";
-                await sleep(100);
-                document.getElementById("toucheFlecheDroite").src="src/media/touche/toucheFlecheDroite.png";
-                if(niveau!=5) {
-                    niveau += 1;
-                }
+                toucheFlecheDroite.src = "src/media/touche/toucheFlecheDroiteGlow.png";
+                setTimeout('toucheFlecheDroite.src="src/media/touche/toucheFlecheDroite.png"',100);
+                if(niveau!=5){niveau += 1;}
             break;
             case 13: //Touche Entrée
-                document.getElementById("toucheEntree").src="src/media/touche/toucheEntreeGlow.png";
-                await sleep(100);
-                document.getElementById("toucheEntree").src="src/media/touche/toucheEntree.png";
+                toucheEntree.src = "src/media/touche/toucheEntreeGlow.png";
+                setTimeout('toucheEntree.src="src/media/touche/toucheEntree.png"',100);
                 affichageNiveau(niveau);
             break;
             case 27: //Touche Echap
-                document.getElementById('toucheEchap').src="src/media/touche/toucheEchapGlow.png";
-                await sleep(150);
-                document.getElementById('toucheEchap').src="src/media/touche/toucheEchap.png";
-                mapZone = false; mapMonde = true;
-                document.querySelector(".mapMonde").style.display="block";
-                document.querySelector(".mapZone"+chapitre).style.display="none";
-                document.querySelector(".zoneFleches").style.display="none";
+                toucheEchap.src = "src/media/touche/toucheEchapGlow.png";
+                setTimeout('toucheEchap.src="src/media/touche/toucheEchap.png"',100);
+                mapMonde.style.display = "block";
+                document.querySelector(".mapZone"+zone).style.display = "none";
+                document.querySelector(".zoneFleches").style.display = "none";
             break;
         }
     }
@@ -122,7 +93,7 @@ document.addEventListener("keydown", async (e) => {
 
 //------------------------------ Pop-up ! ------------------------------
 
-async function popup(texte){
+function popup(texte){
     popups.style.visibility = "visible";
     popups.style.display = "flex";
     popups.children[0].innerHTML = texte;
@@ -160,8 +131,6 @@ document.onmousedown = function(e){
 function supprimerBloc(){
     if(blocEnMouvement.className=="bloc" && blocEnMouvement.dataset.stackedtop=="false" && blocEnMouvement.dataset.stackedbot=="false"){
         menuContextuel.style.display = "none";
-        indexBloc = blocArray.indexOf(blocEnMouvement);
-        blocArray.splice(indexBloc,1);
         blocEnMouvement.parentNode.removeChild(blocEnMouvement);
     }else{
         menuContextuel.style.display = "none";
@@ -171,12 +140,9 @@ function supprimerBloc(){
 function supprimerToutLesBloc(){
     if(partieCode.children.length > 1){
         menuContextuel.style.display = "none";
-        while(partieCode.children.length > 1){
-            blocArray.splice(1,1);
-            partieCode.removeChild(partieCode.children[1]);
-        }
+        while(partieCode.children.length > 1){partieCode.removeChild(partieCode.children[1]);}
+        blocArray.splice(0,blocArray.length);
         blocDepart.dataset.stackedbot = "false";
-        nbCollage = 0;
     }else{
         menuContextuel.style.display = "none";
     }
@@ -187,7 +153,6 @@ function dupliquerBloc(e){
         menuContextuel.style.display = "none";
         blocEnMouvement = blocEnMouvement.cloneNode(true);
         partieCode.append(blocEnMouvement);
-        blocArray.push(blocEnMouvement);
         blocEnMouvement.style.left = parseInt(blocEnMouvement.style.left)+10+"px";
         blocEnMouvement.style.top = parseInt(blocEnMouvement.style.top)+10+"px";
         blocEnMouvement.dataset.stackedtop = "false";
@@ -200,52 +165,47 @@ function dupliquerBloc(e){
 
 //------------------------------ Menu paramètres -------------------------------------------
 
-var settingsActive = false;
-var modeSombreActive = false; //Pour activer le mode sombre.
+var modeSombre = false; //Pour activer le mode sombre.
 
 function afficherParametres(){
-    if(settingsActive==false){
-        settingsActive=true;
-        document.getElementById("controlesJeu").style.display="none";
-        document.getElementById("menuParametres").style.display="flex";
+    if(menuParametres.style.display=="none"){
+        controlesJeu.style.display = "none";
+        menuParametres.style.display = "flex";
     }else{
-        document.getElementById("menuParametres").style.display="none";
-        document.getElementById("controlesJeu").style.display="flex";
-        settingsActive=false;
+        menuParametres.style.display = "none";
+        controlesJeu.style.display = "flex";
     }
 }
 
 function switchMusique(){
     if(audio.muted==false){
         audio.muted = true;
-        document.getElementById("imgMusique").src="src/media/icon/audio-off-icon.png";
+        imgMusique.src="src/media/icon/audio-off-icon.png";
         popup("Musique désactivée !");
     }else{
         audio.muted = false;
-        document.getElementById("imgMusique").src="src/media/icon/audio-icon.png";
+        imgMusique.src="src/media/icon/audio-icon.png";
         popup("Musique activée !");
     }
 }
 
 function switchModeSombre() {
-    if(modeSombreActive==false){
-        document.getElementById("imgModeSombre").src="src/media/icon/moon-white.png";
-        modeSombreActive=true;
-        document.getElementById("partieBanque").style.background="rgb(60,60,60)";
-        document.getElementById("partieCode").style.background="rgb(60,60,60)";
-        document.querySelector(".en-tete").style.background="#3c5a96";
-        document.getElementById("partieControle").style.background="rgb(60,60,60)";
-        document.body.style.background="#6a758a";
-        //A compléter (Tristan)
+    if(modeSombre==false){
+        modeSombre = true;
+        imgModeSombre.src = "src/media/icon/moon-white.png";
+        partieBanque.style.background = "rgb(60,60,60)";
+        partieCode.style.background = "rgb(60,60,60)";
+        enTete.style.background = "#3c5a96";
+        partieControle.style.background = "rgb(60,60,60)";
+        document.body.style.background = "#6a758a";
     }else{
-        document.getElementById("imgModeSombre").src="src/media/icon/moon-black.png";
-        modeSombreActive=false;
-        document.getElementById("partieBanque").style.background="white";
-        document.getElementById("partieCode").style.background="white";
-        document.querySelector(".en-tete").style.background="#6699ff";
-        document.getElementById("partieControle").style.background="white";
-        document.body.style.background="#bbcdf0";
-        //A compléter (Tristan)
+        modeSombre = false;
+        imgModeSombre.src="src/media/icon/moon-black.png";
+        partieBanque.style.background = "white";
+        partieCode.style.background = "white";
+        enTete.style.background = "#6699ff";
+        partieControle.style.background = "white";
+        document.body.style.background = "#bbcdf0";
     }
 }
 
@@ -255,76 +215,18 @@ function switchCodeSource(){
 
 function retournerAuMenu(){
     supprimerToutLesBloc();
-    
-    document.querySelector(".mapZone"+chapitre).style.display="none";
+    document.querySelector(".mapZone"+zone).style.display="none";
     document.querySelector(".zoneFleches").style.display="none";
-    niveau = 1; chapitre = 1;
-
-    niveauAffiché=false; mapMonde=true;
-    document.querySelector(".menu").style.display="flex";
-    document.querySelector(".mapMonde").style.display="block";
-    document.querySelector(".wrapper").style.display="none";
-    document.querySelector(".en-tete").style.display="none";
-
-    settingsActive = false;
-    document.getElementById("menuParametres").style.display="none";
-    document.getElementById("controlesJeu").style.display="flex";
+    menu.style.display = "flex";
+    mapMonde.style.display = "block";
+    wrapper.style.display = "none";
+    enTete.style.display = "none";
+    menuParametres.style.display="none";
+    controlesJeu.style.display="flex";
 }
-
-
-//------------------------------ Classe du joueur + déclaration ------------------------------
-/*
-    Les classe représentent des objets ayant des caractéristiques.
-    Le "contructor" est l'élément obligatoire d'une classe, il permet d'enregistrer les différents paramètres.
-    Par exemple, ici l'objet 'Joueur' a 3 paramètres, les positions x et y ainsi que la direction (dir).
-    Par abus de langage on peut dire que le "constructor" agit comme une fonction au sein de la classe.
-    Ainsi, "afficher" peut-être considérer (et remplacer) comme une fonction, elle sera appeler de cette manière :
-    'joueur.afficher(x,y,dir)'.
-*/
-
-class Joueur {
-    constructor(x,y,dir){
-        this.x=x;
-        this.y=y;
-        this.dir=dir;
-    }
-
-    pos(x,y,dir){
-        this.x=x;
-        this.y=y;
-        this.dir=dir;
-    }
-
-    afficher(x,y,dir){
-        this.dir = dir;
-        switch(dir){
-            case 0: //HAUT
-                ctx.drawImage(tileSet,64,64,64,64,x,y,64,64);
-                break;
-            case 1: //DROITE
-                ctx.drawImage(tileSet,64,0,64,64,x,y,64,64);
-                break;
-            case 2: //BAS
-                ctx.drawImage(tileSet,0,64,64,64,x,y,64,64);
-                break;
-            case 3: //GAUCHE
-                ctx.drawImage(tileSet,0,0,64,64,x,y,64,64);
-                break;
-        }
-    }
-}
-
-var joueur = new Joueur(384,384,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
 
 
 //------------------------------ Gestion du "tileset" et de la map ------------------------------
-/*
-    Pour faire court, lorque l'on créer un objet 'Image()' et qu'on souhaite lui attribuer une source, le navigateur doit
-    d'abords charger l'image, sauf que le reste du code est exécuté en même temps et l'image n'a pas fini de charger avant
-    qu'on lui attribue la source (qui ducoup n'existe pas). Pour palier à ce problème, on utilise la méthode asynchrone "Promise"
-    qui représente littéralement une promesse. Cette promesse peut-être résolue dans le temps et bloque l'éxécution du code.
-    Ainsi, lorque la promesse est résolue (ici le chargement de l'image) la méthode renvoie le résultat et permet l'exécution du code.
-*/
 
 function chargerImg(url){
     return new Promise(resolve => {
@@ -338,13 +240,16 @@ function chargerImg(url){
 }
 
 function afficherBloc(liste){
+    for(var i=0;i<partieBanque.children.length;i++){
+        document.getElementById(partieBanque.children[i].id).style.display = "none";
+    }
     for(var i=0;i<liste.length;i++){
         document.getElementById(liste[i]).style.display = "block";
     }
 }
 
 function creerMap(){
-    switch(chapitre + "-" + niveau){
+    switch(zone + "-" + niveau){
         case "1-1":
             map[0] = Array(0,0,0,0,0,0,0,0,0);
             map[1] = Array(0,0,0,0,0,0,0,0,0);
@@ -356,7 +261,7 @@ function creerMap(){
             map[7] = Array(0,0,0,0,0,0,0,0,0);
             map[8] = Array(0,0,0,0,0,0,0,0,0);
             joueur.pos(384,384,0);
-            afficherBloc(["Avancer"]);
+//            afficherBloc(["Avancer"]);
         break;
 
         case "1-2":
@@ -370,7 +275,7 @@ function creerMap(){
             map[7] = Array(0,0,0,0,0,0,0,0,0);
             map[8] = Array(0,0,0,0,0,0,0,0,0);
             joueur.pos(256,384,1);
-            afficherBloc(["Avancer","Sauter"]);
+//            afficherBloc(["Avancer","Sauter"]);
         break;
 
     }
@@ -401,13 +306,9 @@ function afficherMap(){
 
 //------------------------------ Executer le code + vérifier si le joueur a gagner ------------------------------
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms)); //Méthode asynchrone permettant de créer un 'temps d'arret' (ex : sleep(1000) arretera le code pendant 1sec)
-}
-
 function win(){
     if(map[joueur.y/64][joueur.x/64]==2){
-        popup("Tu as completé le niveau "+niveau+" de la zone "+chapitre+" !");
+        popup("Tu as completé le niveau "+niveau+" de la zone "+zone+" !");
         setTimeout(() => {
             fermerPopup();
             supprimerToutLesBloc();
@@ -417,52 +318,35 @@ function win(){
 }
 
 async function executionCode(){
-    remiseAZero();
+    creerMap();
     await sleep(800);
     for(var i=1;i<blocArray.length;i++){
-        if(blocArray.length>1 && blocDepart.dataset.stackedbot=="true" && blocArray[i].dataset.stackedtop=="true"){
+        if(blocArray.length>1){
             switch(blocArray[i].id){
                 case "Avancer":
-                    ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
+                    var sauvPos = [joueur.x,joueur.y];
+                    ctx.drawImage(tileSet,0,128,64,64,sauvPos[0],sauvPos[1],64,64);
                     switch(joueur.dir){
-                        case 0: //HAUT
-                            joueur.y-=64;
-                            break;
-                        case 1: //DROITE
-                            joueur.x+=64;
-                            break;
-                        case 2: //BAS
-                            joueur.y+=64;
-                            break;
-                        case 3: //GAUCHE
-                            joueur.x-=64;
-                            break;
+                        case 0: joueur.y-=64; break;
+                        case 1: joueur.x+=64; break;
+                        case 2: joueur.y+=64; break;
+                        case 3: joueur.x-=64; break;
                     }
-                    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                    if(map[joueur.y/64][joueur.x/64]!==0){
+                        joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                    }else{
+                        joueur.afficher(sauvPos[0],sauvPos[1],joueur.dir);
+                    }
                 break;
             }
+            win();
             await sleep(800);
         }
     }
-    win();
-}
-
-function remiseAZero(){
-    creerMap();
 }
 
 
-//------------------------------ Trier les blocs & les coller ------------------------------
-
-function trierBloc(){
-    for(var i=0;i<blocArray.length;i++){
-        var bloc1Haut = blocArray[indexBloc].getBoundingClientRect().top;
-        var bloc2Haut = blocArray[i].getBoundingClientRect().top;
-        if((bloc1Haut < bloc2Haut && indexBloc > i) || (bloc1Haut > bloc2Haut && indexBloc < i)){
-            blocArray[i] = blocArray.splice(indexBloc, 1, blocArray[i])[0];
-        }
-    }
-}
+//------------------------------ Attacher les blocs entre eux ------------------------------
 
 function detectionCollage(){
     for(var i=0;i<partieCode.children.length;i++){
@@ -482,16 +366,14 @@ function detectionCollage(){
 
 function collageBloc(){
     for(var i=0;i<partieCode.children.length;i++){
-        if(partieCode.children[i]!==blocEnMouvement){
-            if(partieCode.children[i].children[1].style.display == "block"){
-                nbCollage++;
-                blocEnMouvement.style.left = blocDepart.getBoundingClientRect().left-5+"px";
-                blocEnMouvement.style.top = blocDepart.getBoundingClientRect().top+(33*nbCollage)+5+"px";
-
-                blocEnMouvement.dataset.stackedtop = "true";
-                partieCode.children[i].dataset.stackedbot = "true";
-                partieCode.children[i].children[1].style.display = "none";
-            }
+        if(partieCode.children[i]!==blocEnMouvement && partieCode.children[i].children[1].style.display == "block"){
+            blocEnMouvement.style.left = partieCode.children[i].getBoundingClientRect().left-5+"px";
+            blocEnMouvement.style.top = partieCode.children[i].getBoundingClientRect().bottom-12+"px";
+            blocEnMouvement.dataset.stackedtop = "true";
+            partieCode.children[i].dataset.stackedbot = "true";
+            partieCode.children[i].children[1].style.display = "none";
+            
+            blocArray.push(blocEnMouvement);
         }
     }
 }
@@ -521,26 +403,21 @@ document.onmouseup = function(e){
 function deplacerBloc(e){
 	indexBloc = blocArray.indexOf(blocEnMouvement);
     blocEnMouvement.style.zIndex = 100;
-
     if(e.clientX-75 > infoZone.left && e.clientX+75 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+20 < infoZone.bottom){
         if(blocEnMouvement.dataset.stackedtop == "true"){
-            if(blocEnMouvement.dataset.stackedbot !== "true"){
-                sourisX = e.clientX - 75; sourisY = e.clientY - 20;
+            if(blocEnMouvement.dataset.stackedbot == "false"){
+                var sourisX = e.clientX - 75; var sourisY = e.clientY - 20;
                 blocEnMouvement.style.left = sourisX+"px";
                 blocEnMouvement.style.top = sourisY+"px";
-                nbCollage--;
                 blocEnMouvement.dataset.stackedtop = "false";
-                for(var i=0;i<blocArray.length;i++){
-                    blocArray[indexBloc-1].dataset.stackedbot = "false";
-                }
+                blocArray[indexBloc-1].dataset.stackedbot = "false";
+                blocArray.splice(indexBloc,1);
             }
         }else{
-            sourisX = e.clientX - 75; sourisY = e.clientY - 20;
+            var sourisX = e.clientX - 75; var sourisY = e.clientY - 20;
             blocEnMouvement.style.left = sourisX+"px";
             blocEnMouvement.style.top = sourisY+"px";
         }
-
-        trierBloc();
         detectionCollage();
     }
 }
@@ -548,43 +425,30 @@ function deplacerBloc(e){
 
 //------------------------------ Drag & Drop ------------------------------
 
-partieBanque.ondragstart = function(e){
-    blocEnMouvement = e.target.cloneNode(true);
-    e.dataTransfer.setData("text/html", this.innerHTML);
-};
-
+partieBanque.ondragstart = function(e){blocEnMouvement = e.target.cloneNode(true);};
 partieCode.ondragenter = function(e){e.preventDefault();};
 partieCode.ondragover = function(e){e.preventDefault();};
 
 partieCode.ondrop = function(e){
     partieCode.append(blocEnMouvement);
-    blocArray.push(blocEnMouvement);
-    indexBloc = blocArray.indexOf(blocEnMouvement);
-
     blocEnMouvement.removeAttribute("draggable");
     blocEnMouvement.style.position = "absolute";
 
     if(e.clientX-75 > infoZone.left && e.clientX+75 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+20 < infoZone.bottom){
-        sourisX = e.clientX - 75; sourisY = e.clientY - 20;
+        var sourisX = e.clientX - 75; var sourisY = e.clientY - 20;
         blocEnMouvement.style.left = sourisX+"px";
         blocEnMouvement.style.top = sourisY+"px";
     }else{
         blocEnMouvement.style.left = "50%";
         blocEnMouvement.style.top = "50%";
     }
-
-    trierBloc();
 };
-
-
-
 
 
 //------------------------------ Debugage et tests ------------------------------
 
 window.addEventListener("keydown", function(e){
     if(e.keyCode == 96){
-        console.log(audio.muted);
-//        popup("zebi je test des trucs");
+        console.log(blocArray);
     }
 });

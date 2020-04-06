@@ -27,7 +27,7 @@
 
         <div class="menu">
             <div class="accueil">
-                <img id="logoMenu" src="src/media/menu/logoMenu3.png" alt="Logo du site et du menu"/>
+                <img id="logoMenu" src="src/media/menu/logoMenu.png" alt="Logo du site et du menu"/>
                 <p>
                     Vous êtes plongé dans le monde futuriste d'EatherLand, où le celèbre scientifique Dr. Strangelove travaille sur un ordinateur humanoïde. <br>
                     Malheureusement, pendant le transfert, votre conscience a été transmise dans un monde virtuel, à l'intérieur de cet ordinateur. <br>
@@ -36,7 +36,6 @@
                 <button class="commencerJeu" onclick="affichageMenu()">C'est parti !</button>
                 <i>Scratchly est une application éducative visant à apprendre les bases de l'algorithmie aux jeunes ados.</i>
             </div>
-
             <div class="mapMonde" style="display:none;">
                 <img src="src/media/map/mapMonde.png" alt="Map Monde" usemap="#image-map">
                 <map name="image-map">
@@ -46,23 +45,18 @@
                     <area target="" alt="Zone 4" title="Zone 4" href="#" style="outline: 0;" coords="518,399,502,387,478,389,464,388,447,369,442,356,435,343,436,323,453,301,469,283,481,280,492,263,509,252,544,253,569,262,581,272,597,285,598,399" shape="poly">
                 </map>
             </div>
-
             <div class="mapZone1" style="display:none;">
                 <img src="src/media/map/mapZone1.png" alt="Map Zone 1">
             </div>
-
             <div class="mapZone2" style="display:none;">
                 <img src="src/media/map/mapZone2.png" alt="Map Zone 2">
             </div>
-
             <div class="mapZone3" style="display:none;">
                 <img src="src/media/map/mapZone3.png" alt="Map Zone 3">
             </div>
-
             <div class="mapZone4" style="display:none;">
                 <img src="src/media/map/mapZone4.png" alt="Map Zone 4">
             </div>
-
             <div class="zoneFleches">
                 <img id="toucheEchap" src="src/media/touche/toucheEchap.png" alt="Revenir au Menu">
                 <img id="toucheFlecheGauche" src="src/media/touche/toucheFlecheGauche.png" alt="Flèche de gauche">
@@ -77,10 +71,10 @@
                 <div id="partieControle">
                     <div class="controles" id="controlesJeu">
                         <button onclick="executionCode()"><img id="imgPlay" src="src/media/icon/btn_play.png"></button>
-                        <button onclick="remiseAZero()"><img id="imgReset" src="src/media/icon/btn_reset.png"></button>
+                        <button onclick="creerMap()"><img id="imgReset" src="src/media/icon/btn_reset.png"></button>
                         <button onclick="afficherParametres()"><img id="imgParametres" src="src/media/icon/btn_settings.png"></button>
                     </div>
-                    <div class="controles" id="menuParametres">
+                    <div class="controles" id="menuParametres" style="display:none;">
                         <button onclick="retournerAuMenu()"><img id="imgMenu" src="src/media/touche/toucheEchap.png" title="Retourner au menu principal"></button>
                         <button onclick="switchMusique()"><img id="imgMusique" src="src/media/icon/audio-icon.png" title="Activer/Désactiver la musique"></button>
                         <button onclick="switchModeSombre()"><img id="imgModeSombre" src="src/media/icon/moon-black.png" title="Activer/Désactiver le mode sombre"></button>
@@ -134,10 +128,15 @@
                     </svg>
                     <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                 </div>
-                <div class="bloc" id="Répéter" draggable="true" data-type="logique" data-stackedtop="false" data-stackedbot="false">
-                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="40" viewBox="0 0 150 40">
-                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -33 z" fill="orange" stroke="black" stroke-width="0.5"/>
-                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Répéter ... fois</text>
+                <div class="bloc" id="Repeter" draggable="true" data-type="logique" data-stackedtop="false" data-stackedbot="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150" height="140" viewBox="0 0 150 140">
+                        <path d="m 1 1 l 10 0 l 5 5 l 10 0 l 5 -5 h 118 v 33 h -98 l -5 5 l -10 0 l -5 -5 h -15 v 85 h 133 v 15 h -118 l -5 5 l -10 0 l -5 -5 l -10 0 v -133" 
+                        fill="orange" stroke="black" stroke-width="0.5"/>
+                        <text x="30%" y="14%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Répéter</text>
+                        <text x="80%" y="14%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">fois</text>
+                        <foreignObject x="75" y="7" width="27" height="21"> 
+                            <input id="inputRepeter" type="number" value="1" min="1" placeholder="1">
+                        </foreignObject>
                     </svg>
                     <img class="bloc-shadow" src="src/media/bloc-shadow.png"/>
                 </div>
@@ -158,6 +157,8 @@
             </div>
         </div>
 
+        <script type="text/javascript" src="src/lib/classes.js"></script>
+        <script type="text/javascript" src="src/lib/DOM.js"></script>
         <script type="text/javascript" src="src/lib/script.js"></script>
     </body>
 </html>
