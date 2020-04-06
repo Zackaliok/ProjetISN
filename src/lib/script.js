@@ -37,8 +37,8 @@ var niveauAffiché = false;
 
 //Bypass les menus :
 affichageMenu();
-affichageZone(1);
-setTimeout(function (){affichageNiveau(1);},10);
+affichageZone(3);
+setTimeout(function (){affichageNiveau(2);},10);
 
 //Ajoute un evenement "onclick" aux "area" :
 var area = document.getElementsByTagName("area");
@@ -236,7 +236,7 @@ function switchModeSombre() {
         document.querySelector(".en-tete").style.background="#3c5a96";
         document.getElementById("partieControle").style.background="rgb(60,60,60)";
         document.body.style.background="#6a758a";
-        //A compléter (Tristan)
+        //A changer si besoin
     }else{
         document.getElementById("imgModeSombre").src="src/media/icon/moon-black.png";
         modeSombreActive=false;
@@ -245,7 +245,7 @@ function switchModeSombre() {
         document.querySelector(".en-tete").style.background="#6699ff";
         document.getElementById("partieControle").style.background="white";
         document.body.style.background="#bbcdf0";
-        //A compléter (Tristan)
+        //A changer si besoin
     }
 }
 
@@ -255,7 +255,7 @@ function switchCodeSource(){
 
 function retournerAuMenu(){
     supprimerToutLesBloc();
-    
+
     document.querySelector(".mapZone"+chapitre).style.display="none";
     document.querySelector(".zoneFleches").style.display="none";
     niveau = 1; chapitre = 1;
@@ -373,6 +373,49 @@ function creerMap(){
             afficherBloc(["Avancer","Sauter"]);
         break;
 
+        case "3-1":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,2,0,0,0,0);
+            map[2] = Array(0,0,0,0,1,0,0,0,0);
+            map[3] = Array(0,0,0,0,1,0,0,0,0);
+            map[4] = Array(0,0,0,0,1,0,0,0,0);
+            map[5] = Array(0,0,0,0,1,0,0,0,0);
+            map[6] = Array(0,0,0,0,1,0,0,0,0);
+            map[7] = Array(0,0,0,0,1,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.pos(256,448,0);
+            afficherBloc(["Avancer","Répéter"]);
+          break;
+        case "3-2":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,0,0,0,0,0);
+            map[2] = Array(0,0,0,0,0,1,2,0,0);
+            map[3] = Array(0,0,0,0,1,1,0,0,0);
+            map[4] = Array(0,0,0,1,1,0,0,0,0);
+            map[5] = Array(0,0,1,1,0,0,0,0,0);
+            map[6] = Array(0,0,0,0,0,0,0,0,0);
+            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.pos(128,320,1);
+            afficherBloc(["Avancer","Répéter","TournerADroite","TournerAGauche"]);
+          break;
+        case "3-3":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,0,0,0,0,0);
+            map[2] = Array(0,0,0,0,0,0,0,0,0);
+            map[3] = Array(0,0,0,0,0,0,0,0,0);
+            map[4] = Array(0,0,0,0,0,0,0,0,0);
+            map[5] = Array(0,0,0,0,0,0,0,0,0);
+            map[6] = Array(0,0,0,0,0,0,0,0,0);
+            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.pos(128,320,1);
+            afficherBloc(["Avancer","Répéter","TournerADroite","TournerAGauche"]);
+          break;
+
+
+
+
     }
     afficherMap();
     joueur.afficher(joueur.x,joueur.y,joueur.dir);
@@ -440,6 +483,40 @@ async function executionCode(){
                     }
                     joueur.afficher(joueur.x,joueur.y,joueur.dir);
                 break;
+                case "Sauter":
+                    ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
+                    switch (joueur.dir) {
+                      case 0://HAUT
+                          joueur.y-=128;
+                        break;
+                      case 1://DROITE
+                          joueur.x+=128;
+                        break;
+                      case 2://BAS
+                          joueur.y+=128;
+                        break;
+                      case 3://GAUCHE
+                          joueur.x-=128;
+                        break;
+                    }
+                    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                  break;
+                case "TournerADroite":
+                    ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
+                    joueur.dir++;
+                    if (joueur.dir==4) {
+                      joueur.dir=0
+                    }
+                    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                  break;
+                case "TournerAGauche":
+                    ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
+                    joueur.dir--;
+                    if (joueur.dir==-1) {
+                      joueur.dir=3
+                    }
+                    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                  break;
             }
             await sleep(800);
         }
