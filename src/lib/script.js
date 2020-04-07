@@ -18,7 +18,7 @@ document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction 
 //Bypass les menus :
 affichageMenu();
 affichageZone(3);
-setTimeout(function (){affichageNiveau(2);},10);
+setTimeout(function (){affichageNiveau(3);},10);
 
 //Créer un temps d'arret :
 function sleep(ms) {
@@ -306,16 +306,16 @@ function creerMap(){
           break;
         case "3-3":
             map[0] = Array(0,0,0,0,0,0,0,0,0);
-            map[1] = Array(0,0,0,0,0,0,0,0,0);
-            map[2] = Array(0,0,0,0,0,0,0,0,0);
-            map[3] = Array(0,0,0,0,0,0,0,0,0);
-            map[4] = Array(0,0,0,0,0,0,0,0,0);
-            map[5] = Array(0,0,0,0,0,0,0,0,0);
-            map[6] = Array(0,0,0,0,0,0,0,0,0);
-            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,1,1,2,0,0,0,0);
+            map[2] = Array(0,0,3,0,0,0,0,0,0);
+            map[3] = Array(0,0,1,0,0,0,0,0,0);
+            map[4] = Array(0,0,1,1,3,1,1,0,0);
+            map[5] = Array(0,0,0,0,0,0,3,0,0);
+            map[6] = Array(0,0,0,0,0,0,1,0,0);
+            map[7] = Array(0,1,1,1,1,1,1,0,0);
             map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.pos(128,320,1);
-            afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche"]);
+            joueur.pos(64,448,1);
+            afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche","Sauter"]);
           break;
     }
     afficherMap();
@@ -380,18 +380,10 @@ async function executionCode(){
                 case "Sauter":
                     ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
                     switch (joueur.dir) {
-                      case 0://HAUT
-                          joueur.y-=128;
-                        break;
-                      case 1://DROITE
-                          joueur.x+=128;
-                        break;
-                      case 2://BAS
-                          joueur.y+=128;
-                        break;
-                      case 3://GAUCHE
-                          joueur.x-=128;
-                        break;
+                      case 0: joueur.y-=128; break;
+                      case 1: joueur.x+=128; break;
+                      case 2: joueur.y+=128; break;
+                      case 3: joueur.x-=128; break;
                     }
                     joueur.afficher(joueur.x,joueur.y,joueur.dir);
                   break;
@@ -445,7 +437,7 @@ function collageBloc(){
             blocEnMouvement.dataset.stackedtop = "true";
             partieCode.children[i].dataset.stackedbot = "true";
             partieCode.children[i].children[1].style.display = "none";
-            
+
             blocArray.push(blocEnMouvement);
         }
     }
