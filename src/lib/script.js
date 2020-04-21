@@ -288,7 +288,8 @@ function creerMap(){
             map[8] = Array(0,0,0,0,0,0,0,0,0);
             joueur.startPos(256,448,0);
             afficherBloc(["Avancer","Repeter"]);
-          break;
+        break;
+
         case "3-2":
             map[0] = Array(0,0,0,0,0,0,0,0,0);
             map[1] = Array(0,0,0,0,0,0,0,0,0);
@@ -301,7 +302,8 @@ function creerMap(){
             map[8] = Array(0,0,0,0,0,0,0,0,0);
             joueur.startPos(128,320,1);
             afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche"]);
-          break;
+        break;
+
         case "3-3":
             map[0] = Array(0,0,0,0,0,0,0,0,0);
             map[1] = Array(0,0,1,1,2,0,0,0,0);
@@ -314,7 +316,7 @@ function creerMap(){
             map[8] = Array(0,0,0,0,0,0,0,0,0);
             joueur.startPos(64,448,1);
             afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche","Sauter"]);
-          break;
+        break;
     }
     afficherMap();
     joueur.afficher(joueur.startX,joueur.startY,joueur.startDir);
