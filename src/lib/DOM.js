@@ -18,3 +18,9 @@ const imgModeSombre = document.getElementById("imgModeSombre");
 const imgMusique = document.getElementById("imgMusique");
 const controlesJeu = document.getElementById("controlesJeu");
 const menuParametres = document.getElementById("menuParametres");
+
+
+//Créer l'élément image lorsque deux blocs peuvent être collés
+var insertionBloc = document.createElement("img");
+insertionBloc.src = "src/media/bloc-shadow.png";
+insertionBloc.className = "insertionBloc";

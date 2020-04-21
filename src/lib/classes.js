@@ -10,32 +10,31 @@
 
 class Joueur {
     constructor(x,y,dir){
-        this.x=x;
-        this.y=y;
-        this.dir=dir;
+        this.x = x;
+        this.y = y;
+        this.dir = dir;
     }
 
     pos(x,y,dir){
-        this.x=x;
-        this.y=y;
-        this.dir=dir;
+        this.x = x;
+        this.y = y;
+        this.dir = dir;
+    }
+    
+    startPos(x,y,dir){
+        this.startX = x;
+        this.startY = y;
+        this.startDir = dir;
+        joueur.pos(x,y,dir);
     }
 
     afficher(x,y,dir){
         this.dir = dir;
         switch(dir){
-            case 0: //HAUT
-                ctx.drawImage(tileSet,64,64,64,64,x,y,64,64);
-                break;
-            case 1: //DROITE
-                ctx.drawImage(tileSet,64,0,64,64,x,y,64,64);
-                break;
-            case 2: //BAS
-                ctx.drawImage(tileSet,0,64,64,64,x,y,64,64);
-                break;
-            case 3: //GAUCHE
-                ctx.drawImage(tileSet,0,0,64,64,x,y,64,64);
-                break;
+            case 0: ctx.drawImage(tileSet,64,64,64,64,x,y,64,64); break; //HAUT
+            case 1: ctx.drawImage(tileSet,64,0,64,64,x,y,64,64); break; //DROITE
+            case 2: ctx.drawImage(tileSet,0,64,64,64,x,y,64,64); break; //BAS
+            case 3: ctx.drawImage(tileSet,0,0,64,64,x,y,64,64); break; //GAUCHE
         }
     }
 }

@@ -2,23 +2,22 @@
 
 //Bloc, joueur, map et audio :
 var blocEnMouvement, indexBloc, tileSet, infoZone, zone=1, niveau=1; //Variables globales
-var blocArray = new Array(); //Array contenant les blocs dans l'ordre d'affichage (de haut en bas)
-var map = new Array(); //Array à deux dimension (matrice) servant de carte pour construire les niveaux
+var blocArray = new Array(), map = new Array(); //Array contenant la liste des blocs collés, et la "carte" pour le niveau
 var audio = new Audio(); //Variable représenant l'audio de la page
-var joueur = new Joueur(384,384,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
+var joueur = new Joueur(0,0,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
 
 //Canvas + image :
 const canvas = document.getElementById('canvas'); //Variable représentant le canvas
 const ctx = canvas.getContext('2d'); //Variable représentant le "context" (la où on dessine)
-chargerImg("src/media/tileset.png"); //Charge le "tileset";
+chargerImg("src/media/tileset.png").then(i => tileSet=i); //Charge le "tileset";
 
 //Empêcher la selection :
-document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction (texte, images) sur la page
+document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction du texte sur la page
 
 //Bypass les menus :
 affichageMenu();
 affichageZone(3);
-setTimeout(function (){affichageNiveau(2);},10);
+setTimeout(function (){affichageNiveau(2);},100);
 
 //Créer un temps d'arret :
 function sleep(ms) {
@@ -31,7 +30,7 @@ function sleep(ms) {
 //Ajoute un evenement "onclick" aux "area" :
 var area = document.getElementsByTagName("area");
 for(var i=0;i<area.length;i++){
-    area[i].addEventListener("click", function() {
+    area[i].addEventListener("click", function(){
         affichageZone(parseInt(this.title.match(/\d+/)));
     });
 }
@@ -221,8 +220,8 @@ function retournerAuMenu(){
     mapMonde.style.display = "block";
     wrapper.style.display = "none";
     enTete.style.display = "none";
-    menuParametres.style.display="none";
-    controlesJeu.style.display="flex";
+    menuParametres.style.display = "none";
+    controlesJeu.style.display = "flex";
 }
 
 
@@ -235,7 +234,6 @@ function chargerImg(url){
             resolve(img);
         });
         img.src = url;
-        tileSet = img;
     });
 }
 
@@ -260,8 +258,8 @@ function creerMap(){
             map[6] = Array(0,0,0,0,0,0,1,0,0);
             map[7] = Array(0,0,0,0,0,0,0,0,0);
             map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.pos(384,384,0);
-//            afficherBloc(["Avancer"]);
+            joueur.startPos(384,384,0);
+            afficherBloc(["Avancer"]);
         break;
 
         case "1-2":
@@ -274,8 +272,8 @@ function creerMap(){
             map[6] = Array(0,0,0,0,1,1,1,0,0);
             map[7] = Array(0,0,0,0,0,0,0,0,0);
             map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.pos(256,384,1);
-//            afficherBloc(["Avancer","Sauter"]);
+            joueur.startPos(256,384,1);
+            afficherBloc(["Avancer","Sauter"]);
         break;
 
         case "3-1":
@@ -288,7 +286,7 @@ function creerMap(){
             map[6] = Array(0,0,0,0,1,0,0,0,0);
             map[7] = Array(0,0,0,0,1,0,0,0,0);
             map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.pos(256,448,0);
+            joueur.startPos(256,448,0);
             afficherBloc(["Avancer","Repeter"]);
           break;
         case "3-2":
@@ -301,42 +299,34 @@ function creerMap(){
             map[6] = Array(0,0,0,0,0,0,0,0,0);
             map[7] = Array(0,0,0,0,0,0,0,0,0);
             map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.pos(128,320,1);
+            joueur.startPos(128,320,1);
             afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche"]);
           break;
         case "3-3":
             map[0] = Array(0,0,0,0,0,0,0,0,0);
-            map[1] = Array(0,0,0,0,0,0,0,0,0);
-            map[2] = Array(0,0,0,0,0,0,0,0,0);
-            map[3] = Array(0,0,0,0,0,0,0,0,0);
-            map[4] = Array(0,0,0,0,0,0,0,0,0);
-            map[5] = Array(0,0,0,0,0,0,0,0,0);
-            map[6] = Array(0,0,0,0,0,0,0,0,0);
-            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,1,1,2,0,0,0,0);
+            map[2] = Array(0,0,3,0,0,0,0,0,0);
+            map[3] = Array(0,0,1,0,0,0,0,0,0);
+            map[4] = Array(0,0,1,1,3,1,1,0,0);
+            map[5] = Array(0,0,0,0,0,0,3,0,0);
+            map[6] = Array(0,0,0,0,0,0,1,0,0);
+            map[7] = Array(0,1,1,1,1,1,1,0,0);
             map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.pos(128,320,1);
-            afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche"]);
+            joueur.startPos(64,448,1);
+            afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche","Sauter"]);
           break;
     }
     afficherMap();
-    joueur.afficher(joueur.x,joueur.y,joueur.dir);
+    joueur.afficher(joueur.startX,joueur.startY,joueur.startDir);
 }
 
 function afficherMap(){
     for(var i=0;i<map.length;i++){
         for(var j=0;j<map[i].length;j++){
             switch(map[i][j]){
-                case 0: //Herbe
-                    ctx.drawImage(tileSet,128,0,64,64,64*j,64*i,64,64);
-                break;
-
-                case 1: //Sol
-                    ctx.drawImage(tileSet,0,128,64,64,64*j,64*i,64,64);
-                break;
-
-                case 2: //Case Cible
-                    ctx.drawImage(tileSet,64,128,64,64,64*j,64*i,64,64);
-                break;
+                case 0: ctx.drawImage(tileSet,128,0,64,64,64*j,64*i,64,64); break; //Herbe
+                case 1: ctx.drawImage(tileSet,0,128,64,64,64*j,64*i,64,64); break; //Sol
+                case 2: ctx.drawImage(tileSet,64,128,64,64,64*j,64*i,64,64); break; //Case Cible
             }
         }
     }
@@ -356,11 +346,17 @@ function win(){
     }
 }
 
+function remiseAZero(){
+    ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
+    joueur.pos(joueur.startX,joueur.startY,joueur.startDir);
+    joueur.afficher(joueur.startX,joueur.startY,joueur.startDir);
+}
+
 async function executionCode(){
-    creerMap();
-    await sleep(800);
-    for(var i=1;i<blocArray.length;i++){
-        if(blocArray.length>1){
+    if(blocArray.length>1){
+        remiseAZero();
+        await sleep(800);
+        for(var i=1;i<blocArray.length;i++){
             switch(blocArray[i].id){
                 case "Avancer":
                     var sauvPos = [joueur.x,joueur.y];
@@ -371,50 +367,41 @@ async function executionCode(){
                         case 2: joueur.y+=64; break;
                         case 3: joueur.x-=64; break;
                     }
-                    if(map[joueur.y/64][joueur.x/64]!==0){
-                        joueur.afficher(joueur.x,joueur.y,joueur.dir);
-                    }else{
-                        joueur.afficher(sauvPos[0],sauvPos[1],joueur.dir);
-                    }
+                    if(map[joueur.y/64][joueur.x/64]!==0) joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                    else joueur.afficher(sauvPos[0],sauvPos[1],joueur.dir);
                 break;
+                    
                 case "Sauter":
+                    var sauvPos = [joueur.x,joueur.y];
                     ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
-                    switch (joueur.dir) {
-                      case 0://HAUT
-                          joueur.y-=128;
-                        break;
-                      case 1://DROITE
-                          joueur.x+=128;
-                        break;
-                      case 2://BAS
-                          joueur.y+=128;
-                        break;
-                      case 3://GAUCHE
-                          joueur.x-=128;
-                        break;
+                    switch (joueur.dir){
+                        case 0: joueur.y-=128; break;
+                        case 1: joueur.x+=128; break;
+                        case 2: joueur.y+=128; break;
+                        case 3: joueur.x-=128; break;
                     }
-                    joueur.afficher(joueur.x,joueur.y,joueur.dir);
-                  break;
+                    if(map[joueur.y/64][joueur.x/64]!==0) joueur.afficher(joueur.x,joueur.y,joueur.dir);
+                    else joueur.afficher(sauvPos[0],sauvPos[1],joueur.dir);
+                break;
+                    
                 case "TournerADroite":
                     ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
-                    joueur.dir++;
-                    if (joueur.dir==4) {
-                      joueur.dir=0
-                    }
+                    joueur.dir = (joueur.dir+1)%4;
                     joueur.afficher(joueur.x,joueur.y,joueur.dir);
-                  break;
+                break;
+                    
                 case "TournerAGauche":
                     ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
-                    joueur.dir--;
-                    if (joueur.dir==-1) {
-                      joueur.dir=3
-                    }
+                    joueur.dir -= 1;
+                    if(joueur.dir==-1) joueur.dir=3;
                     joueur.afficher(joueur.x,joueur.y,joueur.dir);
-                  break;
+                break;
             }
             win();
             await sleep(800);
         }
+    }else{
+        popup("Ajoute un (ou plusieurs) bloc(s) pour exécuter le code !");
     }
 }
 
@@ -423,15 +410,21 @@ async function executionCode(){
 
 function detectionCollage(){
     for(var i=0;i<partieCode.children.length;i++){
-        var child = partieCode.children[i];
-        var rect1 = blocEnMouvement.getBoundingClientRect();
-        var rect2 = partieCode.children[i].getBoundingClientRect();
-        if(child!==blocEnMouvement && (child.dataset.stackedtop=="true" || child.id=="blocDepart") && child.dataset.stackedbot=="false"){
-            if(rect1.top-15 <= rect2.bottom && rect1.top-15 >= rect2.bottom-20 && rect1.left >= rect2.left-30 && rect1.right <= rect2.right+30){
-                partieCode.children[i].children[1].style.display = "block";
-
-            }else{
-                partieCode.children[i].children[1].style.display = "none";
+        var blocs = partieCode.children[i];
+        var bloc1Rect = blocEnMouvement.getBoundingClientRect();
+        var bloc2Rect = blocs.getBoundingClientRect();
+        if(blocs!==blocEnMouvement && blocs.dataset.stackedtop=="true" && blocs.dataset.stackedbot=="false"){
+            if(bloc1Rect.top-15 <= bloc2Rect.bottom && bloc1Rect.top-15 >= bloc2Rect.bottom-20 && bloc1Rect.left >= bloc2Rect.left-30 && bloc1Rect.right <= bloc2Rect.right+30){
+                insertionBloc.className = "insertionBloc";
+                blocs.appendChild(insertionBloc);
+            }
+            else if(bloc1Rect.top-15 <= bloc2Rect.top+33 && bloc1Rect.top-15 >= bloc2Rect.top+10 && bloc1Rect.left >= bloc2Rect.left-11 && bloc1Rect.right <= bloc2Rect.right+49 && blocs.id=="Repeter"){
+                insertionBloc.className = "insertionBloc2";
+                blocs.appendChild(insertionBloc);
+            }
+            else if(blocs.querySelector(".insertionBloc")!==null || blocs.querySelector(".insertionBloc2")!==null) {
+                insertionBloc.className = "insertionBloc";
+                blocs.removeChild(insertionBloc);
             }
         }
     }
@@ -439,14 +432,23 @@ function detectionCollage(){
 
 function collageBloc(){
     for(var i=0;i<partieCode.children.length;i++){
-        if(partieCode.children[i]!==blocEnMouvement && partieCode.children[i].children[1].style.display == "block"){
-            blocEnMouvement.style.left = partieCode.children[i].getBoundingClientRect().left-5+"px";
-            blocEnMouvement.style.top = partieCode.children[i].getBoundingClientRect().bottom-12+"px";
+        var blocs = partieCode.children[i];
+        if(blocs!==blocEnMouvement && blocs.querySelector(".insertionBloc")!==null && blocs.querySelector(".insertionBloc2")==null){
+            blocEnMouvement.style.left = blocs.getBoundingClientRect().left-5+"px";
+            blocEnMouvement.style.top = blocs.getBoundingClientRect().bottom-12+"px";
             blocEnMouvement.dataset.stackedtop = "true";
-            partieCode.children[i].dataset.stackedbot = "true";
-            partieCode.children[i].children[1].style.display = "none";
-            
+            blocs.dataset.stackedbot = "true";
+            blocs.removeChild(insertionBloc);
             blocArray.push(blocEnMouvement);
+        }
+        else if(blocs!==blocEnMouvement && blocs.querySelector(".insertionBloc")==null && blocs.querySelector(".insertionBloc2")!==null){
+            blocs.removeChild(insertionBloc);
+            blocs.children[1].appendChild(blocEnMouvement);
+            blocEnMouvement.setAttribute("data-specialstack", true);
+            blocEnMouvement.dataset.stackedtop = "true";
+            blocEnMouvement.style.position = "relative";
+            blocEnMouvement.style.left = "0px";
+            blocEnMouvement.style.top = "0px";
         }
     }
 }
@@ -455,7 +457,7 @@ function collageBloc(){
 //------------------------------ Déplacement des blocs à l'intérieur de la zone de code ------------------------------
 
 partieCode.onmousedown = function(e){
-    if(e.target.className=="bloc" && e.buttons == 1){
+    if(e.target.className=="bloc" && e.buttons==1){
         window.addEventListener('mousemove', deplacerBloc, true);
         blocEnMouvement = e.target;
         blocEnMouvement.style.cursor = "grabbing";
@@ -474,24 +476,36 @@ document.onmouseup = function(e){
 };
 
 function deplacerBloc(e){
-	indexBloc = blocArray.indexOf(blocEnMouvement);
+    var sourisX = e.clientX - 75; 
+    var sourisY = e.clientY - 20;
     blocEnMouvement.style.zIndex = 100;
+    
     if(e.clientX-75 > infoZone.left && e.clientX+75 < infoZone.right && e.clientY-20 > infoZone.top && e.clientY+20 < infoZone.bottom){
-        if(blocEnMouvement.dataset.stackedtop == "true"){
-            if(blocEnMouvement.dataset.stackedbot == "false"){
-                var sourisX = e.clientX - 75; var sourisY = e.clientY - 20;
+        detectionCollage();
+        if(blocEnMouvement.dataset.stackedtop=="true" && blocEnMouvement.hasAttribute("data-specialstack")==false){
+            if(blocEnMouvement.dataset.stackedbot=="false"){
+                indexBloc = blocArray.indexOf(blocEnMouvement);
                 blocEnMouvement.style.left = sourisX+"px";
                 blocEnMouvement.style.top = sourisY+"px";
                 blocEnMouvement.dataset.stackedtop = "false";
                 blocArray[indexBloc-1].dataset.stackedbot = "false";
                 blocArray.splice(indexBloc,1);
             }
-        }else{
+        }
+        else if(blocEnMouvement.dataset.stackedtop=="true" && blocEnMouvement.hasAttribute("data-specialstack")==true){
+            if(blocEnMouvement.dataset.stackedbot == "false"){
+                partieCode.appendChild(blocEnMouvement);
+                blocEnMouvement.removeAttribute("data-specialstack");
+                blocEnMouvement.style.position = "absolute";
+                blocEnMouvement.style.left = sourisX+"px";
+                blocEnMouvement.style.top = sourisY+"px";
+            }
+        }
+        else{
             var sourisX = e.clientX - 75; var sourisY = e.clientY - 20;
             blocEnMouvement.style.left = sourisX+"px";
             blocEnMouvement.style.top = sourisY+"px";
         }
-        detectionCollage();
     }
 }
 
@@ -522,6 +536,6 @@ partieCode.ondrop = function(e){
 
 window.addEventListener("keydown", function(e){
     if(e.keyCode == 96){
-        console.log(blocArray);
+        console.log();
     }
 });
