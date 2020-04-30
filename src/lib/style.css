@@ -22,11 +22,9 @@
 /*-------------------- Général : --------------------*/
 
 body {
-    height: 100vh; width: 100vw;
-    margin: 0; padding: 0;
-    background: #bbcdf0; color: white;   /* #bbcdf0 */
+    height: 100vh; width: 100vw; color: white;
+    margin: 0; padding: 0; background: #bbcdf0;
     font-family: 'Source Sans Pro', sans-serif;
-    box-sizing: border-box;
 }
 
 .wrapper {
@@ -56,11 +54,12 @@ body {
 .accueil {
     display: flex; width: 100vw; height: 100vh;
     align-items: center; flex-direction: column;
+    
 }
 
 .accueil p {
     text-align: center; font-weight: 450; line-height: 50px;
-    font-size: 22px; margin: 50px 0 100px 0;
+    font-size: 22px; margin: 50px 0 75px 0;
 }
 
 .commencerJeu {
@@ -83,9 +82,7 @@ body {
 /*---- Map Monde/Zone : ----*/
 
 .zoneFleches {
-    background: pink; position: absolute; 
-    height: 150px; width: 300px;
-    border: 2px solid black; border-radius: 5px;
+    position: absolute; height: 100px; width: 300px;
     right: 20px; bottom: 20px; display: none;
     justify-content: center; align-items: center;
 }
@@ -106,6 +103,11 @@ body {
     width: 100%; background: white;
     border: 1px solid #454545; border-right: none;
     border-radius: 5px 0 0 5px; margin: 0 0 5px 10px;
+    max-width: 100%; max-height: 100%;
+}
+
+#conteneurCode {
+    height: 1500px; width: 1500px;
 }
 
 #partieControle {
@@ -147,34 +149,33 @@ canvas {
 
 /*-------------------- Blocs : --------------------*/
 
-.blocDepart {
+#blocDepart {
     width: 150px; height: 50px;
-    position: relative; top: 5px;
-    left: calc(50% - 75px);
+    margin: 0; display: block;
+    transform: translate(340px,5px);
+    position: absolute;
 }
 
-.bloc {
-    display: none; width: 150px; height: 40px;
-    margin: 5px; float: right;
-}
-
+.bloc {display: none; width: 150px; height: 40px; margin: 5px;}
 .bloc:hover {cursor: grab;}
 
 svg, path, text {pointer-events: none;}
 foreignObject {pointer-events: all;}
 
 .insertionBloc {filter: blur(1.5px); transform: translate(0px, -5px); opacity: 0.8;}
-.insertionBloc2 {filter: blur(1.5px); transform: translate(20px, -105px); opacity: 0.8;}
-g {position: absolute; top: 28px; left: 15px; display: block;}
+.insertionBloc2 {filter: blur(1.5px); transform: translate(20px, -73px); opacity: 0.8;}
+.insertionBloc3 {filter: blur(1.5px); transform: translate(0px, -5px); opacity: 0.8;}
+.stack {position: absolute; top: 33px; left: 20px;}
 
-/*---- Répéter : ----*/
+/*---- Répéter, Si, ect : ----*/
+
+#Repeter, #Si {height: 74px;}
 
 #inputRepeter {
     width: 25px; height: 15px;
     text-align: center; -moz-appearance: textfield;
     border-radius: 3px; border: 1px solid gray;
 }
-
 #inputRepeter::-webkit-inner-spin-button {-webkit-appearance: none;}
 
 
