@@ -16,7 +16,7 @@ document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction 
 
 //Bypass les menus :
 affichageMenu();
-affichageZone(1);
+affichageZone(3);
 setTimeout(function (){affichageNiveau(2);},100);
 
 //Créer un temps d'arret :
@@ -428,11 +428,11 @@ function collageBloc(){
             blocArray.push(blocEnMouvement);
         }
         else if(bloc.querySelector(".insertionBloc")==null && bloc.querySelector(".insertionBloc2")==null && bloc.querySelector(".insertionBloc3")!==null){ //Zone "special" si il y'a deja un bloc
-            var enfantRect = bloc.children[1].lastChild.getBoundingClientRect();
+            var enfantCoord = (bloc.children[1].lastChild.style.transform.match(/\d+/g).map(Number) + "").split(",");
             bloc.children[1].lastChild.removeChild(insertionBloc);
             bloc.children[1].lastChild.dataset.stackedbot = "true";
             blocEnMouvement.dataset.stackedtop = "true";
-            blocEnMouvement.style.transform = "translate(0px, "+(enfantRect.bottom-155)+"px)";
+            blocEnMouvement.style.transform = "translate(0px, "+(parseInt(enfantCoord[1])+33)+"px)";
             bloc.children[1].appendChild(blocEnMouvement);
         }
         else if(bloc.querySelector(".insertionBloc")==null && bloc.querySelector(".insertionBloc2")!==null && bloc.querySelector(".insertionBloc3")==null){ //Zone "special" (Repeter, si, ect)
