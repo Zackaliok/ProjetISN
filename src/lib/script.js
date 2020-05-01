@@ -15,9 +15,9 @@ chargerImg("src/media/tileset.png").then(i => tileSet=i); //Charge le "tileset";
 document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction du texte sur la page
 
 //Bypass les menus :
-affichageMenu();
-affichageZone(1);
-setTimeout(function (){affichageNiveau(2);},100);
+//affichageMenu();
+//affichageZone(1);
+//setTimeout(function (){affichageNiveau(2);},100);
 
 //Créer un temps d'arret :
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms));}
@@ -299,7 +299,7 @@ function creerMap(){
             map[1] = Array(0,0,1,1,2,0,0,0,0);
             map[2] = Array(0,0,3,0,0,0,0,0,0);
             map[3] = Array(0,0,1,0,0,0,0,0,0);
-            map[4] = Array(0,0,1,1,3,1,1,0,0);
+            map[4] = Array(0,0,1,1,3,1,1,0,0);              // A COMPLETER J'AI PAS FINI CE NIVEAU (TRISTAN)
             map[5] = Array(0,0,0,0,0,0,3,0,0);
             map[6] = Array(0,0,0,0,0,0,1,0,0);
             map[7] = Array(0,1,1,1,1,1,1,0,0);
@@ -307,6 +307,33 @@ function creerMap(){
             joueur.startPos(64,448,1);
             afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche","Sauter"]);
         break;
+
+        case "3-4":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,1,3,1,0,0,0,0,0);
+            map[2] = Array(0,3,0,3,0,0,0,0,0);
+            map[3] = Array(0,1,0,1,0,1,3,1,0);
+            map[4] = Array(0,0,0,3,0,3,0,1,0);
+            map[5] = Array(0,2,0,1,3,1,0,1,0);
+            map[6] = Array(0,1,0,0,0,0,0,1,0);
+            map[7] = Array(0,1,3,1,3,1,3,1,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.startPos(64,192,0);
+            afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche","Sauter"]);
+          break;
+        case "3-5":
+            map[0] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,0,0,0,0,0);
+            map[2] = Array(0,0,0,0,0,0,0,0,0);
+            map[3] = Array(0,0,0,0,0,0,0,0,0);
+            map[4] = Array(0,0,0,0,0,0,0,0,0);
+            map[5] = Array(0,0,0,0,0,0,0,0,0);
+            map[6] = Array(0,0,0,0,0,0,0,0,0);
+            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[8] = Array(0,0,0,0,0,0,0,0,0);
+            joueur.startPos(384,384,0);
+            afficherBloc(["Avancer"]);
+          break;
     }
     afficherMap();
     scrollbar.scrollLeft = 0; scrollbar.scrollTop = 0;
@@ -351,13 +378,13 @@ async function executionCode(){
         await sleep(500);
         for(var bloc of blocArray){
             switch(bloc.id){
-                case "Avancer":  
+                case "Avancer":
                 case "Sauter":
-                case "TournerADroite": 
+                case "TournerADroite":
                 case "TournerAGauche":
                     joueur[bloc.id]();
                 break;
-                
+
                 case "Repeter":
                     if(bloc.children[1].hasChildNodes && bloc.querySelector('#inputRepeter').value > 0){
                         for(var i=0;i<bloc.querySelector('#inputRepeter').value;i++){
@@ -392,20 +419,20 @@ function detectionCollage(){
         var rectA = bloc.getBoundingClientRect();
         var rectB = blocEnMouvement.getBoundingClientRect();
         if(bloc.hasAttribute("data-specialstack") && bloc.dataset.specialstack=="true") var gRect = bloc.children[1].lastChild.getBoundingClientRect();
-                                                                    
+
         if(bloc!==blocEnMouvement && bloc.dataset.stackedtop=="true" && bloc.dataset.stackedbot=="false" && bloc.parentNode==conteneurCode){
             if(rectA.bottom+15 >= rectB.top && rectA.bottom-15 <= rectB.top && rectA.left-30 <= rectB.left && rectA.right+30 >= rectB.right){ //Zone "normal"
                 insertionBloc.className = "insertionBloc";
-                bloc.appendChild(insertionBloc); 
+                bloc.appendChild(insertionBloc);
             }
             else if(rectA.top+53>=rectB.top && rectA.top+13<=rectB.top && rectA.left+5<=rectB.left && rectA.left+35>=rectB.left && bloc.hasAttribute("data-specialstack") && bloc.dataset.specialstack=="false"){
                 insertionBloc.className = "insertionBloc2";
-                bloc.appendChild(insertionBloc); 
+                bloc.appendChild(insertionBloc);
                 changementPath(1,bloc);
             }
             else if(bloc.hasAttribute("data-specialstack") && bloc.dataset.specialstack=="true" && gRect.bottom+15>=rectB.top && gRect.bottom-15<=rectB.top && gRect.left-30<=rectB.left && gRect.right+30>=rectB.right){
                 insertionBloc.className = "insertionBloc3";
-                bloc.children[1].lastChild.appendChild(insertionBloc); 
+                bloc.children[1].lastChild.appendChild(insertionBloc);
                 changementPath(1,bloc);
             }
             else if(bloc.contains(insertionBloc)){
@@ -470,9 +497,9 @@ document.onmouseup = function(e){
 
 function deplacerBloc(e){
     var blocRect = blocEnMouvement.getBoundingClientRect();
-    var sourisX = e.clientX - conteneurCode.getBoundingClientRect().left - blocRect.width/2; 
+    var sourisX = e.clientX - conteneurCode.getBoundingClientRect().left - blocRect.width/2;
     var sourisY = e.clientY - conteneurCode.getBoundingClientRect().top - blocRect.height/2;
-    
+
     if(blocEnMouvement.dataset.stackedtop=="true" && blocEnMouvement.dataset.stackedbot=="false" && blocEnMouvement.parentElement.className!=="stack"){
         blocEnMouvement.style.transform = "translate("+sourisX+"px, "+sourisY+"px)";
         blocEnMouvement.dataset.stackedtop = "false";
@@ -492,12 +519,12 @@ function deplacerBloc(e){
     else if(blocEnMouvement.dataset.stackedtop=="false" && blocEnMouvement.dataset.stackedbot=="false"){
         blocEnMouvement.style.transform = "translate("+sourisX+"px, "+sourisY+"px)";
     }
-    
+
     if(blocRect.right > infoZone.right){scrollbar.scrollLeft += 25;}
     else if(blocRect.left < infoZone.left){scrollbar.scrollLeft -= 25;}
     else if(blocRect.top < infoZone.top){scrollbar.scrollTop -= 25;}
     else if(blocRect.bottom > infoZone.bottom){scrollbar.scrollTop += 25;}
-    
+
     detectionCollage();
 }
 
@@ -514,7 +541,7 @@ conteneurCode.ondrop = function(e){
     blocEnMouvement.style.position = "absolute";
     blocEnMouvement.style.margin = "0";
     var blocRect = blocEnMouvement.getBoundingClientRect();
-    var sourisX = e.clientX - conteneurCode.getBoundingClientRect().left - blocRect.width/2; 
+    var sourisX = e.clientX - conteneurCode.getBoundingClientRect().left - blocRect.width/2;
     var sourisY = e.clientY - conteneurCode.getBoundingClientRect().top - blocRect.height/2;
     blocEnMouvement.style.transform = "translate("+sourisX+"px, "+sourisY+"px)";
 }
