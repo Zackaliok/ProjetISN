@@ -15,8 +15,8 @@ chargerImg("src/media/tileset.png").then(i => tileSet=i); //Charge le "tileset";
 document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction du texte sur la page
 
 //Bypass les menus :
-//affichageMenu();
-//affichageZone(1);
+affichageMenu();
+affichageZone(4);
 //setTimeout(function (){affichageNiveau(2);},100);
 
 //Créer un temps d'arret :
@@ -42,6 +42,21 @@ function affichageZone(z){
     zone = z;
     mapMonde.style.display = "none";
     document.querySelector(".mapZone"+z).style.display = "block";
+    niveau = 1; //On place le joueur sur le niveau 1 quand il arrive dans la zone
+    switch(z){
+        case 1: document.querySelector("#AvatarJoueurMap1").style.left="500px";
+                document.querySelector("#AvatarJoueurMap1").style.bottom="300px";
+            break;
+        case 2: document.querySelector("#AvatarJoueurMap2").style.left="475px"; 
+                document.querySelector("#AvatarJoueurMap2").style.bottom="500px";
+            break;
+        case 3: document.querySelector("#AvatarJoueurMap3").style.left="600px";
+                document.querySelector("#AvatarJoueurMap3").style.bottom="250px";
+            break;
+        case 4: document.querySelector("#AvatarJoueurMap4").style.left="525px";
+                document.querySelector("#AvatarJoueurMap4").style.bottom="300px";
+            break;
+    }
     document.querySelector(".zoneFleches").style.display = "flex";
 }
 
@@ -83,6 +98,29 @@ document.addEventListener("keydown", (e) => {
                 document.querySelector(".mapZone"+zone).style.display = "none";
                 document.querySelector(".zoneFleches").style.display = "none";
             break;
+        }
+
+        switch(zone + "-" + niveau){
+            case "1-1": document.querySelector("#AvatarJoueurMap1").style.left="500px";document.querySelector("#AvatarJoueurMap1").style.bottom="300px";break;
+            case "1-2": document.querySelector("#AvatarJoueurMap1").style.left="635px";document.querySelector("#AvatarJoueurMap1").style.bottom="415px";break;
+            case "1-3": document.querySelector("#AvatarJoueurMap1").style.left="825px";document.querySelector("#AvatarJoueurMap1").style.bottom="485px";break;
+            case "1-4": document.querySelector("#AvatarJoueurMap1").style.left="825px";document.querySelector("#AvatarJoueurMap1").style.bottom="325px";break;
+            case "1-5": document.querySelector("#AvatarJoueurMap1").style.left="1035px";document.querySelector("#AvatarJoueurMap1").style.bottom="370px";break;
+            case "2-1": document.querySelector("#AvatarJoueurMap2").style.left="475px";document.querySelector("#AvatarJoueurMap2").style.bottom="500px";break;
+            case "2-2": document.querySelector("#AvatarJoueurMap2").style.left="885px";document.querySelector("#AvatarJoueurMap2").style.bottom="470px";break;
+            case "2-3": document.querySelector("#AvatarJoueurMap2").style.left="575px";document.querySelector("#AvatarJoueurMap2").style.bottom="375px";break;
+            case "2-4": document.querySelector("#AvatarJoueurMap2").style.left="715px";document.querySelector("#AvatarJoueurMap2").style.bottom="225px";break;
+            case "2-5": document.querySelector("#AvatarJoueurMap2").style.left="1000px";document.querySelector("#AvatarJoueurMap2").style.bottom="350px";break;
+            case "3-1": document.querySelector("#AvatarJoueurMap3").style.left="600px";document.querySelector("#AvatarJoueurMap3").style.bottom="250px";break;
+            case "3-2": document.querySelector("#AvatarJoueurMap3").style.left="610px";document.querySelector("#AvatarJoueurMap3").style.bottom="475px";break;
+            case "3-3": document.querySelector("#AvatarJoueurMap3").style.left="825px";document.querySelector("#AvatarJoueurMap3").style.bottom="360px";break;
+            case "3-4": document.querySelector("#AvatarJoueurMap3").style.left="925px";document.querySelector("#AvatarJoueurMap3").style.bottom="375px";break;
+            case "3-5": document.querySelector("#AvatarJoueurMap3").style.left="1025px";document.querySelector("#AvatarJoueurMap3").style.bottom="475px";break;
+            case "4-1": document.querySelector("#AvatarJoueurMap4").style.left="525px";document.querySelector("#AvatarJoueurMap4").style.bottom="300px";break;
+            case "4-2": document.querySelector("#AvatarJoueurMap4").style.left="635px";document.querySelector("#AvatarJoueurMap4").style.bottom="465px";break;
+            case "4-3": document.querySelector("#AvatarJoueurMap4").style.left="780px";document.querySelector("#AvatarJoueurMap4").style.bottom="385px";break;
+            case "4-4": document.querySelector("#AvatarJoueurMap4").style.left="950px";document.querySelector("#AvatarJoueurMap4").style.bottom="450px";break;
+            case "4-5": document.querySelector("#AvatarJoueurMap4").style.left="850px";document.querySelector("#AvatarJoueurMap4").style.bottom="235px";break;
         }
     }
 });
@@ -323,15 +361,15 @@ function creerMap(){
           break;
         case "3-5":
             map[0] = Array(0,0,0,0,0,0,0,0,0);
-            map[1] = Array(0,0,0,0,0,0,0,0,0);
-            map[2] = Array(0,0,0,0,0,0,0,0,0);
-            map[3] = Array(0,0,0,0,0,0,0,0,0);
-            map[4] = Array(0,0,0,0,0,0,0,0,0);
-            map[5] = Array(0,0,0,0,0,0,0,0,0);
-            map[6] = Array(0,0,0,0,0,0,0,0,0);
-            map[7] = Array(0,0,0,0,0,0,0,0,0);
+            map[1] = Array(0,0,0,0,4,1,1,0,0);
+            map[2] = Array(0,0,0,0,1,0,3,0,0);
+            map[3] = Array(0,1,1,4,1,0,4,0,0);
+            map[4] = Array(0,1,0,0,0,0,1,0,0);
+            map[5] = Array(0,1,0,0,4,3,1,0,0);
+            map[6] = Array(0,0,0,0,1,0,0,0,0);
+            map[7] = Array(0,0,0,0,1,1,4,2,0);
             map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.startPos(384,384,0);
+            joueur.startPos(64,256,0);
             afficherBloc(["Avancer"]);
           break;
     }
@@ -347,6 +385,8 @@ function afficherMap(){
                 case 0: ctx.drawImage(tileSet,128,0,64,64,64*j,64*i,64,64); break; //Herbe
                 case 1: ctx.drawImage(tileSet,0,128,64,64,64*j,64*i,64,64); break; //Sol
                 case 2: ctx.drawImage(tileSet,64,128,64,64,64*j,64*i,64,64); break; //Case Cible
+                case 3: break;//Trou
+                case 4: break;//Ennemi
             }
         }
     }

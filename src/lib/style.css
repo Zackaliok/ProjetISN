@@ -81,6 +81,10 @@ body {
 
 /*---- Map Monde/Zone : ----*/
 
+.AvatarJoueurMap{
+    position: absolute;
+}
+
 .zoneFleches {
     position: absolute; height: 100px; width: 300px;
     right: 20px; bottom: 20px; display: none;
