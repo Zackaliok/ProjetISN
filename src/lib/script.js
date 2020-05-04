@@ -16,8 +16,8 @@ document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction 
 
 //Bypass les menus :
 affichageMenu();
-affichageZone(4);
-setTimeout(function (){affichageNiveau(2);},100);
+//affichageZone(4);
+//setTimeout(function (){affichageNiveau(2);},100);
 
 
 //Créer un temps d'arret :
@@ -45,18 +45,10 @@ function affichageZone(z){
     document.querySelector(".mapZone"+z).style.display = "block";
     niveau = 1; //On place le joueur sur le niveau 1 quand il arrive dans la zone
     switch(z){
-        case 1: document.querySelector("#AvatarJoueurMap1").style.left="500px";
-                document.querySelector("#AvatarJoueurMap1").style.bottom="300px";
-            break;
-        case 2: document.querySelector("#AvatarJoueurMap2").style.left="475px"; 
-                document.querySelector("#AvatarJoueurMap2").style.bottom="500px";
-            break;
-        case 3: document.querySelector("#AvatarJoueurMap3").style.left="600px";
-                document.querySelector("#AvatarJoueurMap3").style.bottom="250px";
-            break;
-        case 4: document.querySelector("#AvatarJoueurMap4").style.left="525px";
-                document.querySelector("#AvatarJoueurMap4").style.bottom="300px";
-            break;
+        case 1: document.querySelector("#AvatarJoueurMap1").style.left="500px";document.querySelector("#AvatarJoueurMap1").style.bottom="300px";break;
+        case 2: document.querySelector("#AvatarJoueurMap2").style.left="475px";document.querySelector("#AvatarJoueurMap2").style.bottom="500px";break;
+        case 3: document.querySelector("#AvatarJoueurMap3").style.left="600px";document.querySelector("#AvatarJoueurMap3").style.bottom="250px"; break;
+        case 4: document.querySelector("#AvatarJoueurMap4").style.left="525px";document.querySelector("#AvatarJoueurMap4").style.bottom="300px";break;
     }
     document.querySelector(".zoneFleches").style.display = "flex";
 }
@@ -352,7 +344,7 @@ function creerMap(){
             map[1] = Array(0,1,3,1,0,0,0,0,0);
             map[2] = Array(0,3,0,3,0,0,0,0,0);
             map[3] = Array(0,1,0,1,0,1,3,1,0);
-            map[4] = Array(0,0,0,3,0,3,0,1,0);
+            map[4] = Array(0,0,0,3,0,3,0,1,0);              // A COMPLETER J'AI PAS FINI CE NIVEAU (TRISTAN)
             map[5] = Array(0,2,0,1,3,1,0,1,0);
             map[6] = Array(0,1,0,0,0,0,0,1,0);
             map[7] = Array(0,1,3,1,3,1,3,1,0);
@@ -365,7 +357,7 @@ function creerMap(){
             map[1] = Array(0,0,0,0,4,1,1,0,0);
             map[2] = Array(0,0,0,0,1,0,3,0,0);
             map[3] = Array(0,1,1,4,1,0,4,0,0);
-            map[4] = Array(0,1,0,0,0,0,1,0,0);
+            map[4] = Array(0,1,0,0,0,0,1,0,0);          // A COMPLETER J'AI PAS FINI CE NIVEAU (TRISTAN)
             map[5] = Array(0,1,0,0,4,3,1,0,0);
             map[6] = Array(0,0,0,0,1,0,0,0,0);
             map[7] = Array(0,0,0,0,1,1,4,2,0);
@@ -386,7 +378,7 @@ function afficherMap(){
                 case 0: ctx.drawImage(tileSet,128,0,64,64,64*j,64*i,64,64); break; //Herbe
                 case 1: ctx.drawImage(tileSet,0,128,64,64,64*j,64*i,64,64); break; //Sol
                 case 2: ctx.drawImage(tileSet,64,128,64,64,64*j,64*i,64,64); break; //Case Cible
-                case 3: break;//Trou
+                case 3: ctx.drawImage(Trou,0,0,64,64,64*j,64*i,64,64)break;//Trou
                 case 4: break;//Ennemi
             }
         }
