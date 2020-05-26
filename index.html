@@ -11,28 +11,30 @@
     <body>
         <header class="en-tete"></header>
         <div class="menuContextuel">
-            <button onClick="supprimerBloc()">Supprimer le bloc sélectionné</button>
+            <button id="supprimerBloc" onclick="supprimerBloc()">Supprimer le bloc sélectionné</button>
             <hr size='1px'>
-            <button onClick="supprimerToutLesBloc()">Supprimer tout les blocs</button>
+            <button id="supprimerToutLesBlocs" onclick="supprimerToutLesBlocs()">Supprimer tout les blocs</button>
             <hr size='1px'>
-            <button onClick="dupliquerBloc()">Dupliquer le bloc sélectionné</button>
+            <button id="dupliquerBloc" onclick="dupliquerBloc()">Dupliquer le bloc sélectionné</button>
         </div>
-        <div class="popup">
+        <div class="popup" style="visibility: hidden">
             <div id="texte"></div>
             <div id="btn">
-                <button onclick="fermerPopup()">OK</button>
+                <button id="fermerPopup" onclick="fermerPopup()">OK</button>
             </div>
         </div>
 
         <div class="menu">
             <div class="accueil">
                 <img id="logoMenu" src="src/media/menu/logoMenu.png" alt="Logo du menu"/>
-                <p>
+                <span id="presentation">
                     Vous êtes plongé dans le monde futuriste d'EatherLand, où le celèbre scientifique Dr. Strangelove travaille sur un ordinateur humanoïde. <br>
                     Malheureusement, pendant le transfert, votre conscience a été transmise dans un monde virtuel, à l'intérieur de cet ordinateur. <br>
                     Pour vous délivrer, vous devrez progresser au sein de plusieurs niveaux matérialisés par l'ordinateur. Mais attention... une seule erreur pourrez vous coûter la vie !
-                </p>
-                <button class="commencerJeu" onclick="affichageMenu()">C'est parti !</button>
+                </span>
+                <span>
+                    <button id="affichageMenu" onclick="affichageMenu()">C'est parti !</button>
+                </span>
                 <i>Scratchly est une application éducative visant à apprendre les bases de l'algorithmie aux jeunes ados.</i>
             </div>
             <div class="mapMonde" style="display:none;">
@@ -46,19 +48,15 @@
             </div>
             <div class="mapZone1" style="display:none;">
                 <img src="src/media/map/mapZone1.png" alt="Map Zone 1">
-                <img src="src/media/AvatarJoueurMap.png" class="AvatarJoueurMap" id="AvatarJoueurMap1">
             </div>
             <div class="mapZone2" style="display:none;">
                 <img src="src/media/map/mapZone2.png" alt="Map Zone 2">
-                <img src="src/media/AvatarJoueurMap.png" class="AvatarJoueurMap" id="AvatarJoueurMap2">
             </div>
             <div class="mapZone3" style="display:none;">
                 <img src="src/media/map/mapZone3.png" alt="Map Zone 3">
-                <img src="src/media/AvatarJoueurMap.png" class="AvatarJoueurMap" id="AvatarJoueurMap3">
             </div>
             <div class="mapZone4" style="display:none;">
                 <img src="src/media/map/mapZone4.png" alt="Map Zone 4">
-                <img src="src/media/AvatarJoueurMap.png" class="AvatarJoueurMap" id="AvatarJoueurMap4">
             </div>
             <div class="zoneFleches">
                 <img id="toucheEchap" src="src/media/touche/toucheEchap.png" alt="Revenir au Menu">
@@ -66,6 +64,7 @@
                 <img id="toucheFlecheDroite" src="src/media/touche/toucheFlecheDroite.png" alt="Flèche de droite">
                 <img id="toucheEntree" src="src/media/touche/toucheEntree.png" alt="Lancer le niveau">
             </div>
+            <img src="src/media/avatarJoueur.png" id="avatarJoueur">
         </div>
 
         <div class="wrapper">
@@ -73,16 +72,17 @@
                 <canvas id="canvas" height="576" width="576"></canvas>
                 <div id="partieControle">
                     <div class="controles" id="controlesJeu">
-                        <button onclick="executionCode()"><img id="imgPlay" src="src/media/icon/btn_play.png"></button>
-                        <button onclick="remiseAZero()"><img id="imgReset" src="src/media/icon/btn_reset.png"></button>
-                        <button onclick="afficherParametres()"><img id="imgParametres" src="src/media/icon/btn_settings.png"></button>
+                        <button id="executionCode" title="Executer le code" onclick="executionCode()"><img id="imgPlay" src="src/media/icon/btn_play.png"></button>
+                        <button id="remiseAZero" title="Remettre à zéro le niveau" onclick="remiseAZero()"><img id="imgReset" src="src/media/icon/btn_reset.png"></button>
+                        <button id="supprimerBlocs" title="Supprimer tout les blocs" onclick="supprimerToutLesBlocs()"><img id="imgPoubelle" src="src/media/icon/btn_poubelle.png"></button>
+                        <button id="afficherParametres" title="Afficher les paramètres" onclick="afficherParametres()"><img id="imgParametres" src="src/media/icon/btn_settings.png"></button>
                     </div>
                     <div class="controles" id="menuParametres" style="display:none;">
-                        <button onclick="retournerAuMenu()"><img id="imgMenu" src="src/media/touche/toucheEchap.png" title="Retourner au menu principal"></button>
-                        <button onclick="switchMusique()"><img id="imgMusique" src="src/media/icon/audio-icon.png" title="Activer/Désactiver la musique"></button>
-                        <button onclick="switchModeSombre()"><img id="imgModeSombre" src="src/media/icon/moon-black.png" title="Activer/Désactiver le mode sombre"></button>
-                        <button onclick="switchCodeSource()"><img id="imgCodeJS" src="src/media/icon/pages.png" title="Afficher le code javascript"></button>
-                        <button onclick="afficherParametres()"><img id="imgParametres2" src="src/media/icon/btn_settings.png" title="Retour en arrière"></button>
+                        <button id="retournerAuMenu" title="Retourner au menu principal" onclick="retournerAuMenu()"><img id="imgMenu" src="src/media/touche/toucheEchap.png"></button>
+                        <button id="switchMusique" title="Activer/Désactiver la musique" onclick="switchMusique()"><img id="imgMusique" src="src/media/icon/audio-icon.png"></button>
+                        <button id="switchModeSombre" title="Activer/Désactiver le mode sombre" onclick="switchModeSombre()"><img id="imgModeSombre" src="src/media/icon/moon-black.png"></button>
+                        <button id="switchCodeSource" title="Afficher le code JavaScript (non fonct.)" onclick="switchCodeSource()"><img id="imgCodeJS" src="src/media/icon/pages.png"></button>
+                        <button id="afficherParametres2" title="Retour en arrière" onclick="afficherParametres()"><img id="imgParametres2" src="src/media/icon/btn_settings.png"</button>
                     </div>
                 </div>
             </div>
@@ -160,10 +160,8 @@
             </div>
         </div>
 
-        <script type="text/javascript" src="src/lib/classes.js"></script>
-        <script type="text/javascript" src="src/lib/DOM.js"></script>
         <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
-        <script type="text/javascript" src="src/lib/path.js"></script>
-        <script type="text/javascript" src="src/lib/script.js"></script>
+        <script type="text/javascript" src="src/lib/DOM.js"></script>
+        <script type="module" src="src/lib/script.js"></script>
     </body>
 </html>

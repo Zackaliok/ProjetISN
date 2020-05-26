@@ -8,7 +8,6 @@
         visibility: hidden;
     }
 }
-
 @keyframes ouverturePopup {
     from {
         opacity: 0;
@@ -29,15 +28,16 @@ body {
 
 .wrapper {
     display: none; flex-direction: row;
-    width: 100vw; height: calc(100vh - 67px);
+    width: 100vw; height: calc(100vh - 60px);
 }
 
 .en-tete {
     display: none; width: 100vw; height: 50px;
-    border-bottom: 1px solid black; margin-bottom: 15px;
+    border-bottom: 1px solid black; margin-bottom: 9px;
     background: #6699ff; justify-content: center;
     align-items: center; font-weight: bold; font-size: 24px;
 }
+.wrapper img {pointer-events: none;}
 
 
 /*--------------------- Menu : ----------------------*/
@@ -57,12 +57,17 @@ body {
     
 }
 
-.accueil p {
-    text-align: center; font-weight: 450; line-height: 50px;
-    font-size: 22px; margin: 50px 0 75px 0;
+.accueil span {
+    display: flex; width: 100vw; height: calc(100vh / 3);
+    justify-content: center; align-items: center;
 }
 
-.commencerJeu {
+#presentation {
+    text-align: center; font-weight: 450;
+    font-size: 22px; line-height: 40px;
+}
+
+#affichageMenu {
     background: linear-gradient(to right, white 0%, white 50%, transparent 50%, transparent 100%);
     border: 2px solid white; border-radius: 5px;
     height: 75px; width: 200px; color: white;
@@ -74,16 +79,13 @@ body {
     transition: all 0.5s;
 }
 
-.commencerJeu:hover { background-position: 0 0; color: #333;}
-
+#affichageMenu:hover {background-position: 0 0; color: #333;}
 .accueil i {font-size: 18px; position: absolute; bottom: 10px;}
 
 
 /*---- Map Monde/Zone : ----*/
 
-.AvatarJoueurMap{
-    position: absolute;
-}
+#avatarJoueur {position: absolute; display: none;}
 
 .zoneFleches {
     position: absolute; height: 100px; width: 300px;

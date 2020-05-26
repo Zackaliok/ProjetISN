@@ -1,145 +1,121 @@
 //------------------------------ Initialisation ------------------------------
 
+//Import :
+import {Joueur} from './classes.js';
+import {chargerMap, tileParCoord, remplacementCanvas} from './niveaux.js';
+import {chargerJSON, chargerImg, sleep, scrollbar} from './outils.js';
+
 //Bloc, joueur, map et audio :
-var blocEnMouvement, indexBloc, tileSet, infoZone, zone=1, niveau=1; //Variables globales
-var blocArray = new Array(), map = new Array(); //Array contenant la liste des blocs collés, et la "carte" pour le niveau
+export var blocEnMouvement, tileset, zone=1, niveau=1; //Variables globales
+export var blocArray = new Array(); //Array contenant la liste des blocs collés, et la "carte" pour le niveau
+export var joueur = new Joueur(0,0,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
 var audio = new Audio(); //Variable représenant l'audio de la page
-var joueur = new Joueur(0,0,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
 
 //Canvas + image :
 const canvas = document.getElementById('canvas'); //Variable représentant le canvas
-const ctx = canvas.getContext('2d'); //Variable représentant le "context" (la où on dessine)
-chargerImg("src/media/tileset.png").then(i => tileSet=i); //Charge le "tileset";
-
-//Empêcher la selection :
-document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction du texte sur la page
+export const ctx = canvas.getContext('2d'); //Variable représentant le "context" (la où on dessine)
+chargerImg("src/media/assets.png").then(img => tileset=img); //Charge le "tileset"
 
 //Bypass les menus :
-affichageMenu();
-affichageZone(4);
-setTimeout(function (){affichageNiveau(2);},100);
+//affichageMenu();
+//affichageZone(1);
+//affichageNiveau(5);
 
-
-//Créer un temps d'arret :
-function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms));}
+//Permet de rendre les fonctions globales (onclick)
+for(const el of document.querySelectorAll('button')){
+    var fn = el.getAttribute("onclick").replace("()",'');
+    window[fn] = eval(fn);
+}
 
 
 //--------------------------- Menu, map monde et choix du niveau -----------------------
-
-//Ajoute un evenement "onclick" aux "area" :
-var area = document.getElementsByTagName("area");
-for(var i=0;i<area.length;i++){
-    area[i].addEventListener("click", function(){
-        affichageZone(parseInt(this.title.match(/\d+/)));
-    });
-}
 
 function affichageMenu(){
     document.querySelector(".accueil").style.display = "none";
     mapMonde.style.display = "flex";
 }
 
-function affichageZone(z){
+export async function affichageZone(z){
+    var data = await chargerJSON('src/data/zones.json');
     zone = z;
     mapMonde.style.display = "none";
     document.querySelector(".mapZone"+z).style.display = "block";
-    niveau = 1; //On place le joueur sur le niveau 1 quand il arrive dans la zone
-    switch(z){
-        case 1: document.querySelector("#AvatarJoueurMap1").style.left="500px";
-                document.querySelector("#AvatarJoueurMap1").style.bottom="300px";
-            break;
-        case 2: document.querySelector("#AvatarJoueurMap2").style.left="475px"; 
-                document.querySelector("#AvatarJoueurMap2").style.bottom="500px";
-            break;
-        case 3: document.querySelector("#AvatarJoueurMap3").style.left="600px";
-                document.querySelector("#AvatarJoueurMap3").style.bottom="250px";
-            break;
-        case 4: document.querySelector("#AvatarJoueurMap4").style.left="525px";
-                document.querySelector("#AvatarJoueurMap4").style.bottom="300px";
-            break;
-    }
     document.querySelector(".zoneFleches").style.display = "flex";
+    document.querySelector("#avatarJoueur").style.display = "block";
+    document.querySelector("#avatarJoueur").style.transform = "translate("+data[zone][niveau][0]+"px, "+data[zone][niveau][1]+"px)";
 }
 
-function affichageNiveau(n){
+async function affichageNiveau(n){
+    var data = await chargerJSON('src/data/zones.json');
     niveau = n;
-    alert("Vous êtes dans la zone " + zone + " au niveau " + niveau + ".");
     menu.style.display = "none";
     wrapper.style.display = "flex";
     enTete.style.display = "flex";
     document.querySelector(".mapZone"+zone).style.display = "none";
-    enTete.innerHTML = "Zone "+zone+" &nbsp; | &nbsp; Niveau "+niveau;
-    infoZone = partieCode.getBoundingClientRect();
+    enTete.innerHTML = "Zone " + zone + " - Niveau " + niveau + " &nbsp; | &nbsp; " + data[zone].nom;
     blocArray.push(blocDepart);
-    creerMap();
+    chargerMap(zone,niveau);
 }
 
-document.addEventListener("keydown", (e) => {
+export async function deplacementAvatar(e){
     if(document.querySelector(".mapZone"+zone).style.display=="block"){
+        var data = await chargerJSON('src/data/zones.json');
+        var avatar = document.querySelector("#avatarJoueur");
         switch(e.keyCode){
             case 37: //Flèche Gauche
                 toucheFlecheGauche.src = "src/media/touche/toucheFlecheGaucheGlow.png";
                 setTimeout('toucheFlecheGauche.src="src/media/touche/toucheFlecheGauche.png"',100);
-                if(niveau!=1){niveau -= 1;}
+                if(niveau!==1 && joueur.niveauDebloque.includes(zone+"-"+(niveau-1))){
+                    niveau -= 1;
+                    avatar.style.transform = "translate("+data[zone][niveau][0]+"px, "+data[zone][niveau][1]+"px)";
+                }
             break;
+                
             case 39: //Flèche Droite
                 toucheFlecheDroite.src = "src/media/touche/toucheFlecheDroiteGlow.png";
                 setTimeout('toucheFlecheDroite.src="src/media/touche/toucheFlecheDroite.png"',100);
-                if(niveau!=5){niveau += 1;}
+                if(niveau!==5 && joueur.niveauDebloque.includes(zone+"-"+(niveau+1))){
+                    niveau += 1;
+                    avatar.style.transform = "translate("+data[zone][niveau][0]+"px, "+data[zone][niveau][1]+"px)";
+                }
             break;
+                
             case 13: //Touche Entrée
                 toucheEntree.src = "src/media/touche/toucheEntreeGlow.png";
                 setTimeout('toucheEntree.src="src/media/touche/toucheEntree.png"',100);
+                avatar.style.display = "none";
                 affichageNiveau(niveau);
             break;
+                
             case 27: //Touche Echap
                 toucheEchap.src = "src/media/touche/toucheEchapGlow.png";
                 setTimeout('toucheEchap.src="src/media/touche/toucheEchap.png"',100);
                 mapMonde.style.display = "block";
+                avatar.style.display = "none";
                 document.querySelector(".mapZone"+zone).style.display = "none";
                 document.querySelector(".zoneFleches").style.display = "none";
             break;
         }
-
-        switch(zone + "-" + niveau){
-            case "1-1": document.querySelector("#AvatarJoueurMap1").style.left="500px";document.querySelector("#AvatarJoueurMap1").style.bottom="300px";break;
-            case "1-2": document.querySelector("#AvatarJoueurMap1").style.left="635px";document.querySelector("#AvatarJoueurMap1").style.bottom="415px";break;
-            case "1-3": document.querySelector("#AvatarJoueurMap1").style.left="825px";document.querySelector("#AvatarJoueurMap1").style.bottom="485px";break;
-            case "1-4": document.querySelector("#AvatarJoueurMap1").style.left="825px";document.querySelector("#AvatarJoueurMap1").style.bottom="325px";break;
-            case "1-5": document.querySelector("#AvatarJoueurMap1").style.left="1035px";document.querySelector("#AvatarJoueurMap1").style.bottom="370px";break;
-            case "2-1": document.querySelector("#AvatarJoueurMap2").style.left="475px";document.querySelector("#AvatarJoueurMap2").style.bottom="500px";break;
-            case "2-2": document.querySelector("#AvatarJoueurMap2").style.left="885px";document.querySelector("#AvatarJoueurMap2").style.bottom="470px";break;
-            case "2-3": document.querySelector("#AvatarJoueurMap2").style.left="575px";document.querySelector("#AvatarJoueurMap2").style.bottom="375px";break;
-            case "2-4": document.querySelector("#AvatarJoueurMap2").style.left="715px";document.querySelector("#AvatarJoueurMap2").style.bottom="225px";break;
-            case "2-5": document.querySelector("#AvatarJoueurMap2").style.left="1000px";document.querySelector("#AvatarJoueurMap2").style.bottom="350px";break;
-            case "3-1": document.querySelector("#AvatarJoueurMap3").style.left="600px";document.querySelector("#AvatarJoueurMap3").style.bottom="250px";break;
-            case "3-2": document.querySelector("#AvatarJoueurMap3").style.left="610px";document.querySelector("#AvatarJoueurMap3").style.bottom="475px";break;
-            case "3-3": document.querySelector("#AvatarJoueurMap3").style.left="825px";document.querySelector("#AvatarJoueurMap3").style.bottom="360px";break;
-            case "3-4": document.querySelector("#AvatarJoueurMap3").style.left="925px";document.querySelector("#AvatarJoueurMap3").style.bottom="375px";break;
-            case "3-5": document.querySelector("#AvatarJoueurMap3").style.left="1025px";document.querySelector("#AvatarJoueurMap3").style.bottom="475px";break;
-            case "4-1": document.querySelector("#AvatarJoueurMap4").style.left="525px";document.querySelector("#AvatarJoueurMap4").style.bottom="300px";break;
-            case "4-2": document.querySelector("#AvatarJoueurMap4").style.left="635px";document.querySelector("#AvatarJoueurMap4").style.bottom="465px";break;
-            case "4-3": document.querySelector("#AvatarJoueurMap4").style.left="780px";document.querySelector("#AvatarJoueurMap4").style.bottom="385px";break;
-            case "4-4": document.querySelector("#AvatarJoueurMap4").style.left="950px";document.querySelector("#AvatarJoueurMap4").style.bottom="450px";break;
-            case "4-5": document.querySelector("#AvatarJoueurMap4").style.left="850px";document.querySelector("#AvatarJoueurMap4").style.bottom="235px";break;
-        }
     }
-});
+}
 
 
 //------------------------------ Pop-up ! ------------------------------
 
 function popup(texte){
-    popups.style.visibility = "visible";
-    popups.style.display = "flex";
-    popups.children[0].innerHTML = texte;
-    popups.style.animation = "ouverturePopup 0.2s ease-in 0s 1 normal forwards";
-    audio.src = "src/media/son/orb.mp3";
-    audio.play();
+    if(popups.style.visibility == 'hidden'){
+        popups.style.visibility = "visible";
+        popups.style.display = "flex";
+        popups.children[0].innerHTML = texte;
+        popups.style.animation = "ouverturePopup 0.2s ease-in 0s 1 normal forwards";
+        audio.src = "src/media/son/orb.mp3";
+        audio.play();
+    }
 }
 
 function fermerPopup(){
     popups.style.animation = "fermeturePopup 1s ease-out 0.2s 1 normal forwards";
+    setTimeout(() => {popups.style.visibility = "hidden"},1200);
 }
 
 
@@ -161,36 +137,30 @@ document.onmousedown = function(e){
 };
 
 function supprimerBloc(){
+    menuContextuel.style.display = "none";
     if(blocEnMouvement.className=="bloc" && blocEnMouvement.dataset.stackedtop=="false" && blocEnMouvement.dataset.stackedbot=="false"){
-        menuContextuel.style.display = "none";
         blocEnMouvement.parentNode.removeChild(blocEnMouvement);
-    }else{
-        menuContextuel.style.display = "none";
     }
 }
 
-function supprimerToutLesBloc(){
+function supprimerToutLesBlocs(){
+    menuContextuel.style.display = "none";
     if(conteneurCode.children.length > 1){
-        menuContextuel.style.display = "none";
         while(conteneurCode.children.length > 1){conteneurCode.removeChild(conteneurCode.children[1]);}
-        blocArray.splice(0,blocArray.length);
+        blocArray.splice(1,blocArray.length);
         blocDepart.dataset.stackedbot = "false";
-    }else{
-        menuContextuel.style.display = "none";
     }
 }
 
 function dupliquerBloc(){
+    menuContextuel.style.display = "none";
     if(blocEnMouvement.className=="bloc" && blocEnMouvement.id!=="blocDepart"){
         var coord = (blocEnMouvement.style.transform.match(/\d+/g).map(Number) + "").split(",");
-        menuContextuel.style.display = "none";
         blocEnMouvement = blocEnMouvement.cloneNode(true);
         conteneurCode.append(blocEnMouvement);
         blocEnMouvement.style.transform = "translate("+(parseInt(coord[0])+20)+"px, "+(parseInt(coord[1])+20)+"px)";
         blocEnMouvement.dataset.stackedtop = "false";
         blocEnMouvement.dataset.stackedbot = "false"
-    }else{
-        menuContextuel.style.display = "none";
     }
 }
 
@@ -198,6 +168,8 @@ function dupliquerBloc(){
 //------------------------------ Menu paramètres -------------------------------------------
 
 function afficherParametres(){
+    const menuParametres = document.getElementById("menuParametres");
+    const controlesJeu = document.getElementById("controlesJeu");
     if(menuParametres.style.display=="none"){
         controlesJeu.style.display = "none";
         menuParametres.style.display = "flex";
@@ -242,188 +214,52 @@ function switchCodeSource(){
 }
 
 function retournerAuMenu(){
-    supprimerToutLesBloc();
+    supprimerToutLesBlocs();
     document.querySelector(".mapZone"+zone).style.display = "none";
+    document.querySelector("#avatarJoueur").style.display = "none";
     document.querySelector(".zoneFleches").style.display = "none";
+    document.getElementById("menuParametres").style.display = "none";
+    document.getElementById("controlesJeu").style.display = "flex";
     menu.style.display = "flex";
     mapMonde.style.display = "block";
     wrapper.style.display = "none";
     enTete.style.display = "none";
-    menuParametres.style.display = "none";
-    controlesJeu.style.display = "flex";
-}
-
-
-//------------------------------ Gestion du "tileset" et de la map ------------------------------
-
-function chargerImg(url){
-    return new Promise(resolve => {
-        const img = new Image();
-        img.addEventListener("load", () => {
-            resolve(img);
-        });
-        img.src = url;
-    });
-}
-
-function afficherBloc(liste){
-    for(var i=0;i<partieBanque.children.length;i++){
-        document.getElementById(partieBanque.children[i].id).style.display = "none";
-    }
-    for(var i=0;i<liste.length;i++){
-        document.getElementById(liste[i]).style.display = "block";
-    }
-}
-
-function creerMap(){
-    switch(zone + "-" + niveau){
-        case "1-1":
-            map[0] = Array(0,0,0,0,0,0,0,0,0);
-            map[1] = Array(0,0,0,0,0,0,0,0,0);
-            map[2] = Array(0,0,0,0,0,0,0,0,0);
-            map[3] = Array(0,0,0,0,0,0,2,0,0);
-            map[4] = Array(0,0,0,0,0,0,1,0,0);
-            map[5] = Array(0,0,0,0,0,0,1,0,0);
-            map[6] = Array(0,0,0,0,0,0,1,0,0);
-            map[7] = Array(0,0,0,0,0,0,0,0,0);
-            map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.startPos(384,384,0);
-            afficherBloc(["Avancer"]);
-        break;
-
-        case "1-2":
-            map[0] = Array(0,0,0,0,0,0,0,0,0);
-            map[1] = Array(0,0,0,0,0,0,0,0,0);
-            map[2] = Array(0,0,0,0,0,0,0,0,0);
-            map[3] = Array(0,0,0,0,0,0,2,0,0);
-            map[4] = Array(0,0,0,0,0,0,1,0,0);
-            map[5] = Array(0,0,0,0,0,0,1,0,0);
-            map[6] = Array(0,0,0,0,1,1,1,0,0);
-            map[7] = Array(0,0,0,0,0,0,0,0,0);
-            map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.startPos(256,384,1);
-            afficherBloc(["Avancer","TournerAGauche"]);
-        break;
-
-        case "3-1":
-            map[0] = Array(0,0,0,0,0,0,0,0,0);
-            map[1] = Array(0,0,0,0,2,0,0,0,0);
-            map[2] = Array(0,0,0,0,1,0,0,0,0);
-            map[3] = Array(0,0,0,0,1,0,0,0,0);
-            map[4] = Array(0,0,0,0,1,0,0,0,0);
-            map[5] = Array(0,0,0,0,1,0,0,0,0);
-            map[6] = Array(0,0,0,0,1,0,0,0,0);
-            map[7] = Array(0,0,0,0,1,0,0,0,0);
-            map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.startPos(256,448,0);
-            afficherBloc(["Avancer","Repeter"]);
-        break;
-
-        case "3-2":
-            map[0] = Array(0,0,0,0,0,0,0,0,0);
-            map[1] = Array(0,0,0,0,0,0,0,0,0);
-            map[2] = Array(0,0,0,0,0,1,2,0,0);
-            map[3] = Array(0,0,0,0,1,1,0,0,0);
-            map[4] = Array(0,0,0,1,1,0,0,0,0);
-            map[5] = Array(0,0,1,1,0,0,0,0,0);
-            map[6] = Array(0,0,0,0,0,0,0,0,0);
-            map[7] = Array(0,0,0,0,0,0,0,0,0);
-            map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.startPos(128,320,1);
-            afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche","Si"]);
-        break;
-
-        case "3-3":
-            map[0] = Array(0,0,0,0,0,0,0,0,0);
-            map[1] = Array(0,0,1,1,2,0,0,0,0);
-            map[2] = Array(0,0,3,0,0,0,0,0,0);
-            map[3] = Array(0,0,1,0,0,0,0,0,0);
-            map[4] = Array(0,0,1,1,3,1,1,0,0);              // A COMPLETER J'AI PAS FINI CE NIVEAU (TRISTAN)
-            map[5] = Array(0,0,0,0,0,0,3,0,0);
-            map[6] = Array(0,0,0,0,0,0,1,0,0);
-            map[7] = Array(0,1,1,1,1,1,1,0,0);
-            map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.startPos(64,448,1);
-            afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche","Sauter"]);
-        break;
-
-        case "3-4":
-            map[0] = Array(0,0,0,0,0,0,0,0,0);
-            map[1] = Array(0,1,3,1,0,0,0,0,0);
-            map[2] = Array(0,3,0,3,0,0,0,0,0);
-            map[3] = Array(0,1,0,1,0,1,3,1,0);
-            map[4] = Array(0,0,0,3,0,3,0,1,0);
-            map[5] = Array(0,2,0,1,3,1,0,1,0);
-            map[6] = Array(0,1,0,0,0,0,0,1,0);
-            map[7] = Array(0,1,3,1,3,1,3,1,0);
-            map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.startPos(64,192,0);
-            afficherBloc(["Avancer","Repeter","TournerADroite","TournerAGauche","Sauter"]);
-          break;
-        case "3-5":
-            map[0] = Array(0,0,0,0,0,0,0,0,0);
-            map[1] = Array(0,0,0,0,4,1,1,0,0);
-            map[2] = Array(0,0,0,0,1,0,3,0,0);
-            map[3] = Array(0,1,1,4,1,0,4,0,0);
-            map[4] = Array(0,1,0,0,0,0,1,0,0);
-            map[5] = Array(0,1,0,0,4,3,1,0,0);
-            map[6] = Array(0,0,0,0,1,0,0,0,0);
-            map[7] = Array(0,0,0,0,1,1,4,2,0);
-            map[8] = Array(0,0,0,0,0,0,0,0,0);
-            joueur.startPos(64,256,0);
-            afficherBloc(["Avancer"]);
-          break;
-    }
-    afficherMap();
-    scrollbar.scrollLeft = 0; scrollbar.scrollTop = 0;
-    joueur.afficher(joueur.startX,joueur.startY,joueur.startDir);
-}
-
-function afficherMap(){
-    for(var i=0;i<map.length;i++){
-        for(var j=0;j<map[i].length;j++){
-            switch(map[i][j]){
-                case 0: ctx.drawImage(tileSet,128,0,64,64,64*j,64*i,64,64); break; //Herbe
-                case 1: ctx.drawImage(tileSet,0,128,64,64,64*j,64*i,64,64); break; //Sol
-                case 2: ctx.drawImage(tileSet,64,128,64,64,64*j,64*i,64,64); break; //Case Cible
-                case 3: break;//Trou
-                case 4: break;//Ennemi
-            }
-        }
-    }
 }
 
 
 //------------------------------ Executer le code + vérifier si le joueur a gagner ------------------------------
 
 function win(){
-    if(map[joueur.y/64][joueur.x/64]==2){
+    if(tileParCoord(joueur.x,joueur.y)[0]=="objectif"){
         popup("Tu as completé le niveau "+niveau+" de la zone "+zone+" !");
         setTimeout(() => {
             fermerPopup();
-            supprimerToutLesBloc();
+            supprimerToutLesBlocs();
             affichageNiveau(niveau+1);
-        },3000);
+            if(joueur.niveauDebloque.includes(zone+"-"+niveau)==false) joueur.niveauDebloque.push(zone+"-"+niveau)
+        },2000);
     }
 }
 
 function remiseAZero(){
-    ctx.drawImage(tileSet,0,128,64,64,joueur.x,joueur.y,64,64);
-    joueur.pos(joueur.startX,joueur.startY,joueur.startDir);
-    joueur.afficher(joueur.startX,joueur.startY,joueur.startDir);
+    remplacementCanvas(joueur.x,joueur.y);
+    chargerJSON('src/niveaux/'+zone+'-'+niveau+'.json').then(niveauData => {
+        joueur.afficher(niveauData.depart[0]*64,niveauData.depart[1]*64,niveauData.depart[2]);
+    });
 }
 
 async function executionCode(){
-    if(blocArray.length>1){
+    if(blocArray.length>=2){
+        document.getElementById('executionCode').disabled = true;
         remiseAZero();
-        await sleep(500);
+        await sleep(200);
         for(var bloc of blocArray){
-            switch(bloc.id){
+            switch(bloc.id){ //"Empiler" des 'case' à le même effet que le "||" (pour le if() par exemple)
                 case "Avancer":
                 case "Sauter":
                 case "TournerADroite":
                 case "TournerAGauche":
-                    joueur[bloc.id]();
+                    joueur[bloc.id](); //La forme objet[var]() sert à utiliser une variable en tant que méthode, par exemple joueur.afficher() peut s'écrire joueur["afficher"]();
                 break;
 
                 case "Repeter":
@@ -431,15 +267,16 @@ async function executionCode(){
                         for(var i=0;i<bloc.querySelector('#inputRepeter').value;i++){
                             for(var child of bloc.children[1].children){
                                 joueur[child.id]();
-                                await sleep(800);
+                                await sleep(500);
                             }
                         }
                     }
                 break;
             }
             win();
-            await sleep(800);
+            await sleep(500);
         }
+        document.getElementById('executionCode').disabled = false;
     }else{
         popup("Ajoute un (ou plusieurs) bloc(s) pour exécuter le code !");
     }
@@ -448,15 +285,24 @@ async function executionCode(){
 
 //------------------------------ Attacher les blocs entre eux ------------------------------
 
-function changementPath(nb,bloc){
-    bloc.getElementsByTagName("path")[0].setAttribute("d", bpath[bloc.children[1].children.length+nb]);
-    bloc.style.height = 74+(33*(bloc.children[1].children.length+nb))+"px";
-    bloc.children[0].setAttribute("height", 74+(33*(bloc.children[1].children.length+nb)));
-    bloc.children[0].setAttribute("viewBox", "0 0 150 "+(74+(33*(bloc.children[1].children.length+nb))));
+//Créer l'élément image lorsque deux blocs peuvent être collés
+var insertionBloc = document.createElement("img");
+insertionBloc.src = "src/media/bloc-shadow.png";
+insertionBloc.className = "insertionBloc";
+
+function changementPath(modifier,bloc){
+    var path = bloc.querySelector("path").getAttribute("d");
+    var n1 = parseInt(path.substring(81,80+path.substring(81).indexOf('h')));
+    var n2 = parseInt(path.substring(132+path.substring(130).indexOf('v')));
+    var res = path.substring(0,81) + (n1+(33*modifier)) + path.substring(81+path.substring(82).indexOf('h'),132+path.substring(130).indexOf('v')) + (n2-(33*modifier));
+    bloc.querySelector("path").setAttribute("d",res);
+    bloc.style.height = bloc.getBoundingClientRect().height+(33*modifier)+"px";
+    bloc.children[0].setAttribute("height", parseInt(bloc.children[0].getAttribute("height"))+(33*modifier));
+    bloc.children[0].setAttribute("viewBox", "0 0 150 " + (parseInt(bloc.children[0].getAttribute("viewBox").split(' ')[3])+(33*modifier)).toString());
 }
 
 function detectionCollage(){
-    for(var bloc of classBlocs){
+    for(var bloc of document.getElementsByClassName('bloc')){
         var rectA = bloc.getBoundingClientRect();
         var rectB = blocEnMouvement.getBoundingClientRect();
         if(bloc.hasAttribute("data-specialstack") && bloc.dataset.specialstack=="true") var gRect = bloc.children[1].lastChild.getBoundingClientRect();
@@ -467,25 +313,25 @@ function detectionCollage(){
                 bloc.appendChild(insertionBloc);
             }
             else if(rectA.top+53>=rectB.top && rectA.top+13<=rectB.top && rectA.left+5<=rectB.left && rectA.left+35>=rectB.left && bloc.hasAttribute("data-specialstack") && bloc.dataset.specialstack=="false"){
+                if(bloc.contains(insertionBloc)==false) changementPath(1,bloc);
                 insertionBloc.className = "insertionBloc2";
                 bloc.appendChild(insertionBloc);
-                changementPath(1,bloc);
             }
             else if(bloc.hasAttribute("data-specialstack") && bloc.dataset.specialstack=="true" && gRect.bottom+15>=rectB.top && gRect.bottom-15<=rectB.top && gRect.left-30<=rectB.left && gRect.right+30>=rectB.right){
+                if(bloc.contains(insertionBloc)==false) changementPath(1,bloc);
                 insertionBloc.className = "insertionBloc3";
                 bloc.children[1].lastChild.appendChild(insertionBloc);
-                changementPath(1,bloc);
             }
             else if(bloc.contains(insertionBloc)){
                 insertionBloc.parentElement.removeChild(insertionBloc);
-                if(bloc.hasAttribute("data-specialstack")) changementPath(0,bloc);
+                if(bloc.hasAttribute("data-specialstack") && insertionBloc.className!=='insertionBloc') changementPath(-1,bloc);
             }
         }
     }
 }
 
 function collageBloc(){
-    for(var bloc of classBlocs){
+    for(var bloc of document.getElementsByClassName('bloc')){
         var blocRect = bloc.getBoundingClientRect();
         var conteneurRect = conteneurCode.getBoundingClientRect();
         if(bloc.querySelector(".insertionBloc")!==null && bloc.querySelector(".insertionBloc2")==null && bloc.querySelector(".insertionBloc3")==null){ //Zone "normal"
@@ -538,6 +384,7 @@ document.onmouseup = function(e){
 
 function deplacerBloc(e){
     var blocRect = blocEnMouvement.getBoundingClientRect();
+    var infoZone = document.getElementById("partieCode").getBoundingClientRect();
     var sourisX = e.clientX - conteneurCode.getBoundingClientRect().left - blocRect.width/2;
     var sourisY = e.clientY - conteneurCode.getBoundingClientRect().top - blocRect.height/2;
 
@@ -545,7 +392,7 @@ function deplacerBloc(e){
         blocEnMouvement.style.transform = "translate("+sourisX+"px, "+sourisY+"px)";
         blocEnMouvement.dataset.stackedtop = "false";
         if(blocArray.includes(blocEnMouvement)){
-            indexBloc = blocArray.indexOf(blocEnMouvement);
+            var indexBloc = blocArray.indexOf(blocEnMouvement);
             blocArray[indexBloc-1].dataset.stackedbot = "false";
             blocArray.splice(indexBloc,1);
         }
@@ -553,7 +400,8 @@ function deplacerBloc(e){
     else if(blocEnMouvement.dataset.stackedtop=="true" && blocEnMouvement.dataset.stackedbot=="false" && blocEnMouvement.parentElement.className=="stack"){
         blocEnMouvement.dataset.stackedtop=="false";
         if(blocEnMouvement.parentNode.children.length == 1) blocEnMouvement.parentNode.parentNode.dataset.specialstack = "false";
-        else blocEnMouvement.previousSibling.dataset.stackedbot="false";
+        else blocEnMouvement.previousSibling.dataset.stackedbot = "false";
+        changementPath(-1,blocEnMouvement.parentNode.parentNode);
         conteneurCode.appendChild(blocEnMouvement);
         blocEnMouvement.style.transform = "translate("+sourisX+"px, "+sourisY+"px)";
     }
@@ -588,9 +436,9 @@ conteneurCode.ondrop = function(e){
 }
 
 
-//------------------------------ Debugage et tests ------------------------------
+//------------------------------ Debugage et test ------------------------------
 
-window.addEventListener("keydown", function(e){
+window.addEventListener("keydown", async function(e){
     if(e.keyCode == 96){
     }
 });

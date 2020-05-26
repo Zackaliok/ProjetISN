@@ -1,0 +1,27 @@
+{
+    "herbe": [0,0],
+    "chemin": [1,0],
+    "chemin_coin": [2,0],
+    "eau_horizontal": [3,0],
+    "eau_verticale": [4,0],
+    "eau_coin_haut_gauche": [5,0],
+    "eau_coin_haut_droite": [6,0],
+    "eau_coin_bas_gauche": [7,0],
+    "eau_coin_bas_droite": [8,0],
+    
+    "epeeSol": [0,1],
+    "cloture": [1,1],
+    "soucheHache": [2,1],
+    "panneau": [3,1],
+    "arbre": [4,1],
+    
+    "nenuphar": [0,2],
+    "fleur1": [1,2],
+    "fleur2": [2,2],
+    "fleur3": [3,2],
+    "cailloux": [4,2],
+    
+    "pont": [0,3],
+    
+    "objectif": [4,8]
+}
