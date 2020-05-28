@@ -1,4 +1,4 @@
-import {zone, niveau, joueur, ctx, tileset} from './script.js';
+import {zone, niveau, joueur, ctx, files} from './script.js';
 import {chargerJSON, scrollbar} from './outils.js';
 export var tilesMap = new Map();
 
@@ -7,41 +7,38 @@ function afficherBloc(liste){
     for(var el of liste){document.getElementById(el).style.display = "block";}
 }
 
-export async function chargerMap(zone, niveau){
-    var niveauData = await chargerJSON('src/niveaux/'+zone+'-'+niveau+'.json');
-    var tilesData = await chargerJSON('src/data/tiles.json');
-    niveauData.decors.forEach(partie => {
-        if(partie.hasOwnProperty("modif")) var modif = [partie.modif[0],partie.modif[1],partie.modif[2],partie.modif[3]];
-        else var modif = [64,64,0,0];
-        
-        partie.coord.forEach(coord => {
-            for(var i=coord[0];i<=coord[1];i++){
-                for(var j=coord[2];j<=coord[3];j++){
-                    
-                    tilesMap.set((i+","+j),[partie.tile,coord[4]]);
-                    
-                    if(coord[4]!=null) rotationCanvas(i,j,coord[4],tilesData[partie.tile],modif);
-                    else ctx.drawImage(tileset,tilesData[partie.tile][0]*64,tilesData[partie.tile][1]*64,modif[0],modif[1],(i*64)-modif[2],(j*64)-modif[3],modif[0],modif[1]);
+export function chargerMap(zone, niveau){
+    chargerJSON('src/niveaux/'+zone+'-'+niveau+'.json').then(niveauData => {
+        files.niveauxData = niveauData;
+        niveauData.decors.forEach(partie => {
+            if(partie.hasOwnProperty("modif")) var modif = [partie.modif[0],partie.modif[1],partie.modif[2],partie.modif[3]];
+            else var modif = [64,64,0,0];
+
+            partie.coord.forEach(coord => {
+                for(var i=coord[0];i<=coord[1];i++){
+                    for(var j=coord[2];j<=coord[3];j++){
+                        tilesMap.set((i+","+j),[partie.tile,coord[4]]);
+                        if(coord[4]!=null) rotationCanvas(i,j,coord[4],files.tilesData[partie.tile],modif);
+                        else ctx.drawImage(files.tileset,files.tilesData[partie.tile][0]*64,files.tilesData[partie.tile][1]*64,modif[0],modif[1],(i*64)-modif[2],(j*64)-modif[3],modif[0],modif[1]);
+                    }
                 }
-            }
+            });
         });
+
+        afficherBloc(niveauData.blocs);
+        scrollbar.scrollLeft = 0; scrollbar.scrollTop = 0;
+        joueur.afficher(niveauData.depart[0]*64,niveauData.depart[1]*64,niveauData.depart[2]);
     });
-    
-    afficherBloc(niveauData.blocs);
-    scrollbar.scrollLeft = 0; scrollbar.scrollTop = 0;
-    joueur.afficher(niveauData.depart[0]*64,niveauData.depart[1]*64,niveauData.depart[2]);
 }
 
 export function tileParCoord(x,y){
     return tilesMap.get((x/64)+","+(y/64));
 }
 
-export async function remplacementCanvas(x,y){
-    await chargerJSON('src/data/tiles.json').then(tile => {
-        var coord = tile[tileParCoord(x,y)[0]];
-        var deg = tileParCoord(x,y)[1];
-        rotationCanvas(x/64,y/64,deg,coord,[64,64,0,0]);
-    });
+export function remplacementCanvas(x,y){
+    var coord = files.tilesData[tileParCoord(x,y)[0]]
+    var deg = tileParCoord(x,y)[1];
+    rotationCanvas(x/64,y/64,deg,coord,[64,64,0,0]);
 }
 
 function rotationCanvas(x,y,deg,tile,modif){
@@ -49,7 +46,7 @@ function rotationCanvas(x,y,deg,tile,modif){
     ctx.translate((x*64)+32,(y*64)+32);
     ctx.rotate((deg*90)*(Math.PI/180));
     ctx.translate(-(x*64)-32,-(y*64)-32);
-    ctx.drawImage(tileset,tile[0]*64,tile[1]*64,modif[0],modif[1],(x*64)-modif[2],(y*64)-modif[3],modif[0],modif[1]);
+    ctx.drawImage(files.tileset,tile[0]*64,tile[1]*64,modif[0],modif[1],(x*64)-modif[2],(y*64)-modif[3],modif[0],modif[1]);
     ctx.restore();
 }
 

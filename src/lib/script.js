@@ -1,31 +1,34 @@
 //------------------------------ Initialisation ------------------------------
 
 //Import :
-import {Joueur} from './classes.js';
+import {Joueur, FileManager} from './classes.js';
 import {chargerMap, tileParCoord, remplacementCanvas} from './niveaux.js';
 import {chargerJSON, chargerImg, sleep, scrollbar} from './outils.js';
 
-//Bloc, joueur, map et audio :
-export var blocEnMouvement, tileset, zone=1, niveau=1; //Variables globales
+//Bloc, joueur et audio :
+export var blocEnMouvement, zone=1, niveau=1; //Variables globales
 export var blocArray = new Array(); //Array contenant la liste des blocs collés, et la "carte" pour le niveau
-export var joueur = new Joueur(0,0,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
-var audio = new Audio(); //Variable représenant l'audio de la page
+const audio = new Audio(); //Variable représenant l'audio de la page
+export const joueur = new Joueur(0,0,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
+//Fichiers :
+export const files = new FileManager(); //Charge les fichiers afin d'éviter de les charger à chaque niveaux
 
-//Canvas + image :
+//Canvas :
 const canvas = document.getElementById('canvas'); //Variable représentant le canvas
 export const ctx = canvas.getContext('2d'); //Variable représentant le "context" (la où on dessine)
-chargerImg("src/media/assets.png").then(img => tileset=img); //Charge le "tileset"
 
-//Bypass les menus :
-//affichageMenu();
-//affichageZone(1);
-//affichageNiveau(5);
-
-//Permet de rendre les fonctions globales (onclick)
+//Permet d'instancier les fonctions importées sur "window" (pour le onclick)
 for(const el of document.querySelectorAll('button')){
     var fn = el.getAttribute("onclick").replace("()",'');
     window[fn] = eval(fn);
 }
+
+//Bypass les menus :
+//affichageMenu();
+//setTimeout(() => {
+//    affichageZone(1);
+//    affichageNiveau(4);
+//},50);
 
 
 //--------------------------- Menu, map monde et choix du niveau -----------------------
@@ -35,31 +38,28 @@ function affichageMenu(){
     mapMonde.style.display = "flex";
 }
 
-export async function affichageZone(z){
-    var data = await chargerJSON('src/data/zones.json');
+export function affichageZone(z){
     zone = z;
     mapMonde.style.display = "none";
     document.querySelector(".mapZone"+z).style.display = "block";
     document.querySelector(".zoneFleches").style.display = "flex";
     document.querySelector("#avatarJoueur").style.display = "block";
-    document.querySelector("#avatarJoueur").style.transform = "translate("+data[zone][niveau][0]+"px, "+data[zone][niveau][1]+"px)";
+    document.querySelector("#avatarJoueur").style.transform = "translate("+files.zonesData[zone][niveau][0]+"px, "+files.zonesData[zone][niveau][1]+"px)";
 }
 
-async function affichageNiveau(n){
-    var data = await chargerJSON('src/data/zones.json');
+function affichageNiveau(n){
     niveau = n;
     menu.style.display = "none";
     wrapper.style.display = "flex";
     enTete.style.display = "flex";
     document.querySelector(".mapZone"+zone).style.display = "none";
-    enTete.innerHTML = "Zone " + zone + " - Niveau " + niveau + " &nbsp; | &nbsp; " + data[zone].nom;
+    enTete.innerHTML = `Zone ${zone} - Niveau ${niveau} &nbsp; | &nbsp; ${files.zonesData[zone].nom}`;
     blocArray.push(blocDepart);
     chargerMap(zone,niveau);
 }
 
-export async function deplacementAvatar(e){
+export function deplacementAvatar(e){
     if(document.querySelector(".mapZone"+zone).style.display=="block"){
-        var data = await chargerJSON('src/data/zones.json');
         var avatar = document.querySelector("#avatarJoueur");
         switch(e.keyCode){
             case 37: //Flèche Gauche
@@ -67,7 +67,7 @@ export async function deplacementAvatar(e){
                 setTimeout('toucheFlecheGauche.src="src/media/touche/toucheFlecheGauche.png"',100);
                 if(niveau!==1 && joueur.niveauDebloque.includes(zone+"-"+(niveau-1))){
                     niveau -= 1;
-                    avatar.style.transform = "translate("+data[zone][niveau][0]+"px, "+data[zone][niveau][1]+"px)";
+                    avatar.style.transform = "translate("+files.zonesData[zone][niveau][0]+"px, "+files.zonesData[zone][niveau][1]+"px)";
                 }
             break;
                 
@@ -76,7 +76,7 @@ export async function deplacementAvatar(e){
                 setTimeout('toucheFlecheDroite.src="src/media/touche/toucheFlecheDroite.png"',100);
                 if(niveau!==5 && joueur.niveauDebloque.includes(zone+"-"+(niveau+1))){
                     niveau += 1;
-                    avatar.style.transform = "translate("+data[zone][niveau][0]+"px, "+data[zone][niveau][1]+"px)";
+                    avatar.style.transform = "translate("+files.zonesData[zone][niveau][0]+"px, "+files.zonesData[zone][niveau][1]+"px)";
                 }
             break;
                 
@@ -90,7 +90,7 @@ export async function deplacementAvatar(e){
             case 27: //Touche Echap
                 toucheEchap.src = "src/media/touche/toucheEchapGlow.png";
                 setTimeout('toucheEchap.src="src/media/touche/toucheEchap.png"',100);
-                mapMonde.style.display = "block";
+                mapMonde.style.display = "flex";
                 avatar.style.display = "none";
                 document.querySelector(".mapZone"+zone).style.display = "none";
                 document.querySelector(".zoneFleches").style.display = "none";
@@ -102,7 +102,7 @@ export async function deplacementAvatar(e){
 
 //------------------------------ Pop-up ! ------------------------------
 
-function popup(texte){
+export function popup(texte){
     if(popups.style.visibility == 'hidden'){
         popups.style.visibility = "visible";
         popups.style.display = "flex";
@@ -221,7 +221,7 @@ function retournerAuMenu(){
     document.getElementById("menuParametres").style.display = "none";
     document.getElementById("controlesJeu").style.display = "flex";
     menu.style.display = "flex";
-    mapMonde.style.display = "block";
+    mapMonde.style.display = "flex";
     wrapper.style.display = "none";
     enTete.style.display = "none";
 }
@@ -231,21 +231,23 @@ function retournerAuMenu(){
 
 function win(){
     if(tileParCoord(joueur.x,joueur.y)[0]=="objectif"){
-        popup("Tu as completé le niveau "+niveau+" de la zone "+zone+" !");
-        setTimeout(() => {
-            fermerPopup();
-            supprimerToutLesBlocs();
-            affichageNiveau(niveau+1);
-            if(joueur.niveauDebloque.includes(zone+"-"+niveau)==false) joueur.niveauDebloque.push(zone+"-"+niveau)
-        },2000);
+        if(niveau<5){
+            popup(`Tu as completé  le niveau ${niveau} de la zone ${zone} !`);
+            setTimeout(() => {
+                fermerPopup();
+                supprimerToutLesBlocs();
+                affichageNiveau(niveau+1);
+                if(joueur.niveauDebloque.includes(zone+"-"+niveau)==false) joueur.niveauDebloque.push(zone+"-"+niveau)
+            },2000);
+        }else{
+            popup(`Tu as fini la 1ère zone, bravo jeune aventurier !<br> (le reste n'est pas encore fait, désolé :/)`);
+        }
     }
 }
 
 function remiseAZero(){
     remplacementCanvas(joueur.x,joueur.y);
-    chargerJSON('src/niveaux/'+zone+'-'+niveau+'.json').then(niveauData => {
-        joueur.afficher(niveauData.depart[0]*64,niveauData.depart[1]*64,niveauData.depart[2]);
-    });
+    joueur.afficher(files.niveauxData.depart[0]*64,files.niveauxData.depart[1]*64,files.niveauxData.depart[2]);
 }
 
 async function executionCode(){

@@ -1,4 +1,4 @@
-import {deplacementAvatar, affichageZone, joueur} from './script.js';
+import {deplacementAvatar, affichageZone, joueur, popup} from './script.js';
 export var scrollbar;
 
 
@@ -34,5 +34,8 @@ window.addEventListener("DOMContentLoaded", () => {
     document.querySelector('map').addEventListener("click", (e) => { //Evenement "click" sur les "area" (Map Monde)
         var zone = parseInt(e.target.title.match(/[0-9]/g));
         if(joueur.niveauDebloque.includes(zone+"-1")) affichageZone(zone);
+        else {
+            popup("Tu ne peux pas accéder à une zone non débloquée !");
+        }
     });
 });

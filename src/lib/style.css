@@ -87,12 +87,20 @@ body {
 
 #avatarJoueur {position: absolute; display: none;}
 
+.mapMonde {flex-direction: column;}
+
+.mapMonde span {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 20px;
+}
+
 .zoneFleches {
     position: absolute; height: 100px; width: 300px;
     right: 20px; bottom: 20px; display: none;
     justify-content: center; align-items: center;
 }
-
 .zoneFleches img {margin: 0 5px 0 5px;}
 
 
