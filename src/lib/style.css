@@ -131,6 +131,17 @@ body {
     border: 1px solid #454545; background: white;
     border-radius: 5px; margin-left: 5px;
     align-items: center; justify-content: center;
+}   
+.comptageBlocs {
+    background-color: black;
+    width: 100%;
+    height: 20px;
+}
+.comptageBlocs div {
+    width: 0;
+    height: 100%;
+    background-color: cyan;
+    transition-duration: 1s;
 }
 
 canvas {

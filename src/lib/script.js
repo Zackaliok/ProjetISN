@@ -24,11 +24,11 @@ for(const el of document.querySelectorAll('button')){
 }
 
 //Bypass les menus :
-//affichageMenu();
-//setTimeout(() => {
-//    affichageZone(1);
-//    affichageNiveau(4);
-//},50);
+affichageMenu();
+setTimeout(() => {
+    affichageZone(1);
+   affichageNiveau(1);
+},50);
 
 
 //--------------------------- Menu, map monde et choix du niveau -----------------------
@@ -141,6 +141,7 @@ function supprimerBloc(){
     if(blocEnMouvement.className=="bloc" && blocEnMouvement.dataset.stackedtop=="false" && blocEnMouvement.dataset.stackedbot=="false"){
         blocEnMouvement.parentNode.removeChild(blocEnMouvement);
     }
+    updateComptageBlocs();
 }
 
 function supprimerToutLesBlocs(){
@@ -150,6 +151,7 @@ function supprimerToutLesBlocs(){
         blocArray.splice(1,blocArray.length);
         blocDepart.dataset.stackedbot = "false";
     }
+    updateComptageBlocs();
 }
 
 function dupliquerBloc(){
@@ -226,6 +228,21 @@ function retournerAuMenu(){
     enTete.style.display = "none";
 }
 
+function updateComptageBlocs(objectifNbrBlocs) {
+    var objectifNbrBlocs = 3;//On récupèrera l'objectif à chaques niveaux
+    var tauxRemplissage = ((blocArray.length-1)/objectifNbrBlocs)*100;
+    if (blocArray.length-1>objectifNbrBlocs) {
+        document.querySelector(".texteComptageBlocs").innerHTML=blocArray.length-1+" / " + objectifNbrBlocs;
+        document.querySelector(".comptageBlocs div").style.backgroundColor="red";
+    } else {
+        document.querySelector(".texteComptageBlocs").innerHTML=blocArray.length-1+" / " + objectifNbrBlocs;
+        document.querySelector(".comptageBlocs div").style.backgroundColor="cyan";
+        document.querySelector(".comptageBlocs div").style.width=tauxRemplissage+"%";
+    }
+    
+    
+
+}
 
 //------------------------------ Executer le code + vérifier si le joueur a gagner ------------------------------
 
@@ -359,6 +376,7 @@ function collageBloc(){
             blocEnMouvement.style.transform = "translate(0px, 0px)";
         }
     }
+    updateComptageBlocs();
 }
 
 
@@ -435,6 +453,7 @@ conteneurCode.ondrop = function(e){
     var sourisX = e.clientX - conteneurCode.getBoundingClientRect().left - blocRect.width/2;
     var sourisY = e.clientY - conteneurCode.getBoundingClientRect().top - blocRect.height/2;
     blocEnMouvement.style.transform = "translate("+sourisX+"px, "+sourisY+"px)";
+    //updateComptageBlocs();
 }
 
 
