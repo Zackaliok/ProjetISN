@@ -31,5 +31,6 @@
     ],
     
     "depart": [3,2,1],
-    "blocs": ["Avancer", "TournerAGauche", "TournerADroite"]
+    "blocs": ["Avancer", "TournerAGauche", "TournerADroite"],
+    "objectifBloc": 9
 }

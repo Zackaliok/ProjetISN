@@ -10,6 +10,7 @@ export var blocEnMouvement, zone=1, niveau=1; //Variables globales
 export var blocArray = new Array(); //Array contenant la liste des blocs collés, et la "carte" pour le niveau
 const audio = new Audio(); //Variable représenant l'audio de la page
 export const joueur = new Joueur(0,0,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
+
 //Fichiers :
 export const files = new FileManager(); //Charge les fichiers afin d'éviter de les charger à chaque niveaux
 
@@ -24,11 +25,11 @@ for(const el of document.querySelectorAll('button')){
 }
 
 //Bypass les menus :
-affichageMenu();
-setTimeout(() => {
-    affichageZone(1);
-   affichageNiveau(1);
-},50);
+//affichageMenu();
+//setTimeout(() => {
+//    affichageZone(1);
+//    affichageNiveau(5);
+//},50);
 
 
 //--------------------------- Menu, map monde et choix du niveau -----------------------
@@ -54,7 +55,7 @@ function affichageNiveau(n){
     enTete.style.display = "flex";
     document.querySelector(".mapZone"+zone).style.display = "none";
     enTete.innerHTML = `Zone ${zone} - Niveau ${niveau} &nbsp; | &nbsp; ${files.zonesData[zone].nom}`;
-    blocArray.push(blocDepart);
+    if(!blocArray.includes(blocDepart)) blocArray.push(blocDepart);
     chargerMap(zone,niveau);
 }
 
@@ -141,17 +142,16 @@ function supprimerBloc(){
     if(blocEnMouvement.className=="bloc" && blocEnMouvement.dataset.stackedtop=="false" && blocEnMouvement.dataset.stackedbot=="false"){
         blocEnMouvement.parentNode.removeChild(blocEnMouvement);
     }
-    updateComptageBlocs();
 }
 
 function supprimerToutLesBlocs(){
     menuContextuel.style.display = "none";
-    if(conteneurCode.children.length > 1){
+    if(conteneurCode.children.length > 1 && document.getElementById('executionCode').disabled==false){
         while(conteneurCode.children.length > 1){conteneurCode.removeChild(conteneurCode.children[1]);}
         blocArray.splice(1,blocArray.length);
         blocDepart.dataset.stackedbot = "false";
+        updateComptageBlocs();
     }
-    updateComptageBlocs();
 }
 
 function dupliquerBloc(){
@@ -228,20 +228,20 @@ function retournerAuMenu(){
     enTete.style.display = "none";
 }
 
-function updateComptageBlocs(objectifNbrBlocs) {
-    var objectifNbrBlocs = 3;//On récupèrera l'objectif à chaques niveaux
-    var tauxRemplissage = ((blocArray.length-1)/objectifNbrBlocs)*100;
-    if (blocArray.length-1>objectifNbrBlocs) {
-        document.querySelector(".texteComptageBlocs").innerHTML=blocArray.length-1+" / " + objectifNbrBlocs;
-        document.querySelector(".comptageBlocs div").style.backgroundColor="red";
-    } else {
-        document.querySelector(".texteComptageBlocs").innerHTML=blocArray.length-1+" / " + objectifNbrBlocs;
-        document.querySelector(".comptageBlocs div").style.backgroundColor="cyan";
-        document.querySelector(".comptageBlocs div").style.width=tauxRemplissage+"%";
+function updateComptageBlocs(){
+    var blocTotal = (blocArray.length-1);
+    for(const bloc of blocArray){
+        if(bloc.id=="Repeter") blocTotal += bloc.children[1].children.length;
+        var tauxRemplissage = (blocTotal/files.niveauxData.objectifBloc)*100;
+        if(blocTotal > files.niveauxData.objectifBloc){
+            document.querySelector(".texteComptageBlocs").innerHTML = blocTotal +" / "+ files.niveauxData.objectifBloc;
+            document.querySelector(".comptageBlocs div").style.background="#d86060";
+        }else{
+            document.querySelector(".texteComptageBlocs").innerHTML = blocTotal +" / "+ files.niveauxData.objectifBloc;
+            document.querySelector(".comptageBlocs div").style.background="#50d6d6";
+            document.querySelector(".comptageBlocs div").style.width = tauxRemplissage+"%";
+        }
     }
-    
-    
-
 }
 
 //------------------------------ Executer le code + vérifier si le joueur a gagner ------------------------------
@@ -257,7 +257,7 @@ function win(){
                 if(joueur.niveauDebloque.includes(zone+"-"+niveau)==false) joueur.niveauDebloque.push(zone+"-"+niveau)
             },2000);
         }else{
-            popup(`Tu as fini la 1ère zone, bravo jeune aventurier !<br> (le reste n'est pas encore fait, désolé :/)`);
+            popup("Tu as fini la 1ère zone, bravo jeune aventurier !<br> (le reste n'est pas encore fait, désolé :/)");
         }
     }
 }
@@ -453,7 +453,6 @@ conteneurCode.ondrop = function(e){
     var sourisX = e.clientX - conteneurCode.getBoundingClientRect().left - blocRect.width/2;
     var sourisY = e.clientY - conteneurCode.getBoundingClientRect().top - blocRect.height/2;
     blocEnMouvement.style.transform = "translate("+sourisX+"px, "+sourisY+"px)";
-    //updateComptageBlocs();
 }
 
 
@@ -461,5 +460,6 @@ conteneurCode.ondrop = function(e){
 
 window.addEventListener("keydown", async function(e){
     if(e.keyCode == 96){
+        console.log(blocArray)
     }
 });

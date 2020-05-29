@@ -106,6 +106,11 @@ body {
 
 /*-------------------- Zones : --------------------*/
 
+canvas {
+    border: 1px solid #454545; background: white;
+    border-radius: 5px; margin-left: 5px;
+}
+
 #partieBanque {
     display: flex; background: white;
     flex-flow: column; align-items: flex-end;
@@ -120,9 +125,7 @@ body {
     max-width: 100%; max-height: 100%;
 }
 
-#conteneurCode {
-    height: 1500px; width: 1500px;
-}
+#conteneurCode {height: 1500px; width: 1500px;}
 
 #partieControle {
     height: calc(100% - 589px); display: flex;
@@ -131,29 +134,31 @@ body {
     border: 1px solid #454545; background: white;
     border-radius: 5px; margin-left: 5px;
     align-items: center; justify-content: center;
+    flex-direction: column;
 }   
+
 .comptageBlocs {
-    background-color: black;
-    width: 100%;
-    height: 20px;
-}
-.comptageBlocs div {
-    width: 0;
-    height: 100%;
-    background-color: cyan;
-    transition-duration: 1s;
+    width: 80%; height: 20px;
+    background-color: black; font-weight: bold;
+    border-radius: 10px; overflow: hidden;
 }
 
-canvas {
-    border: 1px solid #454545; background: white;
-    border-radius: 5px; margin-left: 5px;
+.comptageBlocs div {
+    width: 0%; height: 100%; transition-duration: 1s; 
+    background: #50d6d6; border-radius: inherit;
+}
+
+.texteComptageBlocs {
+    display: block; width: 100%; height: 20px;
+    border-radius: 10px; text-align: center;
+    position: relative; top: -20px;
 }
 
 
 /*-------------------- Controles et menu parametres : --------------------*/
 
 .controles {
-    height: 100%; width: 100%; display: flex;
+    height: 50%; width: 100%; display: flex;
     align-items: center; justify-content: center;
 }
 

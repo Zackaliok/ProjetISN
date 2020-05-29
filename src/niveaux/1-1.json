@@ -115,5 +115,6 @@
     ],
     
     "depart": [6,6,0],
-    "blocs": ["Avancer"]
+    "blocs": ["Avancer"],
+    "objectifBloc": 3
 }

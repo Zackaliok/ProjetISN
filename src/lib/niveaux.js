@@ -28,6 +28,7 @@ export function chargerMap(zone, niveau){
         afficherBloc(niveauData.blocs);
         scrollbar.scrollLeft = 0; scrollbar.scrollTop = 0;
         joueur.afficher(niveauData.depart[0]*64,niveauData.depart[1]*64,niveauData.depart[2]);
+        document.querySelector(".texteComptageBlocs").innerHTML = "0 / "+niveauData.objectifBloc;
     });
 }
 
@@ -49,6 +50,7 @@ function rotationCanvas(x,y,deg,tile,modif){
     ctx.drawImage(files.tileset,tile[0]*64,tile[1]*64,modif[0],modif[1],(x*64)-modif[2],(y*64)-modif[3],modif[0],modif[1]);
     ctx.restore();
 }
+
 
 
 
