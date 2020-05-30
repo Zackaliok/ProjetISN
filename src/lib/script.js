@@ -9,6 +9,7 @@ import {chargerJSON, chargerImg, sleep, scrollbar} from './outils.js';
 export var blocEnMouvement, zone=1, niveau=1; //Variables globales
 export var blocArray = new Array(); //Array contenant la liste des blocs collés, et la "carte" pour le niveau
 const audio = new Audio(); //Variable représenant l'audio de la page
+var musiqueAutorisee = true; // Variable autorisant ou non la lecture d'une musique (à l'exception des son comme les popups)
 export const joueur = new Joueur(0,0,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
 
 //Fichiers :
@@ -25,11 +26,11 @@ for(const el of document.querySelectorAll('button')){
 }
 
 //Bypass les menus :
-//affichageMenu();
-//setTimeout(() => {
-//    affichageZone(1);
-//    affichageNiveau(5);
-//},50);
+affichageMenu();
+/*setTimeout(() => {
+    affichageZone(1);
+    affichageNiveau(1);
+},50);*/
 
 
 //--------------------------- Menu, map monde et choix du niveau -----------------------
@@ -57,7 +58,39 @@ function affichageNiveau(n){
     enTete.innerHTML = `Zone ${zone} - Niveau ${niveau} &nbsp; | &nbsp; ${files.zonesData[zone].nom}`;
     if(!blocArray.includes(blocDepart)) blocArray.push(blocDepart);
     chargerMap(zone,niveau);
+    musique();
 }
+
+
+function musique() {
+
+    if (musiqueAutorisee==true) {
+        switch (zone) {
+        case 1:
+            audio.src="src/media/son/testArabe.wav";// A changer pour mettre les plaines
+            audio.play();
+            break;
+        case 2:
+            audio.src="src/media/son/testArabe.wav";
+            audio.play();
+            break;
+        case 3:
+            audio.src="src/media/son/testArabe.wav";// A changer pour mettre les grottes
+            audio.play();
+            break;
+        case 4:
+            audio.src="src/media/son/testArabe.wav";// A changer pour mettre les volcans
+            audio.play();
+            break;
+    }
+    /*   Quand on aura les 4 musiques
+      audio.src="src/media/son/musiqueAmbiance"+zone+".wav";
+      audio.play();
+    */
+    audio.loop=true;
+    }
+}
+
 
 export function deplacementAvatar(e){
     if(document.querySelector(".mapZone"+zone).style.display=="block"){
@@ -111,6 +144,7 @@ export function popup(texte){
         popups.style.animation = "ouverturePopup 0.2s ease-in 0s 1 normal forwards";
         audio.src = "src/media/son/orb.mp3";
         audio.play();
+        audio.loop=false;
     }
 }
 
@@ -182,14 +216,14 @@ function afficherParametres(){
 }
 
 function switchMusique(){
-    if(audio.muted==false){
-        audio.muted = true;
+    if(audio.paused==false){
+        audio.pause();
         imgMusique.src="src/media/icon/audio-off-icon.png";
-        popup("Musique désactivée !");
+        musiqueAutorisee=false;
     }else{
-        audio.muted = false;
+        audio.play();
         imgMusique.src="src/media/icon/audio-icon.png";
-        popup("Musique activée !");
+        musiqueAutorisee=true;
     }
 }
 
@@ -226,6 +260,7 @@ function retournerAuMenu(){
     mapMonde.style.display = "flex";
     wrapper.style.display = "none";
     enTete.style.display = "none";
+    audio.pause();
 }
 
 function updateComptageBlocs(){
