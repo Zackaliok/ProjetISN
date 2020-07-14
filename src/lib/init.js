@@ -1,11 +1,10 @@
 import {Joueur, Jeu} from './classes.js';
 import {sleep} from './outils.js';
 
-export const joueur = new Joueur(0,0,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
-export const jeu = new Jeu(1,1); //Représente les niveaux et zones débloqués
-
-export const canvas = document.getElementById('canvas'); //Variable représentant le canvas
-export const ctx = canvas.getContext('2d'); //Variable représentant le "context" (la où on dessine)
+export const joueur = new Joueur(0,0,0);
+export const jeu = new Jeu(1,1);
+export const canvas = document.getElementById('canvas');
+export const ctx = canvas.getContext('2d');
 
 async function barreDeProgression(){
     for(var i=0;i<=5000;i+=1000){
@@ -18,7 +17,7 @@ async function barreDeProgression(){
 (async function chargement(){
     jeu.chargerFichiers();
     
-//    await barreDeProgression(); //Bypass
+    await barreDeProgression();
     
     document.querySelector(".pageDeChargement").style.display = "none";
     document.querySelector(".mapMonde").style.display = "flex";
