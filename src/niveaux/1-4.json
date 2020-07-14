@@ -22,6 +22,12 @@
             ]
         },
         {
+            "tile": "trou", 
+            "coord": [
+                [6,6,4,4]
+            ]
+        },
+        {
             "tile": "objectif",
             "coord": [
                 [6,6,6,6]

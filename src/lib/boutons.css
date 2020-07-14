@@ -1,0 +1,34 @@
+/* Switch (menu pause) : */
+
+.switch {
+    height: 32px; width: 52px; display: inline-block;
+    border-radius: 16px; position: relative; margin: 0 0 0 20px;
+    border: 2px solid #474755; transition: all .2s ease;
+    background: linear-gradient(180deg, #757575 0%, #828282 100%);
+    -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    -webkit-tap-highlight-color: transparent; cursor: pointer;
+}
+
+.switch::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: white; box-shadow: 0 1px 2px rgba(44,44,44,.2);
+    transition: all .2s cubic-bezier(.5,.1,.75,1.35);
+}
+
+.switch:focus {outline: 0}
+.switch:checked {border-color: #654FEC; background: linear-gradient(180deg, #2D2F39 0%, #1F2027 100%)}
+.switch:checked:after {transform: translatex(20px)}
+
+
+/* Slider (menu pause) : */
+
+.slider {
+    -webkit-appearance: none; appearance: none; background: #adadad;
+    width: 200px; height: 15px; outline: none; opacity: 0.7; 
+    transition: opacity .2s; border-radius: 8px; border: 2px solid #474755;
+}
+
+.slider::-webkit-slider-thumb {-webkit-appearance: none; appearance: none; border-radius: 50%; width: 25px; height: 25px; background: #FFF; cursor: pointer;}
+.slider::-moz-range-thumb {width: 25px; height: 25px; background: #FFF; cursor: pointer; border-radius: 50%;}
+.slider:hover {opacity: 1;}

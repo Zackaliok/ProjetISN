@@ -1,116 +1,76 @@
-//------------------------------ Initialisation ------------------------------
-
 //Import :
-import {Joueur, FileManager} from './classes.js';
+import {joueur, jeu, canvas, ctx} from './init.js';
 import {chargerMap, tileParCoord, remplacementCanvas} from './niveaux.js';
 import {chargerJSON, chargerImg, sleep, scrollbar} from './outils.js';
+export var blocEnMouvement, blocArray = new Array(); 
 
-//Bloc, joueur et audio :
-export var blocEnMouvement, zone=1, niveau=1; //Variables globales
-export var blocArray = new Array(); //Array contenant la liste des blocs collés, et la "carte" pour le niveau
-const audio = new Audio(); //Variable représenant l'audio de la page
-var musiqueAutorisee = true; // Variable autorisant ou non la lecture d'une musique (à l'exception des son comme les popups)
-export const joueur = new Joueur(0,0,0); //Déclaration de l'objet Joueur avec 3 paramètres (x,y,dir)
-
-//Fichiers :
-export const files = new FileManager(); //Charge les fichiers afin d'éviter de les charger à chaque niveaux
-
-//Canvas :
-const canvas = document.getElementById('canvas'); //Variable représentant le canvas
-export const ctx = canvas.getContext('2d'); //Variable représentant le "context" (la où on dessine)
+//DOM :
+const conteneurCode = document.getElementById("conteneurCode");
+const partieBanque = document.getElementById("partieBanque");
+const blocDepart = document.getElementById("blocDepart");
+const menuContextuel = document.querySelector(".menuContextuel");
+const toucheFlecheGauche = document.getElementById("toucheFlecheGauche");
+const toucheFlecheDroite = document.getElementById("toucheFlecheDroite");
+const toucheEntree = document.getElementById("toucheEntree");
+const toucheEchap = document.getElementById('toucheEchap');
 
 //Permet d'instancier les fonctions importées sur "window" (pour le onclick)
-for(const el of document.querySelectorAll('button')){
-    var fn = el.getAttribute("onclick").replace("()",'');
-    window[fn] = eval(fn);
+for(const el of document.getElementsByTagName("*")){
+    if(el.hasAttribute("onclick")){
+        var fn = el.getAttribute("onclick").replace("()",'');
+        window[fn] = eval(fn);
+    }
 }
 
-//Bypass les menus :
-affichageMenu();
-/*setTimeout(() => {
-    affichageZone(1);
-    affichageNiveau(1);
-},50);*/
+//Bypass le menu principal :
+//setTimeout(() => {
+//    affichageZone(1);
+//    affichageNiveau(1);
+//},100);
 
 
 //--------------------------- Menu, map monde et choix du niveau -----------------------
 
-function affichageMenu(){
-    document.querySelector(".accueil").style.display = "none";
-    mapMonde.style.display = "flex";
-}
-
 export function affichageZone(z){
-    zone = z;
-    mapMonde.style.display = "none";
-    document.querySelector(".mapZone"+z).style.display = "block";
+    jeu.zone = z;
+    document.querySelector(".mapMonde").style.display = "none";
+    document.querySelector(".mapZone").style.display = "flex";
+    document.querySelector(".mapZone").firstChild.src = "src/media/map/mapZone"+z+".png";
     document.querySelector(".zoneFleches").style.display = "flex";
     document.querySelector("#avatarJoueur").style.display = "block";
-    document.querySelector("#avatarJoueur").style.transform = "translate("+files.zonesData[zone][niveau][0]+"px, "+files.zonesData[zone][niveau][1]+"px)";
+    document.querySelector("#avatarJoueur").style.transform = "translate("+jeu.zonesData[jeu.zone][jeu.niveau][0]+"px, "+jeu.zonesData[jeu.zone][jeu.niveau][1]+"px)";
 }
 
 function affichageNiveau(n){
-    niveau = n;
-    menu.style.display = "none";
-    wrapper.style.display = "flex";
-    enTete.style.display = "flex";
-    document.querySelector(".mapZone"+zone).style.display = "none";
-    enTete.innerHTML = `Zone ${zone} - Niveau ${niveau} &nbsp; | &nbsp; ${files.zonesData[zone].nom}`;
+    jeu.niveau = n;
+    document.querySelector(".menuPrincipal").style.display = "none";
+    document.querySelector(".wrapper").style.display = "flex";
+    document.querySelector(".mapZone").style.display = "none";
+    document.querySelector("header").innerHTML = `Zone ${jeu.zone} - Niveau ${jeu.niveau} &nbsp; | &nbsp; ${jeu.zonesData[jeu.zone].nom}`;
     if(!blocArray.includes(blocDepart)) blocArray.push(blocDepart);
-    chargerMap(zone,niveau);
-    musique();
+    chargerMap(jeu.zone,jeu.niveau);
+    jeu.jouerMusique();
 }
-
-
-function musique() {
-
-    if (musiqueAutorisee==true) {
-        switch (zone) {
-        case 1:
-            audio.src="src/media/son/testArabe.wav";// A changer pour mettre les plaines
-            audio.play();
-            break;
-        case 2:
-            audio.src="src/media/son/testArabe.wav";
-            audio.play();
-            break;
-        case 3:
-            audio.src="src/media/son/testArabe.wav";// A changer pour mettre les grottes
-            audio.play();
-            break;
-        case 4:
-            audio.src="src/media/son/testArabe.wav";// A changer pour mettre les volcans
-            audio.play();
-            break;
-    }
-    /*   Quand on aura les 4 musiques
-      audio.src="src/media/son/musiqueAmbiance"+zone+".wav";
-      audio.play();
-    */
-    audio.loop=true;
-    }
-}
-
 
 export function deplacementAvatar(e){
-    if(document.querySelector(".mapZone"+zone).style.display=="block"){
+    if(document.querySelector(".mapZone").style.display=="flex"){
         var avatar = document.querySelector("#avatarJoueur");
         switch(e.keyCode){
             case 37: //Flèche Gauche
                 toucheFlecheGauche.src = "src/media/touche/toucheFlecheGaucheGlow.png";
                 setTimeout('toucheFlecheGauche.src="src/media/touche/toucheFlecheGauche.png"',100);
-                if(niveau!==1 && joueur.niveauDebloque.includes(zone+"-"+(niveau-1))){
-                    niveau -= 1;
-                    avatar.style.transform = "translate("+files.zonesData[zone][niveau][0]+"px, "+files.zonesData[zone][niveau][1]+"px)";
+                if(jeu.niveau!==1 && jeu.niveauDebloque.includes(jeu.zone+"-"+(jeu.niveau-1))){
+                    jeu.niveau -= 1;
+                    avatar.style.transform = "translate("+jeu.zonesData[jeu.zone][jeu.niveau][0]+"px, "+jeu.zonesData[jeu.zone][jeu.niveau][1]+"px)";
                 }
             break;
                 
             case 39: //Flèche Droite
                 toucheFlecheDroite.src = "src/media/touche/toucheFlecheDroiteGlow.png";
                 setTimeout('toucheFlecheDroite.src="src/media/touche/toucheFlecheDroite.png"',100);
-                if(niveau!==5 && joueur.niveauDebloque.includes(zone+"-"+(niveau+1))){
-                    niveau += 1;
-                    avatar.style.transform = "translate("+files.zonesData[zone][niveau][0]+"px, "+files.zonesData[zone][niveau][1]+"px)";
+                if(jeu.niveau!==5 && jeu.niveauDebloque.includes(jeu.zone+"-"+(jeu.niveau+1))){
+                    jeu.niveau += 1;
+                    avatar.style.transform = "translate("+jeu.zonesData[jeu.zone][jeu.niveau][0]+"px, "+jeu.zonesData[jeu.zone][jeu.niveau][1]+"px)";
                 }
             break;
                 
@@ -118,15 +78,15 @@ export function deplacementAvatar(e){
                 toucheEntree.src = "src/media/touche/toucheEntreeGlow.png";
                 setTimeout('toucheEntree.src="src/media/touche/toucheEntree.png"',100);
                 avatar.style.display = "none";
-                affichageNiveau(niveau);
+                affichageNiveau(jeu.niveau);
             break;
                 
             case 27: //Touche Echap
                 toucheEchap.src = "src/media/touche/toucheEchapGlow.png";
                 setTimeout('toucheEchap.src="src/media/touche/toucheEchap.png"',100);
-                mapMonde.style.display = "flex";
+                document.querySelector(".mapMonde").style.display = "flex";
                 avatar.style.display = "none";
-                document.querySelector(".mapZone"+zone).style.display = "none";
+                document.querySelector(".mapZone").style.display = "none";
                 document.querySelector(".zoneFleches").style.display = "none";
             break;
         }
@@ -137,20 +97,18 @@ export function deplacementAvatar(e){
 //------------------------------ Pop-up ! ------------------------------
 
 export function popup(texte){
-    if(popups.style.visibility == 'hidden'){
-        popups.style.visibility = "visible";
-        popups.style.display = "flex";
-        popups.children[0].innerHTML = texte;
-        popups.style.animation = "ouverturePopup 0.2s ease-in 0s 1 normal forwards";
-        audio.src = "src/media/son/orb.mp3";
-        audio.play();
-        audio.loop=false;
+    if(document.querySelector(".popup").style.visibility == 'hidden'){
+        document.querySelector(".popup").style.opacity = "1";
+        document.querySelector(".popup").style.visibility = "visible";
+        document.querySelector(".popup").children[0].innerHTML = texte;
+        jeu.jouerSFX("popup");
     }
 }
 
 function fermerPopup(){
-    popups.style.animation = "fermeturePopup 1s ease-out 0.2s 1 normal forwards";
-    setTimeout(() => {popups.style.visibility = "hidden"},1200);
+    document.querySelector(".popup").style.top = "5%";
+    document.querySelector(".popup").style.opacity = "0";
+    document.querySelector(".popup").style.visibility = "hidden";
 }
 
 
@@ -162,7 +120,7 @@ document.oncontextmenu = (e) => {
 
 document.onmousedown = function(e){
     if(menuContextuel.style.display=="block" && e.target!==menuContextuel && e.target.tagName!=="BUTTON") menuContextuel.style.display = "none";
-    else if(e.buttons==2 && wrapper.style.display=="flex" && ((e.target.className=="bloc" && e.target.parentNode!==partieBanque) || e.target==conteneurCode)){
+    else if(e.buttons==2 && document.querySelector(".wrapper").style.display=="flex" && ((e.target.className=="bloc" && e.target.parentNode!==partieBanque) || e.target==conteneurCode)){
         var x = e.clientX + 10; var y = e.clientY;
         menuContextuel.style.display = "block";
         menuContextuel.style.left = x+"px";
@@ -201,47 +159,51 @@ function dupliquerBloc(){
 }
 
 
-//------------------------------ Menu paramètres -------------------------------------------
+//------------------------------ Menu pause -------------------------------------------
 
-function afficherParametres(){
-    const menuParametres = document.getElementById("menuParametres");
-    const controlesJeu = document.getElementById("controlesJeu");
-    if(menuParametres.style.display=="none"){
-        controlesJeu.style.display = "none";
-        menuParametres.style.display = "flex";
+function afficherMenuPause(){
+    const menuPause = document.querySelector(".menuPause");
+    if(menuPause.style.display=="none"){
+        menuPause.style.display = "flex";
+        document.querySelector(".wrapper").style.filter = "blur(5px)";
+        
     }else{
-        menuParametres.style.display = "none";
-        controlesJeu.style.display = "flex";
+        menuPause.style.display = "none";
+        document.querySelector(".wrapper").style.filter = "";
     }
 }
 
-function switchMusique(){
-    if(audio.paused==false){
-        audio.pause();
-        imgMusique.src="src/media/icon/audio-off-icon.png";
-        musiqueAutorisee=false;
-    }else{
-        audio.play();
-        imgMusique.src="src/media/icon/audio-icon.png";
-        musiqueAutorisee=true;
-    }
-}
+document.querySelector("#volumeMusique").addEventListener("input",(e) => {jeu.musique.volume = e.target.value/100;}); //Volume musique
+document.querySelector("#volumeSFX").addEventListener("input",(e) => {jeu.sfx.volume = e.target.value/100;}); //Volume SFX
 
-function switchModeSombre() {
-    if(imgModeSombre.src.includes("black")){
-        imgModeSombre.src = "src/media/icon/moon-white.png";
-        partieBanque.style.background = "#717171";
-        conteneurCode.style.background = "#717171";
-        enTete.style.background = "#3c5a96";
-        partieControle.style.background = "#717171";
-        document.body.style.background = "rgb(60,60,60)";
+document.querySelector("#remiseAZero").addEventListener("mouseout", (e) => {
+    e.target.querySelector('path').setAttribute("transform", "rotate(0,500,500)");
+});
+
+document.querySelector("#remiseAZero").addEventListener("mouseenter", (e) => {
+    e.target.querySelector('path').style.transition = "all 0.5s ease-in-out";
+    e.target.querySelector('path').setAttribute("transform", "rotate(-20,500,500)");
+});
+
+function switchModeSombre(){
+    if(document.getElementById("modeSombre").checked){
+        partieBanque.style.background = "var(--bg-modeSombre)";
+        document.querySelector("#partieCode").style.background = "var(--bg-modeSombre)";
+        document.getElementById("partieControle").style.background = "var(--bg-modeSombre)";
+        document.querySelector("#iconModeSombre").setAttribute("fill","#151515");
+        document.querySelector("header").style.background = "#3c5a96";
+        document.body.style.background = "#262626";
+        document.documentElement.style.setProperty("--controles-hover","#5a5a5a");
+        for(const el of document.querySelector(".controles").children) {el.children[0].setAttribute("fill","#dbdbdb");}
     }else{
-        imgModeSombre.src="src/media/icon/moon-black.png";
         partieBanque.style.background = "white";
-        conteneurCode.style.background = "white";
-        enTete.style.background = "#6699ff";
-        partieControle.style.background = "white";
+        document.querySelector("#partieCode").style.background = "white";
+        document.querySelector("header").style.background = "#6699ff";
+        document.getElementById("partieControle").style.background = "white";
         document.body.style.background = "#bbcdf0";
+        document.querySelector("#iconModeSombre").setAttribute("fill","white");
+        document.documentElement.style.setProperty("--controles-hover","#e8e8e8");
+        for(const el of document.querySelector(".controles").children) {el.children[0].setAttribute("fill","black");}
     }
 }
 
@@ -249,31 +211,30 @@ function switchCodeSource(){
     //Bon euh faudrait qu'on complete ca a la fin
 }
 
-function retournerAuMenu(){
+function retournerAuMenuPrincipal(){
     supprimerToutLesBlocs();
-    document.querySelector(".mapZone"+zone).style.display = "none";
+    document.querySelector(".mapZone").style.display = "none";
     document.querySelector("#avatarJoueur").style.display = "none";
     document.querySelector(".zoneFleches").style.display = "none";
-    document.getElementById("menuParametres").style.display = "none";
-    document.getElementById("controlesJeu").style.display = "flex";
-    menu.style.display = "flex";
-    mapMonde.style.display = "flex";
-    wrapper.style.display = "none";
-    enTete.style.display = "none";
-    audio.pause();
+    document.querySelector(".menuPause").style.display = "none";
+    document.querySelector(".menuPrincipal").style.display = "flex";
+    document.querySelector(".mapMonde").style.display = "flex";
+    document.querySelector(".wrapper").style.display = "none";
+    document.querySelector(".wrapper").style.filter = "";
+    jeu.musique.pause();
 }
 
 function updateComptageBlocs(){
     var blocTotal = (blocArray.length-1);
     for(const bloc of blocArray){
         if(bloc.id=="Repeter") blocTotal += bloc.children[1].children.length;
-        var tauxRemplissage = (blocTotal/files.niveauxData.objectifBloc)*100;
-        if(blocTotal > files.niveauxData.objectifBloc){
-            document.querySelector(".texteComptageBlocs").innerHTML = blocTotal +" / "+ files.niveauxData.objectifBloc;
-            document.querySelector(".comptageBlocs div").style.background="#d86060";
+        var tauxRemplissage = (blocTotal/jeu.niveauxData.objectifBloc)*100;
+        if(blocTotal > jeu.niveauxData.objectifBloc){
+            document.querySelector(".texteComptageBlocs").innerHTML = `${blocTotal} / ${jeu.niveauxData.objectifBloc}`;
+            document.querySelector(".comptageBlocs div").style.background = "#d86060";
         }else{
-            document.querySelector(".texteComptageBlocs").innerHTML = blocTotal +" / "+ files.niveauxData.objectifBloc;
-            document.querySelector(".comptageBlocs div").style.background="#50d6d6";
+            document.querySelector(".texteComptageBlocs").innerHTML = `${blocTotal} / ${jeu.niveauxData.objectifBloc}`;
+            document.querySelector(".comptageBlocs div").style.background = "#50d6d6";
             document.querySelector(".comptageBlocs div").style.width = tauxRemplissage+"%";
         }
     }
@@ -283,13 +244,13 @@ function updateComptageBlocs(){
 
 function win(){
     if(tileParCoord(joueur.x,joueur.y)[0]=="objectif"){
-        if(niveau<5){
-            popup(`Tu as completé  le niveau ${niveau} de la zone ${zone} !`);
+        if(jeu.niveau<5){
+            popup(`Tu as completé  le niveau ${jeu.niveau} de la zone ${jeu.zone} !`);
             setTimeout(() => {
                 fermerPopup();
                 supprimerToutLesBlocs();
-                affichageNiveau(niveau+1);
-                if(joueur.niveauDebloque.includes(zone+"-"+niveau)==false) joueur.niveauDebloque.push(zone+"-"+niveau)
+                affichageNiveau(jeu.niveau+1);
+                if(jeu.niveauDebloque.includes(jeu.zone+"-"+jeu.niveau)==false) jeu.niveauDebloque.push(jeu.zone+"-"+jeu.niveau)
             },2000);
         }else{
             popup("Tu as fini la 1ère zone, bravo jeune aventurier !<br> (le reste n'est pas encore fait, désolé :/)");
@@ -299,7 +260,7 @@ function win(){
 
 function remiseAZero(){
     remplacementCanvas(joueur.x,joueur.y);
-    joueur.afficher(files.niveauxData.depart[0]*64,files.niveauxData.depart[1]*64,files.niveauxData.depart[2]);
+    joueur.afficher(jeu.niveauxData.depart[0]*64,jeu.niveauxData.depart[1]*64,jeu.niveauxData.depart[2]);
 }
 
 async function executionCode(){
@@ -307,13 +268,13 @@ async function executionCode(){
         document.getElementById('executionCode').disabled = true;
         remiseAZero();
         await sleep(200);
-        for(var bloc of blocArray){
-            switch(bloc.id){ //"Empiler" des 'case' à le même effet que le "||" (pour le if() par exemple)
+        for(const bloc of blocArray){
+            switch(bloc.id){
                 case "Avancer":
                 case "Sauter":
                 case "TournerADroite":
                 case "TournerAGauche":
-                    joueur[bloc.id](); //La forme objet[var]() sert à utiliser une variable en tant que méthode, par exemple joueur.afficher() peut s'écrire joueur["afficher"]();
+                    joueur[bloc.id]();
                 break;
 
                 case "Repeter":
@@ -428,7 +389,7 @@ conteneurCode.onmousedown = function(e){
 };
 
 document.onmouseup = function(e){
-    if(blocEnMouvement!==undefined && wrapper.style.display=="flex"){
+    if(blocEnMouvement!==undefined && document.querySelector(".wrapper").style.display=="flex"){
         window.removeEventListener('mousemove', deplacerBloc, true);
         blocEnMouvement.style.cursor = "grab";
         blocEnMouvement.style.zIndex = 0;
@@ -493,8 +454,8 @@ conteneurCode.ondrop = function(e){
 
 //------------------------------ Debugage et test ------------------------------
 
-window.addEventListener("keydown", async function(e){
+window.addEventListener("keydown", (e) => {
     if(e.keyCode == 96){
-        console.log(blocArray)
+//        console.log(blocArray)
     }
 });

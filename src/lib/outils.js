@@ -1,10 +1,11 @@
-import {deplacementAvatar, affichageZone, joueur, popup} from './script.js';
+import {deplacementAvatar, affichageZone, popup} from './script.js';
+import {jeu} from './init.js';
 export var scrollbar;
 
 
 //Charge le JSON
 export function chargerJSON(url){
-    return fetch(url).then(async(r) => {return await r.json()});
+    return fetch(url).then(r => {return r.json()});
 }
 
 //Charge l'image
@@ -25,17 +26,14 @@ export function sleep(ms) {
 
 //Event Listener
 window.addEventListener("DOMContentLoaded", () => {
-    document.onselectstart = (e) => {e.preventDefault();}; //Empeche la séléction du texte sur la page
+    document.onselectstart = (e) => {e.preventDefault()};
+    scrollbar = document.querySelector('.simplebar-content-wrapper');
+    document.addEventListener("keydown",deplacementAvatar);
+    for(const el of document.querySelectorAll('img')) {el.setAttribute('draggable', false);}
     
-    scrollbar = document.querySelector('.simplebar-content-wrapper'); //On définit l'élément contenant les scrollbars custom
-    
-    document.addEventListener("keydown",deplacementAvatar); //Evenement "keydown" (avatar sur les map de zones)
-    
-    document.querySelector('map').addEventListener("click", (e) => { //Evenement "click" sur les "area" (Map Monde)
+    document.querySelector('map').addEventListener("click", (e) => {
         var zone = parseInt(e.target.title.match(/[0-9]/g));
-        if(joueur.niveauDebloque.includes(zone+"-1")) affichageZone(zone);
-        else {
-            popup("Tu ne peux pas accéder à une zone non débloquée !");
-        }
+        if(jeu.niveauDebloque.includes(zone+"-1")) affichageZone(zone);
+        else popup("Tu ne peux pas accéder à une zone non débloquée !");
     });
 });
