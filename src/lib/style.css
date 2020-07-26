@@ -1,3 +1,9 @@
+:root {
+    --controles-hover: #e8e8e8;
+    --bg-modeSombre: linear-gradient(45deg, rgba(113,113,113,0), #4d4d4d);
+}
+
+
 /*-------------------- Général : --------------------*/
 
 body {
@@ -14,11 +20,6 @@ header {
 
 .wrapper {display: none; flex-direction: column; width: 100vw; height: 100vh;}
 .app {display: flex; flex-direction: row; width: 100vw; height: calc(100vh - 60px);}
-
-:root {
-    --controles-hover: #e8e8e8;
-    --bg-modeSombre: linear-gradient(45deg, rgba(113,113,113,0), #4d4d4d);
-}
 
 
 /*--------------------- Menu : ----------------------*/
@@ -42,12 +43,11 @@ header {
 
 /* Map Monde/Zone : */
 
-#avatarJoueur {position: absolute; display: none;}
 .mapMonde {height: 100vh; width: 100vw; align-items: center; justify-content: center; flex-direction: column;}
 .mapMonde span {text-align: center; font-size: 28px; font-weight: bold; margin-bottom: 25px;}
-.zoneFleches img {margin: 0 5px}
+.zoneTouches svg {margin: 0 5px; height: 50px;}
 
-.zoneFleches {
+.zoneTouches {
     position: absolute; height: 100px; width: 300px;
     right: 20px; bottom: 20px; display: none;
     justify-content: center; align-items: center;

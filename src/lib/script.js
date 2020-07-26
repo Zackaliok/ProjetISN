@@ -36,7 +36,7 @@ export function affichageZone(z){
     document.querySelector(".mapMonde").style.display = "none";
     document.querySelector(".mapZone").style.display = "flex";
     document.querySelector(".mapZone").firstChild.src = "src/media/map/mapZone"+z+".png";
-    document.querySelector(".zoneFleches").style.display = "flex";
+    document.querySelector(".zoneTouches").style.display = "flex";
     document.querySelector("#avatarJoueur").style.display = "block";
     document.querySelector("#avatarJoueur").style.transform = "translate("+jeu.zonesData[jeu.zone][jeu.niveau][0]+"px, "+jeu.zonesData[jeu.zone][jeu.niveau][1]+"px)";
 }
@@ -55,10 +55,18 @@ function affichageNiveau(n){
 export function deplacementAvatar(e){
     if(document.querySelector(".mapZone").style.display=="flex"){
         var avatar = document.querySelector("#avatarJoueur");
+        
+        if(e.keyCode == 37 || e.keyCode == 27 ||e.keyCode == 13 ||e.keyCode == 39){
+            document.querySelector('#touche'+e.keyCode).children[0].setAttribute('stroke','orange');
+            document.querySelector('#touche'+e.keyCode).children[1].setAttribute('fill','orange');
+            setTimeout(() => {
+                document.querySelector('#touche'+e.keyCode).children[0].setAttribute('stroke','gray');
+                document.querySelector('#touche'+e.keyCode).children[1].setAttribute('fill','gray');
+            },200);
+        }
+        
         switch(e.keyCode){
             case 37: //Flèche Gauche
-                toucheFlecheGauche.src = "src/media/touche/toucheFlecheGaucheGlow.png";
-                setTimeout('toucheFlecheGauche.src="src/media/touche/toucheFlecheGauche.png"',100);
                 if(jeu.niveau!==1 && jeu.niveauDebloque.includes(jeu.zone+"-"+(jeu.niveau-1))){
                     jeu.niveau -= 1;
                     avatar.style.transform = "translate("+jeu.zonesData[jeu.zone][jeu.niveau][0]+"px, "+jeu.zonesData[jeu.zone][jeu.niveau][1]+"px)";
@@ -66,8 +74,6 @@ export function deplacementAvatar(e){
             break;
                 
             case 39: //Flèche Droite
-                toucheFlecheDroite.src = "src/media/touche/toucheFlecheDroiteGlow.png";
-                setTimeout('toucheFlecheDroite.src="src/media/touche/toucheFlecheDroite.png"',100);
                 if(jeu.niveau!==5 && jeu.niveauDebloque.includes(jeu.zone+"-"+(jeu.niveau+1))){
                     jeu.niveau += 1;
                     avatar.style.transform = "translate("+jeu.zonesData[jeu.zone][jeu.niveau][0]+"px, "+jeu.zonesData[jeu.zone][jeu.niveau][1]+"px)";
@@ -75,19 +81,15 @@ export function deplacementAvatar(e){
             break;
                 
             case 13: //Touche Entrée
-                toucheEntree.src = "src/media/touche/toucheEntreeGlow.png";
-                setTimeout('toucheEntree.src="src/media/touche/toucheEntree.png"',100);
                 avatar.style.display = "none";
                 affichageNiveau(jeu.niveau);
             break;
                 
             case 27: //Touche Echap
-                toucheEchap.src = "src/media/touche/toucheEchapGlow.png";
-                setTimeout('toucheEchap.src="src/media/touche/toucheEchap.png"',100);
                 document.querySelector(".mapMonde").style.display = "flex";
                 avatar.style.display = "none";
                 document.querySelector(".mapZone").style.display = "none";
-                document.querySelector(".zoneFleches").style.display = "none";
+                document.querySelector(".zoneTouches").style.display = "none";
             break;
         }
     }
@@ -215,7 +217,7 @@ function retournerAuMenuPrincipal(){
     supprimerToutLesBlocs();
     document.querySelector(".mapZone").style.display = "none";
     document.querySelector("#avatarJoueur").style.display = "none";
-    document.querySelector(".zoneFleches").style.display = "none";
+    document.querySelector(".zoneTouches").style.display = "none";
     document.querySelector(".menuPause").style.display = "none";
     document.querySelector(".menuPrincipal").style.display = "flex";
     document.querySelector(".mapMonde").style.display = "flex";

@@ -27,13 +27,35 @@
                 </map>
             </div>
             <div class="mapZone" style="display:none;"><img src="src/media/map/mapZone1.png"></div>
-            <div class="zoneFleches">
-                <img id="toucheEchap" src="src/media/touche/toucheEchap.png" alt="Revenir au Menu">
-                <img id="toucheFlecheGauche" src="src/media/touche/toucheFlecheGauche.png" alt="Flèche de gauche">
-                <img id="toucheFlecheDroite" src="src/media/touche/toucheFlecheDroite.png" alt="Flèche de droite">
-                <img id="toucheEntree" src="src/media/touche/toucheEntree.png" alt="Lancer le niveau">
+            <div class="zoneTouches">
+                <svg id="touche27" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                    <rect fill="#fff" stroke-width="6px" stroke="gray" x="3" y="3" width="94" height="94" rx="10"/>
+                    <text text-anchor="middle" font-family="Source Sans Pro" font-weight="bold" font-size="30" y="58" x="50"fill="gray">Esc</text>
+                </svg>
+                <svg id="touche37" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                    <g stroke="gray">
+                        <rect fill="#fff" stroke-width="6px" x="3" y="3" width="94" height="94" rx="10"/>
+                        <line stroke-width="5px" x1="80" y1="50" x2="36.6" y2="50"/>
+                    </g>
+                    <path d="M20,50c7.81-2.9,17.5-7.84,23.51-13.08L38.77,50l4.74,13.08C37.5,57.84,27.81,52.9,20,50Z" fill="gray"/>
+                </svg>
+                <svg id="touche39" transform="rotate(180)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                    <g stroke="gray">
+                        <rect fill="#fff" stroke-width="6px" x="3" y="3" width="94" height="94" rx="10"/>
+                        <line stroke-width="5px" x1="80" y1="50" x2="36.6" y2="50"/>
+                    </g>
+                    <path d="M20,50c7.81-2.9,17.5-7.84,23.51-13.08L38.77,50l4.74,13.08C37.5,57.84,27.81,52.9,20,50Z" fill="gray"/>
+                </svg>
+                <svg id="touche13" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                    <g stroke="gray">
+                        <rect rx="10" height="94" width="94" y="3" x="3" stroke-width="6px" fill="#fff"/>
+                        <line y2="57.5" x2="36.6" y1="57.5" x1="64.1" stroke-width="5px"/>
+                        <line y2="58" x2="61.6" y1="24" x1="61.6" stroke-width="5px"/>
+                    </g>
+                    <path d="m20,57.5c7.81,-2.9 17.5,-7.84 23.51,-13.08l-4.74,13.08l4.74,13.08c-6.01,-5.24 -15.7,-10.18 -23.51,-13.08z" fill="gray"/>
+                </svg>
             </div>
-            <img src="src/media/avatarJoueur.png" id="avatarJoueur">
+            <img src="src/media/avatarJoueur.png" id="avatarJoueur" style="position: absolute; display: none">
         </div>
         <div class="menuPause" style="display:none">
             <div style="font-size: 34px; font-weight: bold; margin-bottom: 15px;">Menu Pause</div>
@@ -48,7 +70,12 @@
                     <input type="checkbox" class="switch" id="modeSombre" onclick="switchModeSombre()">
                 </div>
                 <div class="controleMusique">
-                    <img id="imgMusique" src="src/media/icon/music.png" style="height: 38px; margin-right: 20px;">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="35px" style="margin-right: 20px;" viewBox="0 0 551.89 551.89">
+                        <path fill="white" d="M94.499,535.901c52.188,0,94.496-42.308,94.496-94.496c0-0.024-0.003-0.053-0.003-0.077h0.003V134.753H492.51v218.921
+                            c-10.86-4.352-22.699-6.769-35.113-6.769c-52.188,0-94.496,42.308-94.496,94.496c0,52.188,42.305,94.499,94.493,94.499
+                            c52.188,0,94.496-42.308,94.496-94.496c0-0.024-0.004-0.053-0.004-0.077h0.004V134.753V15.988h-59.383H188.995h-59.385v118.765
+                            v218.921c-10.86-4.352-22.699-6.769-35.114-6.769C42.307,346.906,0,389.214,0,441.402C0,493.59,42.311,535.901,94.499,535.901z"/>
+                    </svg>
                     <input type="range" min="0" max="100" value="100" class="slider" id="volumeMusique">
                 </div>
                 <div class="controleSFX">
