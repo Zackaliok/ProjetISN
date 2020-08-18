@@ -9,10 +9,6 @@ const conteneurCode = document.getElementById("conteneurCode");
 const partieBanque = document.getElementById("partieBanque");
 const blocDepart = document.getElementById("blocDepart");
 const menuContextuel = document.querySelector(".menuContextuel");
-const toucheFlecheGauche = document.getElementById("toucheFlecheGauche");
-const toucheFlecheDroite = document.getElementById("toucheFlecheDroite");
-const toucheEntree = document.getElementById("toucheEntree");
-const toucheEchap = document.getElementById('toucheEchap');
 
 //Permet d'instancier les fonctions importées sur "window" (pour le onclick)
 for(const el of document.getElementsByTagName("*")){

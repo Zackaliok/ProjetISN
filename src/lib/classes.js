@@ -20,7 +20,7 @@ export class Jeu {
     }
     
     jouerMusique(){
-        this.musique.src="src/media/son/musiqueZone.wav"; //A changer après avec "this.zone"
+        this.musique.src="src/media/son/musiqueZone.wav"; //A changer après en ajoutant "this.zone"
         this.musique.play();
         this.musique.loop=true;
     }
@@ -77,7 +77,9 @@ export class Joueur {
             case 2: this.y+=128; break;
             case 3: this.x-=128; break;
         }
-        if(tileParCoord(this.x,this.y)[0]!="herbe") this.afficher(this.x,this.y,this.dir);
+        if(tileParCoord(this.x,this.y)[0]!="herbe"){
+            this.afficher(this.x,this.y,this.dir);
+        }
         else this.afficher(sauvPos[0],sauvPos[1],this.dir);
     }
     

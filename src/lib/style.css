@@ -3,6 +3,10 @@
     --bg-modeSombre: linear-gradient(45deg, rgba(113,113,113,0), #4d4d4d);
 }
 
+@media screen and (max-width: 1280px) {
+    canvas {height: 60%}
+}
+
 
 /*-------------------- Général : --------------------*/
 
@@ -18,8 +22,9 @@ header {
     display: flex; align-items: center; justify-content: center;
 }
 
-.wrapper {display: none; flex-direction: column; width: 100vw; height: 100vh;}
-.app {display: flex; flex-direction: row; width: 100vw; height: calc(100vh - 60px);}
+.simplebar-mask {border-radius: 5px 0 0 5px}
+svg, path, text {pointer-events: none;}
+foreignObject {pointer-events: all;}
 
 
 /*--------------------- Menu : ----------------------*/
@@ -53,7 +58,7 @@ header {
     justify-content: center; align-items: center;
 }
 
-/*Menu Pause :*/
+/* Menu Pause :*/
 
 .menuPause {
     height: 100vh; width: 100vw; z-index: 200; position: absolute;
@@ -78,31 +83,48 @@ header {
 .mp_contenu i {border: solid #FFF; border-width: 0 3px 3px 0; display: inline-block; padding: 3px; transform: rotate(135deg); margin-right: 10px;}
 
 
-/*-------------------- Zones : --------------------*/
+/*-------------------- Parties : --------------------*/
 
-canvas {border: 1px solid #454545; background: white; border-radius: 5px; margin-left: 5px;}
-
-#partieBanque {
-    display: flex; background: white;
-    flex-flow: column; align-items: flex-end;
-    float: right; width: 30vw; margin: 0 5px 5px 0;
-    border: 1px solid #454545; border-radius: 0 5px 5px 0;
-}
-
-#partieCode {
-    width: 100%; background: white;
-    border: 1px solid #454545; border-right: none;
-    border-radius: 5px 0 0 5px; margin: 0 0 5px 10px;
-    max-width: 100%; max-height: 100%;
+#partieGauche {
+    display: flex; height: 100%; flex: 1;
+    margin-left: 5px; flex-direction: column;
 }
 
 #partieControle {
-    height: calc(100% - 589px); display: flex;
-    width: -moz-available; width: -webkit-fill-available;
-    border: 1px solid #454545; background: white;
-    border-radius: 5px; margin-left: 5px; flex-direction: column;
-    align-items: center; justify-content: space-evenly;
+    height: -webkit-fill-available; height: -moz-available;
+    display: flex; background: white; margin-top: 5px;
+    border: 1px solid #454545; border-radius: 5px; align-items: center;
+    flex-direction: column; justify-content: space-evenly;
 }   
+
+#partieCode {
+    display: flex; background: white; flex: 3;
+    border: 1px solid #454545; border-right: none;
+    border-radius: 5px 0 0 5px; margin-left: 10px;
+    max-width: 100%; max-height: 100%;
+}
+
+#partieBanque {
+    display: flex; margin-right: 5px; background: white;
+    flex-flow: column; align-items: flex-end; flex: 1;
+    border: 1px solid #454545; border-radius: 0 5px 5px 0;
+}
+
+canvas {border: 1px solid #454545; background: white; border-radius: 5px;}
+.wrapper {display: none; flex-direction: column; width: 100vw; height: 100vh;}
+.app {display: flex; flex-direction: row; width: 100vw; height: calc(100vh - 65px);}
+
+
+/*-------------------- Controles : --------------------*/
+
+.controles {height: 50px; width: 250px; display: flex; align-items: center; justify-content: space-evenly;}
+
+.controles button {
+    height: 40px; width: 40px; border: none; background: transparent;
+    cursor: pointer; outline: 0; display: flex; padding: 0;
+    align-items: center; justify-content: center;
+}
+.controles button:hover {background: var(--controles-hover);}
 
 .comptageBlocs {
     width: 80%; height: 20px; background-color: black; 
@@ -118,18 +140,6 @@ canvas {border: 1px solid #454545; background: white; border-radius: 5px; margin
     display: block; width: 100%; height: 20px; border-radius: 10px; 
     text-align: center; position: relative; top: -20px;
 }
-.simplebar-mask {border-radius: 5px 0 0 5px}
-
-/*-------------------- Controles : --------------------*/
-
-.controles {height: 50px; width: 250px; display: flex; align-items: center; justify-content: space-evenly;}
-
-.controles button {
-    height: 40px; width: 40px; border: none; background: transparent;
-    cursor: pointer; outline: 0; display: flex; padding: 0;
-    align-items: center; justify-content: center;
-}
-.controles button:hover {background: var(--controles-hover);}
 
 
 /*-------------------- Blocs : --------------------*/
@@ -140,9 +150,7 @@ canvas {border: 1px solid #454545; background: white; border-radius: 5px; margin
 }
 
 .bloc {display: none; width: 150px; height: 40px; margin: 5px;}
-.bloc:hover {cursor: grab;}
-svg, path, text {pointer-events: none;}
-foreignObject {pointer-events: all;}
+.bloc:hover {cursor: grab}
 
 .insertionBloc {filter: blur(1.5px); transform: translate(0px, -5px); opacity: 0.8;}
 .insertionBloc2 {filter: blur(1.5px); transform: translate(20px, -73px); opacity: 0.8;}
@@ -164,22 +172,16 @@ foreignObject {pointer-events: all;}
 /*-------------------- Menu Contextuel : --------------------*/
 
 .menuContextuel {
-    display: none; z-index: 100;
-    width: 300px; height: 122px;
+    display: none; width: 300px; height: 122px;
     position: absolute; background: rgba(33,33,33,0.8);
-    border: 1px solid gray;
+    border: 1px solid gray; z-index: 100; 
 }
 
 .menuContextuel button {
-    width: 300px; height: 40px;
-    background: transparent;
-    border: none; color: white;
-    font-size: 16px; text-align: left;
-    font-family: 'Source Sans Pro', sans-serif;
-    padding-left: 25px; outline: 0;
+    width: 300px; height: 40px; background: transparent; outline: 0;
+    border: none; color: white; font-size: 16px; text-align: left;
+    font-family: 'Source Sans Pro', sans-serif; padding-left: 25px;
 }
-
-.menuContextuel hr {margin: 0; opacity: 0.5;}
 
 
 /*-------------------- Pop-up : --------------------*/
@@ -197,19 +199,17 @@ foreignObject {pointer-events: all;}
 }
 
 .popup #texte {
-    width: 500px; height: 70px;
-    display: flex; text-align: center;
+    width: 500px; height: 70px; display: flex; text-align: center;
     align-items: center; justify-content: center;
 }
 
 .popup #btn {
-    width: 500px; height: 30px;
+    width: 500px; height: 30px; display: flex; margin: 0 10px 5px 0;
     align-items: center; justify-content: flex-end;
-    margin: 0 10px 5px 0; display: flex;
+    
 }
 
 .popup button {
-    border: none; background: orange;
-    width: 50px; height: 30px; outline: 0;
-    border-radius: 15px; color: white;
+    width: 50px; height: 30px; border-radius: 15px; 
+    border: none; outline: 0; color: white; background: orange;
 }
