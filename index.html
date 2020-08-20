@@ -103,7 +103,8 @@
             <header class="en-tete"></header>
             <div class="app">
                 <div id="partieGauche">
-                    <canvas id="canvas" height="576" width="576"></canvas>
+                    <canvas id="canvasJoueur" height="576" width="576"></canvas>
+                    <canvas id="canvasDecors" height="576" width="576"></canvas>
                     <div id="partieControle">
                         <div class="controles">
                             <button id="executionCode" title="Executer le code" onclick="executionCode()">
@@ -189,7 +190,7 @@
                             fill="orange" stroke="black" stroke-width="0.5"/>
                             <text x="30%" y="20px" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">Répéter</text>
                             <text x="80%" y="20px" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" fill="white" font-size="12">fois</text>
-                            <foreignObject x="75" y="7" width="27" height="21"> 
+                            <foreignObject x="73" y="7" width="31" height="21">
                                 <input id="inputRepeter" type="number" value="1" min="1" placeholder="1">
                             </foreignObject>
                         </svg>

@@ -1,6 +1,6 @@
 //Import :
-import {joueur, jeu, canvas, ctx} from './init.js';
-import {chargerMap, tileParCoord, remplacementCanvas} from './niveaux.js';
+import {joueur, jeu, ctxJoueur} from './init.js';
+import {chargerMap, tileParCoord} from './niveaux.js';
 import {chargerJSON, chargerImg, sleep, scrollbar} from './outils.js';
 export var blocEnMouvement, blocArray = new Array(); 
 
@@ -205,10 +205,6 @@ function switchModeSombre(){
     }
 }
 
-function switchCodeSource(){
-    //Bon euh faudrait qu'on complete ca a la fin
-}
-
 function retournerAuMenuPrincipal(){
     supprimerToutLesBlocs();
     document.querySelector(".mapZone").style.display = "none";
@@ -241,11 +237,12 @@ function updateComptageBlocs(){
 //------------------------------ Executer le code + vérifier si le joueur a gagner ------------------------------
 
 function win(){
-    if(tileParCoord(joueur.x,joueur.y)[0]=="objectif"){
+    if(Number.isInteger(joueur.x/64) && Number.isInteger(joueur.y/64) && tileParCoord(joueur.x,joueur.y)[0]=="objectif"){
         if(jeu.niveau<5){
             popup(`Tu as completé  le niveau ${jeu.niveau} de la zone ${jeu.zone} !`);
             setTimeout(() => {
                 fermerPopup();
+                ctxJoueur.clearRect(joueur.x,joueur.y,64,64);
                 supprimerToutLesBlocs();
                 affichageNiveau(jeu.niveau+1);
                 if(jeu.niveauDebloque.includes(jeu.zone+"-"+jeu.niveau)==false) jeu.niveauDebloque.push(jeu.zone+"-"+jeu.niveau)
@@ -257,37 +254,35 @@ function win(){
 }
 
 function remiseAZero(){
-    remplacementCanvas(joueur.x,joueur.y);
+    ctxJoueur.clearRect(joueur.x,joueur.y,64,64);
     joueur.afficher(jeu.niveauxData.depart[0]*64,jeu.niveauxData.depart[1]*64,jeu.niveauxData.depart[2]);
 }
 
 async function executionCode(){
     if(blocArray.length>=2){
         document.getElementById('executionCode').disabled = true;
-        remiseAZero();
-        await sleep(200);
+        await remiseAZero();
+        await sleep(500);
         for(const bloc of blocArray){
             switch(bloc.id){
                 case "Avancer":
                 case "Sauter":
                 case "TournerADroite":
                 case "TournerAGauche":
-                    joueur[bloc.id]();
+                    await joueur[bloc.id]();
                 break;
 
                 case "Repeter":
                     if(bloc.children[1].hasChildNodes && bloc.querySelector('#inputRepeter').value > 0){
                         for(var i=0;i<bloc.querySelector('#inputRepeter').value;i++){
                             for(var child of bloc.children[1].children){
-                                joueur[child.id]();
-                                await sleep(500);
+                                await joueur[child.id]();
                             }
                         }
                     }
                 break;
             }
             win();
-            await sleep(500);
         }
         document.getElementById('executionCode').disabled = false;
     }else{
@@ -454,6 +449,6 @@ conteneurCode.ondrop = function(e){
 
 window.addEventListener("keydown", (e) => {
     if(e.keyCode == 96){
-//        console.log(blocArray)
+        console.log(joueur.y);
     }
 });

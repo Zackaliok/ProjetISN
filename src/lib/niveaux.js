@@ -1,4 +1,4 @@
-import {joueur, jeu, ctx} from './init.js';
+import {joueur, jeu, ctxDecors} from './init.js';
 import {chargerJSON, scrollbar} from './outils.js';
 export var tilesMap = new Map();
 
@@ -20,7 +20,7 @@ export function chargerMap(zone, niveau){
                     for(var j=coord[2];j<=coord[3];j++){
                         tilesMap.set((i+","+j),[partie.tile,coord[4]]);
                         if(coord[4]!=null) rotationCanvas(i,j,coord[4],jeu.tilesData[partie.tile],modif);
-                        else ctx.drawImage(jeu.tileset,jeu.tilesData[partie.tile][0]*64,jeu.tilesData[partie.tile][1]*64,modif[0],modif[1],(i*64)-modif[2],(j*64)-modif[3],modif[0],modif[1]);
+                        else ctxDecors.drawImage(jeu.tileset,jeu.tilesData[partie.tile][0]*64,jeu.tilesData[partie.tile][1]*64,modif[0],modif[1],(i*64)-modif[2],(j*64)-modif[3],modif[0],modif[1]);
                     }
                 }
             });
@@ -34,22 +34,16 @@ export function chargerMap(zone, niveau){
 }
 
 export function tileParCoord(x,y){
-    return tilesMap.get((x/64)+","+(y/64));
-}
-
-export function remplacementCanvas(x,y){
-    var coord = jeu.tilesData[tileParCoord(x,y)[0]]
-    var deg = tileParCoord(x,y)[1];
-    rotationCanvas(x/64,y/64,deg,coord,[64,64,0,0]);
+    return tilesMap.get(Math.trunc(x/64)+","+Math.trunc(y/64));
 }
 
 function rotationCanvas(x,y,deg,tile,modif){
-    ctx.save();
-    ctx.translate((x*64)+32,(y*64)+32);
-    ctx.rotate((deg*90)*(Math.PI/180));
-    ctx.translate(-(x*64)-32,-(y*64)-32);
-    ctx.drawImage(jeu.tileset,tile[0]*64,tile[1]*64,modif[0],modif[1],(x*64)-modif[2],(y*64)-modif[3],modif[0],modif[1]);
-    ctx.restore();
+    ctxDecors.save();
+    ctxDecors.translate((x*64)+32,(y*64)+32);
+    ctxDecors.rotate((deg*90)*(Math.PI/180));
+    ctxDecors.translate(-(x*64)-32,-(y*64)-32);
+    ctxDecors.drawImage(jeu.tileset,tile[0]*64,tile[1]*64,modif[0],modif[1],(x*64)-modif[2],(y*64)-modif[3],modif[0],modif[1]);
+    ctxDecors.restore();
 }
 
 

@@ -1,6 +1,6 @@
-import {jeu, ctx} from './init.js';
-import {tileParCoord, remplacementCanvas} from './niveaux.js';
-import {chargerJSON, chargerImg} from './outils.js';
+import {jeu, ctxJoueur} from './init.js';
+import {tileParCoord} from './niveaux.js';
+import {chargerJSON, chargerImg, sleep} from './outils.js';
 
 
 export class Jeu {
@@ -8,7 +8,6 @@ export class Jeu {
         this.zone = zone;
         this.niveau = niveau;
         this.niveauDebloque = ["1-1"];
-        
         this.musique = new Audio();
         this.sfx = new Audio();
     }
@@ -16,19 +15,22 @@ export class Jeu {
     chargerFichiers(){
         chargerJSON('src/data/tiles.json').then(r => {this.tilesData = r;});
         chargerJSON('src/data/zones.json').then(r => {this.zonesData = r;});
+        chargerJSON('src/data/animations.json').then(r => {this.anim = r;});
         chargerImg("src/media/assets.png").then(img => {this.tileset = img;});
     }
     
     jouerMusique(){
-        this.musique.src="src/media/son/musiqueZone.wav"; //A changer après en ajoutant "this.zone"
-        this.musique.play();
-        this.musique.loop=true;
+        if(this.musique.paused){
+            this.musique.src="src/media/son/musiqueZone.wav"; //A changer après en ajoutant "this.zone"
+            this.musique.play();
+            this.musique.loop = true;
+        }
     }
     
     jouerSFX(nom){
         this.sfx.src = "src/media/son/"+nom+".mp3";
         this.sfx.play();
-        this.sfx.loop=false;
+        this.sfx.loop = false;
     }
 }
 
@@ -47,53 +49,56 @@ export class Joueur {
 
     afficher(x,y,dir){
         this.pos(x,y,dir);
-        switch(this.dir){
-            case 0: ctx.drawImage(jeu.tileset,0,512,64,64,x,y,64,64); break; //HAUT
-            case 1: ctx.drawImage(jeu.tileset,64,512,64,64,x,y,64,64); break; //DROITE
-            case 2: ctx.drawImage(jeu.tileset,128,512,64,64,x,y,64,64); break; //BAS
-            case 3: ctx.drawImage(jeu.tileset,196,512,64,64,x,y,64,64); break; //GAUCHE
+        ctxJoueur.drawImage(jeu.tileset,64*dir,512,64,64,x,y,64,64);
+    }
+    
+    async Avancer(){ 
+        for(let i=0;i<4;i++){
+            var sauvPos = [this.x,this.y];
+            ctxJoueur.clearRect(this.x,this.y,64,64);
+            switch(this.dir){
+                case 0: this.y -= 16; break;
+                case 1: this.x += 16; break;
+                case 2: this.y += 16; break;
+                case 3: this.x -= 16; break;
+            }
+            if(tileParCoord(this.x,this.y)[0]!=="herbe"){
+                ctxJoueur.drawImage(jeu.tileset,this.dir*64,jeu.anim.marche[i],64,64,this.x,this.y,64,64);
+                await sleep(400);
+            }
+            else this.afficher(sauvPos[0],sauvPos[1],this.dir);
         }
     }
     
-    Avancer(){
+    async Sauter(){
         var sauvPos = [this.x,this.y];
-        remplacementCanvas(this.x,this.y);
+        ctxJoueur.clearRect(this.x,this.y,64,64);
         switch(this.dir){
-            case 0: this.y-=64; break;
-            case 1: this.x+=64; break;
-            case 2: this.y+=64; break;
-            case 3: this.x-=64; break;
+            case 0: this.y -= 128; break;
+            case 1: this.x += 128; break;
+            case 2: this.y += 128; break;
+            case 3: this.x -= 128; break;
         }
-        if(tileParCoord(this.x,this.y)[0]!="herbe") this.afficher(this.x,this.y,this.dir);
+        if(tileParCoord(this.x,this.y)[0]!=="herbe"){
+            ctxJoueur.drawImage(jeu.tileset,this.dir*64,512,64,64,this.x,this.y,64,64);
+            await sleep(400);
+        }
         else this.afficher(sauvPos[0],sauvPos[1],this.dir);
     }
     
-    Sauter(){
-        var sauvPos = [this.x,this.y];
-        remplacementCanvas(this.x,this.y);
-        switch (this.dir){
-            case 0: this.y-=128; break;
-            case 1: this.x+=128; break;
-            case 2: this.y+=128; break;
-            case 3: this.x-=128; break;
-        }
-        if(tileParCoord(this.x,this.y)[0]!="herbe"){
-            this.afficher(this.x,this.y,this.dir);
-        }
-        else this.afficher(sauvPos[0],sauvPos[1],this.dir);
-    }
     
-    
-    TournerADroite(){
-        remplacementCanvas(this.x,this.y);
+    async TournerADroite(){
+        ctxJoueur.clearRect(this.x,this.y,64,64);
         this.dir = (this.dir+1)%4;
         this.afficher(this.x,this.y,this.dir);
+        await sleep(400);
     }
     
-    TournerAGauche(){
-        remplacementCanvas(this.x,this.y);
+    async TournerAGauche(){
+        ctxJoueur.clearRect(this.x,this.y,64,64);
         this.dir -= 1;
         if(this.dir==-1) this.dir=3;
         this.afficher(this.x,this.y,this.dir);
+        await sleep(400);
     }
 }

@@ -3,10 +3,6 @@
     --bg-modeSombre: linear-gradient(45deg, rgba(113,113,113,0), #4d4d4d);
 }
 
-@media screen and (max-width: 1280px) {
-    canvas {height: 60%}
-}
-
 
 /*-------------------- Général : --------------------*/
 
@@ -110,7 +106,9 @@ foreignObject {pointer-events: all;}
     border: 1px solid #454545; border-radius: 0 5px 5px 0;
 }
 
-canvas {border: 1px solid #454545; background: white; border-radius: 5px;}
+#canvasJoueur {border: 1px solid #454545; z-index: 100; border-radius: 5px;}
+#canvasDecors {border: 1px solid #454545; border-radius: 5px; position: absolute;}
+
 .wrapper {display: none; flex-direction: column; width: 100vw; height: 100vh;}
 .app {display: flex; flex-direction: row; width: 100vw; height: calc(100vh - 65px);}
 
@@ -162,9 +160,8 @@ canvas {border: 1px solid #454545; background: white; border-radius: 5px;}
 #Repeter, #Si {height: 74px;}
 
 #inputRepeter {
-    width: 25px; height: 15px;
-    text-align: center; -moz-appearance: textfield;
-    border-radius: 3px; border: 1px solid gray;
+    width: 25px; height: 15px; -moz-appearance: textfield;
+    border-radius: 3px; border: 1px solid gray; text-align: center;
 }
 #inputRepeter::-webkit-inner-spin-button {-webkit-appearance: none;}
 
@@ -187,14 +184,10 @@ canvas {border: 1px solid #454545; background: white; border-radius: 5px;}
 /*-------------------- Pop-up : --------------------*/
 
 .popup {
-    display: flex; position: absolute;
-    height: 100px; width: 500px;
-    top: 10%; left: calc(50% - 250px);
-    border: 1px solid gray; z-index: 200;
-    border-radius: 5px; background: rgb(60,60,60);
-    box-shadow: 2px 2px 5px 0px #656565;
-    flex-direction: column; align-items: center;
-    justify-content: flex-end; opacity: 0;
+    display: flex; position: absolute; height: 100px; width: 500px; opacity: 0;
+    top: 10%; left: calc(50% - 250px); border: 1px solid gray; z-index: 200;
+    border-radius: 5px; background: rgb(60,60,60); box-shadow: 2px 2px 5px 0px #656565;
+    flex-direction: column; align-items: center; justify-content: flex-end; 
     transition: visibility 2s, opacity 1s ease-out, top 2s;
 }
 
@@ -206,10 +199,16 @@ canvas {border: 1px solid #454545; background: white; border-radius: 5px;}
 .popup #btn {
     width: 500px; height: 30px; display: flex; margin: 0 10px 5px 0;
     align-items: center; justify-content: flex-end;
-    
 }
 
 .popup button {
     width: 50px; height: 30px; border-radius: 15px; 
     border: none; outline: 0; color: white; background: orange;
+}
+
+
+/*-------------------- Media Queries : --------------------*/
+
+@media screen and (max-width: 1280px){
+    canvas {height: 500px}
 }
